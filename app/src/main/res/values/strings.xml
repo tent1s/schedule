@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">schedule</string>
+    <string name="title_tasks">Задачи</string>
+    <string name="title_timetable">Расписание</string>
+    <string name="title_settings">Настройки</string>
+    <string name="addNew">Нажмите “+”, чтобы добавить</string>
+    <string name="newObject">Изменение</string>
+</resources>

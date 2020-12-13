@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@id/navigation_timetable">
+
+    <fragment
+        android:id="@+id/navigation_tasks"
+        android:name="com.tent1s.android.schedule.ui.tasks.TasksFragment"
+        android:label="@string/title_tasks"
+        tools:layout="@layout/fragment_tasks" >
+        <action
+            android:id="@+id/action_navigation_tasks_to_newTaskFragment"
+            app:destination="@id/navigation_newTask"
+            app:popUpToInclusive="false" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_timetable"
+        android:name="com.tent1s.android.schedule.ui.timetable.TimetableFragment"
+        android:label="@string/title_timetable"
+        tools:layout="@layout/fragment_timetable" >
+        <action
+            android:id="@+id/action_navigation_timetable_to_newTimeRow"
+            app:destination="@id/navigation_newTimeRow" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_settings"
+        android:name="com.tent1s.android.schedule.ui.settings.SettingsFragment"
+        android:label="@string/title_settings"
+        tools:layout="@layout/fragment_settings" />
+    <fragment
+        android:id="@+id/navigation_newTask"
+        android:name="com.tent1s.android.schedule.ui.newtask.NewTaskFragment"
+        android:label="@string/newObject">
+        <action
+            android:id="@+id/action_newTaskFragment_to_navigation_tasks"
+            app:destination="@id/navigation_tasks" />
+    </fragment>
+    <fragment
+        android:id="@+id/navigation_newTimeRow"
+        android:name="com.tent1s.android.schedule.ui.newtimerow.NewTimeRow"
+        android:label="@string/newObject">
+        <action
+            android:id="@+id/action_newTimeRow_to_navigation_timetable"
+            app:destination="@id/navigation_timetable" />
+    </fragment>
+</navigation>
