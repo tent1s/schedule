@@ -11,7 +11,7 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.tent1s.android.schedule.databinding.ActivityMainBinding
 import com.tent1s.android.schedule.databinding.FragmentSettingsBinding
-
+//test
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 
