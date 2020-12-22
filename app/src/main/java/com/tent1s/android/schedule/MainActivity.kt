@@ -1,7 +1,6 @@
 package com.tent1s.android.schedule
 
 import android.os.Bundle
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.findNavController
@@ -10,7 +9,6 @@ import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.tent1s.android.schedule.databinding.ActivityMainBinding
-import com.tent1s.android.schedule.databinding.FragmentSettingsBinding
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -22,7 +20,7 @@ class MainActivity : AppCompatActivity() {
         val navController = findNavController(R.id.nav_host_fragment)
         NavigationUI.setupActionBarWithNavController(this, navController)
         val appBarConfiguration = AppBarConfiguration(setOf(
-                R.id.navigation_tasks, R.id.navigation_timetable, R.id.navigation_settings))
+            R.id.navigation_tasks, R.id.navigation_timetable, R.id.navigation_settings))
         setupActionBarWithNavController(navController, appBarConfiguration)
 
         binding.navView.setupWithNavController(navController)

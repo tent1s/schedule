@@ -11,7 +11,7 @@ data class TimetableList(
     var timetableId: Long = 0L,
 
     @ColumnInfo(name = "task_title")
-    val timetableTitle:  String? = null,
+    var timetableTitle:  String? = null,
 
     @ColumnInfo(name = "task_information")
     var timetableInformation: String? = null,

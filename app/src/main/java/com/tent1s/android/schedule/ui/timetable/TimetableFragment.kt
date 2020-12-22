@@ -10,8 +10,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
+import androidx.navigation.findNavController
 import com.tent1s.android.schedule.R
+import com.tent1s.android.schedule.databinding.FragmentTasksBinding
 import com.tent1s.android.schedule.databinding.FragmentTimetableBinding
+import com.tent1s.android.schedule.ui.tasks.TasksViewModel
 
 class TimetableFragment : Fragment() {
 
@@ -24,25 +27,26 @@ class TimetableFragment : Fragment() {
             savedInstanceState: Bundle?
     ): View? {
 
-        binding = DataBindingUtil.inflate(
-            inflater,
-            R.layout.fragment_timetable,
-            container,
-            false
-        )
+        val view = inflater.inflate(R.layout.fragment_timetable, container, false)
+        val binding = FragmentTimetableBinding.inflate(inflater)
 
         timetableViewModel =
                 ViewModelProvider(this).get(TimetableViewModel::class.java)
 
+        binding.viewModel = timetableViewModel
 
         timetableViewModel.text.observe(viewLifecycleOwner, Observer {
             binding.textTimetable.text = it
         })
 
-        binding.floatingActionButtonTimetable.setOnClickListener { view ->
-            Navigation.findNavController(view).navigate(R.id.action_navigation_timetable_to_newTimeRow)
-        }
-
+        timetableViewModel.navigateToSearch.observe(viewLifecycleOwner,
+                Observer<Boolean> { shouldNavigate ->
+                    if (shouldNavigate == true) {
+                        val navController = binding.root.findNavController()
+                        navController.navigate(R.id.action_navigation_timetable_to_newTimeRow)
+                        timetableViewModel.onNavigationToSearch()
+                    }
+                })
         return binding.root
     }
 }

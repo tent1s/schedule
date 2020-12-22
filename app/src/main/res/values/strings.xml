@@ -5,4 +5,13 @@
     <string name="title_settings">Настройки</string>
     <string name="addNew">Нажмите “+”, чтобы добавить</string>
     <string name="newObject">Изменение</string>
+    <string name="title">Заголовок</string>
+    <string name="about">Предмет</string>
+    <string name="task_about_text">Описание</string>
+    <string name="task_title_text">Задача</string>
+    <string name="date_task_text">ВЫБРАТЬ ДАТУ</string>
+    <string name="checkbox_task_text">Выполнение</string>
+    <string name="notification">Оповещение</string>
+    <string name="deleted">УДАЛИТЬ</string>
+    <string name="save">СОХРАНИТЬ</string>
 </resources>

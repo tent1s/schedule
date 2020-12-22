@@ -15,9 +15,15 @@ data class TasksList(
         @ColumnInfo(name = "task_information")
         var taskInformation: String? = null,
 
-//        @ColumnInfo(name = "task_deadline")
-//        var taskDeadline: Long =
+        @ColumnInfo(name = "task_deadline_day")
+        var taskDeadlineDay: Int = 0,
 
-        @ColumnInfo(name = "task_diligence")
-        var taskDiligence: Int = -1
+        @ColumnInfo(name = "task_deadline_mount")
+        var taskDeadlineMount: Int = 0,
+
+        @ColumnInfo(name = "task_deadline_year")
+        var taskDeadlineYear: Int = 0,
+
+        @ColumnInfo(name = "is_task_done")
+        var isTaskDone: Boolean = false
 )

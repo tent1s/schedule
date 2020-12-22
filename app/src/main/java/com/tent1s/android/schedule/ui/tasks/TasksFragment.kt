@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.FragmentNavigatorDestinationBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.tent1s.android.schedule.R
@@ -22,27 +23,32 @@ class TasksFragment : Fragment() {
     private lateinit var tasksViewModel: TasksViewModel
     private lateinit var binding: FragmentTasksBinding
 
+
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
-        binding = DataBindingUtil.inflate(
-            inflater,
-           R.layout.fragment_tasks,
-            container,
-            false
-        )
+        val view = inflater.inflate(R.layout.fragment_tasks, container, false)
+        val binding = FragmentTasksBinding.inflate(inflater)
 
-        tasksViewModel = ViewModelProvider(this).get(TasksViewModel::class.java)
+        tasksViewModel =
+                ViewModelProvider(this).get(TasksViewModel::class.java)
+
+        binding.viewModel = tasksViewModel
 
         tasksViewModel.text.observe(viewLifecycleOwner, Observer {
             binding.textTasks.text = it
         })
 
-        binding.floatingActionButtonTask.setOnClickListener { view ->
-           Navigation.findNavController(view).navigate(R.id.action_navigation_tasks_to_newTaskFragment)
-        }
+        tasksViewModel.navigateToSearch.observe(viewLifecycleOwner,
+                Observer<Boolean> { shouldNavigate ->
+                    if (shouldNavigate == true) {
+                        val navController = binding.root.findNavController()
+                        navController.navigate(R.id.action_navigation_tasks_to_newTaskFragment)
+                        tasksViewModel.onNavigationToSearch()
+                    }
+                })
 
         return binding.root
     }
