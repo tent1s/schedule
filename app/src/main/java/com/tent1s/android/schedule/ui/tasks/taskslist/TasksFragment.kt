@@ -1,22 +1,15 @@
-package com.tent1s.android.schedule.ui.tasks
+package com.tent1s.android.schedule.ui.tasks.taskslist
 
 import android.os.Bundle
-import android.renderscript.ScriptGroup
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.Navigation
 import androidx.navigation.findNavController
-import androidx.navigation.fragment.FragmentNavigatorDestinationBuilder
-import com.google.android.material.snackbar.Snackbar
 import com.tent1s.android.schedule.R
 import com.tent1s.android.schedule.databinding.FragmentTasksBinding
-import com.tent1s.android.schedule.ui.newtask.NewTaskFragment
 
 class TasksFragment : Fragment() {
 

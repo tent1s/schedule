@@ -1,11 +1,10 @@
-package com.tent1s.android.schedule.ui.newtask
+package com.tent1s.android.schedule.ui.tasks.newtask
 
 import android.app.DatePickerDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer

@@ -1,10 +1,11 @@
-package com.tent1s.android.schedule.ui.tasks
+package com.tent1s.android.schedule.ui.timetable.timetablelist
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.tent1s.android.schedule.repository.TimetableRepository
 
-class TasksViewModel : ViewModel() {
+class TimetableViewModel : ViewModel() {
 
     private val _navigateToSearch = MutableLiveData<Boolean>()
     val navigateToSearch: LiveData<Boolean>
@@ -18,8 +19,12 @@ class TasksViewModel : ViewModel() {
         _navigateToSearch.value = false
     }
 
+    val timetable = TimetableRepository.getList()
+
     private val _text = MutableLiveData<String>().apply {
-        value = "Нажмите “+”, чтобы добавить"
+        if (timetable==null) {
+            value = "Нажмите “+”, чтобы добавить"
+        }
     }
     val text: LiveData<String> = _text
 }

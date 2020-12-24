@@ -1,20 +1,17 @@
-package com.tent1s.android.schedule.ui.timetable
+package com.tent1s.android.schedule.ui.timetable.timetablelist
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import com.tent1s.android.schedule.R
-import com.tent1s.android.schedule.databinding.FragmentTasksBinding
 import com.tent1s.android.schedule.databinding.FragmentTimetableBinding
-import com.tent1s.android.schedule.ui.tasks.TasksViewModel
+import com.tent1s.android.schedule.repository.TimetableRepository
+import com.tent1s.android.schedule.ui.timetable.TimetableAdapter
 
 class TimetableFragment : Fragment() {
 
@@ -34,6 +31,13 @@ class TimetableFragment : Fragment() {
                 ViewModelProvider(this).get(TimetableViewModel::class.java)
 
         binding.viewModel = timetableViewModel
+
+
+
+        val adapter = TimetableAdapter(timetableViewModel.timetable)
+        binding.timetableList.adapter = adapter
+
+
 
         timetableViewModel.text.observe(viewLifecycleOwner, Observer {
             binding.textTimetable.text = it

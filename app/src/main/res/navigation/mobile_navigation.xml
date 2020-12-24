@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/navigation_tasks"
-        android:name="com.tent1s.android.schedule.ui.tasks.TasksFragment"
+        android:name="com.tent1s.android.schedule.ui.tasks.taskslist.TasksFragment"
         android:label="@string/title_tasks"
         tools:layout="@layout/fragment_tasks" >
         <action
@@ -18,7 +18,7 @@
 
     <fragment
         android:id="@+id/navigation_timetable"
-        android:name="com.tent1s.android.schedule.ui.timetable.TimetableFragment"
+        android:name="com.tent1s.android.schedule.ui.timetable.timetablelist.TimetableFragment"
         android:label="@string/title_timetable"
         tools:layout="@layout/fragment_timetable" >
         <action
@@ -33,7 +33,7 @@
         tools:layout="@layout/fragment_settings" />
     <fragment
         android:id="@+id/navigation_newTask"
-        android:name="com.tent1s.android.schedule.ui.newtask.NewTaskFragment"
+        android:name="com.tent1s.android.schedule.ui.tasks.newtask.NewTaskFragment"
         android:label="@string/newObject">
         <action
             android:id="@+id/action_newTaskFragment_to_navigation_tasks"
@@ -41,7 +41,7 @@
     </fragment>
     <fragment
         android:id="@+id/navigation_newTimeRow"
-        android:name="com.tent1s.android.schedule.ui.newtimerow.NewTimeRow"
+        android:name="com.tent1s.android.schedule.ui.timetable.newtimerow.NewTimeRow"
         android:label="@string/newObject">
         <action
             android:id="@+id/action_newTimeRow_to_navigation_timetable"

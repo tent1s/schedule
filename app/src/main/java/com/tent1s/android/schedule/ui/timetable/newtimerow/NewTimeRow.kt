@@ -1,4 +1,4 @@
-package com.tent1s.android.schedule.ui.newtimerow
+package com.tent1s.android.schedule.ui.timetable.newtimerow
 
 import android.os.Bundle
 import android.view.LayoutInflater

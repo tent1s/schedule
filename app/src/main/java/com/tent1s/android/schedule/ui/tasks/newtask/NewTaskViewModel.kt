@@ -1,4 +1,4 @@
-package com.tent1s.android.schedule.ui.newtask
+package com.tent1s.android.schedule.ui.tasks.newtask
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
