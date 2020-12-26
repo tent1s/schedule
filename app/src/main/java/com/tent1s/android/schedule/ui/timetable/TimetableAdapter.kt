@@ -1,5 +1,7 @@
 package com.tent1s.android.schedule.ui.timetable
 
+import android.graphics.Color
+import android.graphics.PorterDuff
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -73,6 +75,13 @@ class TimetableAdapter(var list: List<TimetableRepository.ListItem>) : RecyclerV
         fun bind(item: TimetableRepository.ContentItem){
             binding.timetableTitle.text = item.title
             binding.timetableInf.text = item.inf
+            when(item.colorId) {
+                0 -> binding.timetableColor.setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_ATOP)
+                1 -> binding.timetableColor.setColorFilter(Color.BLUE, PorterDuff.Mode.SRC_ATOP)
+                2 -> binding.timetableColor.setColorFilter(Color.GREEN, PorterDuff.Mode.SRC_ATOP)
+                3 -> binding.timetableColor.setColorFilter(Color.YELLOW, PorterDuff.Mode.SRC_ATOP)
+                4 -> binding.timetableColor.setColorFilter(Color.RED, PorterDuff.Mode.SRC_ATOP)
+            }
         }
 
         companion object {

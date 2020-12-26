@@ -25,6 +25,6 @@ data class TimetableList(
     @ColumnInfo(name = "timetable_day_week")
     var timetableDayWeek: Int = -1,
 
-//    @ColumnInfo(name = "timetable_color_id")
-//    var timetableColorId: Int = -1
+    @ColumnInfo(name = "timetable_color_id")
+    var timetableColorId: Int = -1
 )

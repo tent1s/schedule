@@ -43,6 +43,7 @@ class TimetableRepository : Application()  {
                             findDay = x + 1
                             item.title = itemDate.timetableTitle
                             item.inf = itemDate.timetableInformation
+                            item.colorId = itemDate.timetableColorId
                             break
                         }
                     }
@@ -69,19 +70,19 @@ class TimetableRepository : Application()  {
         private fun getAllTimetable(): ArrayList<TimetableList> {
             var timetable = ArrayList<TimetableList>()
 
-            timetable.add(TimetableList(0,"Матем", "Лекция", 1))
-            timetable.add(TimetableList(1,"Матем", "Практика", 0))
-            timetable.add(TimetableList(2,"Схемотехника", "Лекция", 1))
-            timetable.add(TimetableList(3,"Схемотехника", "Лабораторные", 2))
-            timetable.add(TimetableList(4,"Электротехника", "Лекция", 3))
-            timetable.add(TimetableList(5,"Электротехника", "Лабораторные", 2))
-            timetable.add(TimetableList(6,"Криптография", "Лабораторные", 4))
-            timetable.add(TimetableList(7,"Криптография", "Практика", 4))
-            timetable.add(TimetableList(8,"Криптография", "Лекция", 5))
-            timetable.add(TimetableList(9,"ОС", "Практика", 4))
-            timetable.add(TimetableList(10,"ОС", "Лекция", 4))
-            timetable.add(TimetableList(11,"Тервер", "Практика", 0))
-            timetable.add(TimetableList(12,"Тервер", "Лекция", 0))
+            timetable.add(TimetableList(0,"Матем", "Лекция", 1,0))
+            timetable.add(TimetableList(1,"Матем", "Практика", 0,0))
+            timetable.add(TimetableList(2,"Схемотехника", "Лекция", 1,1))
+            timetable.add(TimetableList(3,"Схемотехника", "Лабораторные", 2,1))
+            timetable.add(TimetableList(4,"Электротехника", "Лекция", 3,1))
+            timetable.add(TimetableList(5,"Электротехника", "Лабораторные", 2,1))
+            timetable.add(TimetableList(6,"Криптография", "Лабораторные", 4,2))
+            timetable.add(TimetableList(7,"Криптография", "Практика", 4,2))
+            timetable.add(TimetableList(8,"Криптография", "Лекция", 5,2))
+            timetable.add(TimetableList(9,"ОС", "Практика", 4,3))
+            timetable.add(TimetableList(10,"ОС", "Лекция", 4,3))
+            timetable.add(TimetableList(11,"Тервер", "Практика", 0,4))
+            timetable.add(TimetableList(12,"Тервер", "Лекция", 0,4))
 
             return timetable
         }
@@ -97,6 +98,7 @@ class TimetableRepository : Application()  {
     class ContentItem : ListItem() {
         var title: String? = null
         var inf: String? = null
+        var colorId: Int? = null
     }
 
     open class ListItem {
