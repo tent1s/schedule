@@ -7,13 +7,13 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.tent1s.android.schedule.databinding.HeaderTimetableBinding
 import com.tent1s.android.schedule.databinding.ListItemTimetableBinding
-import com.tent1s.android.schedule.repository.TimetableRepository
+import com.tent1s.android.schedule.repository.ScheduleRepository
 
 
 private const val ITEM_VIEW_TYPE_HEADER = 0
 private const val ITEM_VIEW_TYPE_ITEM = 1
 
-class TimetableAdapter(var list: List<TimetableRepository.ListItem>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class TimetableAdapter(var list: List<ScheduleRepository.ListItem>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -27,10 +27,10 @@ class TimetableAdapter(var list: List<TimetableRepository.ListItem>) : RecyclerV
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is ViewHolderHeader) {
-            val item = list[position] as TimetableRepository.Header
+            val item = list[position] as ScheduleRepository.Header
             holder.bind(item)
         } else if (holder is ViewHolderItem) {
-            val item = list[position] as TimetableRepository.ContentItem
+            val item = list[position] as ScheduleRepository.ContentItem
             holder.bind(item)
         }
     }
@@ -41,7 +41,7 @@ class TimetableAdapter(var list: List<TimetableRepository.ListItem>) : RecyclerV
     }
 
     private fun isPositionHeader(position: Int): Boolean {
-        return list[position] is TimetableRepository.Header
+        return list[position] is ScheduleRepository.Header
     }
 
 
@@ -53,7 +53,7 @@ class TimetableAdapter(var list: List<TimetableRepository.ListItem>) : RecyclerV
 
     class ViewHolderHeader private constructor(val binding: HeaderTimetableBinding): RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: TimetableRepository.Header) {
+        fun bind(item: ScheduleRepository.Header) {
             binding.header.text = item.header
         }
 
@@ -72,7 +72,7 @@ class TimetableAdapter(var list: List<TimetableRepository.ListItem>) : RecyclerV
 
     class ViewHolderItem private constructor(val binding: ListItemTimetableBinding): RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: TimetableRepository.ContentItem){
+        fun bind(item: ScheduleRepository.ContentItem){
             binding.timetableTitle.text = item.title
             binding.timetableInf.text = item.inf
             when(item.colorId) {

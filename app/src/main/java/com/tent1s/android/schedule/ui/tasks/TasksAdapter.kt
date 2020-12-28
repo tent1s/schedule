@@ -1,2 +1,88 @@
 package com.tent1s.android.schedule.ui.tasks
 
+
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
+import com.tent1s.android.schedule.databinding.HeaderTimetableBinding
+import com.tent1s.android.schedule.databinding.ListItemTasksBinding
+import com.tent1s.android.schedule.repository.ScheduleRepository
+
+
+private const val ITEM_VIEW_TYPE_HEADER = 0
+private const val ITEM_VIEW_TYPE_ITEM = 1
+
+class TasksAdapter(var list: List<ScheduleRepository.TasksItem>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        return if (viewType == ITEM_VIEW_TYPE_HEADER) {
+            ViewHolderHeader.from(parent)
+        } else {
+            ViewHolderItem.from(parent)
+        }
+    }
+
+
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        if (holder is ViewHolderHeader) {
+            val item = list[position] as ScheduleRepository.HeaderTask
+            holder.bind(item)
+        } else if (holder is ViewHolderItem) {
+            val item = list[position] as ScheduleRepository.ContentTask
+            holder.bind(item)
+        }
+    }
+
+
+    override fun getItemViewType(position: Int): Int {
+        return if (isPositionHeader(position)) ITEM_VIEW_TYPE_HEADER else ITEM_VIEW_TYPE_ITEM
+    }
+
+    private fun isPositionHeader(position: Int): Boolean {
+        return list[position] is ScheduleRepository.HeaderTask
+    }
+
+
+    override fun getItemCount(): Int {
+        return list.size
+    }
+
+
+
+    class ViewHolderHeader private constructor(val binding: HeaderTimetableBinding): RecyclerView.ViewHolder(binding.root) {
+
+        fun bind(item: ScheduleRepository.HeaderTask) {
+            binding.header.text = item.header
+        }
+
+        companion object {
+            fun from(parent: ViewGroup): ViewHolderHeader {
+                val layoutInflater = LayoutInflater.from(parent.context)
+                val binding = HeaderTimetableBinding.inflate(layoutInflater,parent,false)
+
+                return ViewHolderHeader(binding)
+            }
+        }
+    }
+
+
+
+
+    class ViewHolderItem private constructor(val binding: ListItemTasksBinding): RecyclerView.ViewHolder(binding.root) {
+
+        fun bind(item: ScheduleRepository.ContentTask){
+            binding.taskTitle.text = item.title
+            binding.taskInf.text = item.inf
+        }
+
+        companion object {
+            fun from(parent: ViewGroup): ViewHolderItem {
+                val layoutInflater = LayoutInflater.from(parent.context)
+                val binding = ListItemTasksBinding.inflate(layoutInflater,parent,false)
+
+                return ViewHolderItem(binding)
+            }
+        }
+    }
+}

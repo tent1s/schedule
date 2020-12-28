@@ -3,7 +3,7 @@ package com.tent1s.android.schedule.ui.timetable.timetablelist
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.tent1s.android.schedule.repository.TimetableRepository
+import com.tent1s.android.schedule.repository.ScheduleRepository
 
 class TimetableViewModel : ViewModel() {
 
@@ -19,7 +19,7 @@ class TimetableViewModel : ViewModel() {
         _navigateToSearch.value = false
     }
 
-    val timetable = TimetableRepository.getList()
+    val timetable = ScheduleRepository.getList()
 
     private val _text = MutableLiveData<String>().apply {
         if (timetable==null) {

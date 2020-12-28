@@ -10,7 +10,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.tent1s.android.schedule.R
 import com.tent1s.android.schedule.databinding.FragmentTimetableBinding
-import com.tent1s.android.schedule.repository.TimetableRepository
 import com.tent1s.android.schedule.ui.timetable.TimetableAdapter
 
 class TimetableFragment : Fragment() {

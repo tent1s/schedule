@@ -3,6 +3,7 @@ package com.tent1s.android.schedule.ui.tasks.taskslist
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.tent1s.android.schedule.repository.ScheduleRepository
 
 class TasksViewModel : ViewModel() {
 
@@ -18,8 +19,10 @@ class TasksViewModel : ViewModel() {
         _navigateToSearch.value = false
     }
 
+    val tasks = ScheduleRepository.getTasks()
+
     private val _text = MutableLiveData<String>().apply {
-        value = "Нажмите “+”, чтобы добавить"
+        //value = "Нажмите “+”, чтобы добавить"
     }
     val text: LiveData<String> = _text
 }

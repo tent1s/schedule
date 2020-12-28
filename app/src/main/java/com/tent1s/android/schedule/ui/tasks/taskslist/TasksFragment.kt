@@ -10,6 +10,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.tent1s.android.schedule.R
 import com.tent1s.android.schedule.databinding.FragmentTasksBinding
+import com.tent1s.android.schedule.ui.tasks.TasksAdapter
+import com.tent1s.android.schedule.ui.timetable.TimetableAdapter
 
 class TasksFragment : Fragment() {
 
@@ -33,6 +35,12 @@ class TasksFragment : Fragment() {
         tasksViewModel.text.observe(viewLifecycleOwner, Observer {
             binding.textTasks.text = it
         })
+
+
+        val adapter = TasksAdapter(tasksViewModel.tasks)
+        binding.taskList.adapter = adapter
+
+
 
         tasksViewModel.navigateToSearch.observe(viewLifecycleOwner,
                 Observer<Boolean> { shouldNavigate ->
