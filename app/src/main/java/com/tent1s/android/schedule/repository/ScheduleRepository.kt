@@ -1,6 +1,8 @@
 package com.tent1s.android.schedule.repository
 
 import android.app.Application
+import android.os.Parcel
+import android.os.Parcelable
 import com.tent1s.android.schedule.database.TasksList
 import com.tent1s.android.schedule.database.TimetableList
 import timber.log.Timber
@@ -22,7 +24,7 @@ class ScheduleRepository : Application()  {
             val date = getAllTimetable()
 
             for (j in 0..5) {
-                val header = Header()
+                val header = ListItem.Header()
 
                 when (j) {
                     0 -> header.header = "Понидельник"
@@ -37,7 +39,7 @@ class ScheduleRepository : Application()  {
                 val count = getCount(j, date)
                 var findDay = 0
                 for (i in 0 until count) {
-                    val item = ContentItem()
+                    val item = ListItem.ContentItem()
 
                     for (x in findDay until date.size) {
                         val itemDate = date[x]
@@ -58,7 +60,7 @@ class ScheduleRepository : Application()  {
 
 
 
-        fun getCount(dayOfWeek: Int, date: ArrayList<TimetableList>): Int {
+        private fun getCount(dayOfWeek: Int, date: ArrayList<TimetableList>): Int {
             var count: Int = 0
             for (i in 0 until date.size) {
                 val item = date[i]
@@ -104,7 +106,7 @@ class ScheduleRepository : Application()  {
             val date = getAllTasks()
 
             for (j in 0..1) {
-                val header = HeaderTask()
+                val header = TasksItem.HeaderTask()
                 var m = true
                 when (j) {
                     0 -> header.header = "Выполнено"
@@ -118,7 +120,7 @@ class ScheduleRepository : Application()  {
                 val count = getCountTasks(m, date)
                 var findDay = 0
                 for (i in 0 until count) {
-                    val item = ContentTask()
+                    val item = TasksItem.ContentTask()
 
                     for (x in findDay until date.size) {
                         val itemDate = date[x]
@@ -135,7 +137,7 @@ class ScheduleRepository : Application()  {
             return arrayList
         }
 
-        fun getCountTasks(isTask: Boolean, date: ArrayList<TasksList>): Int {
+        private fun getCountTasks(isTask: Boolean, date: ArrayList<TasksList>): Int {
             var count: Int = 0
             for (i in 0 until date.size) {
                 val item = date[i]
@@ -144,39 +146,26 @@ class ScheduleRepository : Application()  {
             return count
         }
     }
+}
 
+sealed class ListItem {
+    class Header : ListItem() var header: String? = null
 
-
-
-    class HeaderTask : TasksItem() {
-        var header: String? = null
-    }
-    class ContentTask : TasksItem() {
-        var title: String? = null
-        var inf: String? = null
-        var taskDeadlineDay: Int = -1
-        var taskDeadlineMount: Int = -1
-        var taskDeadlineYear: Int =-1
-    }
-
-    open class TasksItem {
-    }
-
-
-
-
-
-    class Header : ListItem() {
-        var header: String? = null
-    }
     class ContentItem : ListItem() {
         var title: String? = null
         var inf: String? = null
         var colorId: Int? = null
     }
-
-    open class ListItem {
-    }
-
 }
 
+sealed class TasksItem {
+    class HeaderTask : TasksItem() var header: String? = null
+
+    class ContentTask : TasksItem() {
+        var title: String? = null
+        var inf: String? = null
+        var taskDeadlineDay: Int = -1
+        var taskDeadlineMount: Int = -1
+        var taskDeadlineYear: Int = -1
+    }
+}

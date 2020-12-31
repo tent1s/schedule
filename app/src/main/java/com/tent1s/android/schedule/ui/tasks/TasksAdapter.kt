@@ -7,12 +7,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.tent1s.android.schedule.databinding.HeaderTimetableBinding
 import com.tent1s.android.schedule.databinding.ListItemTasksBinding
 import com.tent1s.android.schedule.repository.ScheduleRepository
+import com.tent1s.android.schedule.repository.TasksItem
 
 
 private const val ITEM_VIEW_TYPE_HEADER = 0
 private const val ITEM_VIEW_TYPE_ITEM = 1
 
-class TasksAdapter(var list: List<ScheduleRepository.TasksItem>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class TasksAdapter(var list: List<TasksItem>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -26,10 +27,10 @@ class TasksAdapter(var list: List<ScheduleRepository.TasksItem>) : RecyclerView.
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is ViewHolderHeader) {
-            val item = list[position] as ScheduleRepository.HeaderTask
+            val item = list[position] as TasksItem.HeaderTask
             holder.bind(item)
         } else if (holder is ViewHolderItem) {
-            val item = list[position] as ScheduleRepository.ContentTask
+            val item = list[position] as TasksItem.ContentTask
             holder.bind(item)
         }
     }
@@ -40,7 +41,10 @@ class TasksAdapter(var list: List<ScheduleRepository.TasksItem>) : RecyclerView.
     }
 
     private fun isPositionHeader(position: Int): Boolean {
-        return list[position] is ScheduleRepository.HeaderTask
+        return when(list[position]){
+            is TasksItem.HeaderTask -> true
+            is TasksItem.ContentTask -> false
+        }
     }
 
 
@@ -52,7 +56,7 @@ class TasksAdapter(var list: List<ScheduleRepository.TasksItem>) : RecyclerView.
 
     class ViewHolderHeader private constructor(val binding: HeaderTimetableBinding): RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: ScheduleRepository.HeaderTask) {
+        fun bind(item: TasksItem.HeaderTask) {
             binding.header.text = item.header
         }
 
@@ -71,7 +75,7 @@ class TasksAdapter(var list: List<ScheduleRepository.TasksItem>) : RecyclerView.
 
     class ViewHolderItem private constructor(val binding: ListItemTasksBinding): RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: ScheduleRepository.ContentTask){
+        fun bind(item: TasksItem.ContentTask){
             binding.taskTitle.text = item.title
             binding.taskInf.text = item.inf
         }
