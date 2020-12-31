@@ -9,15 +9,17 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.tent1s.android.schedule.R
+import com.tent1s.android.schedule.ScheduleApplication
 import com.tent1s.android.schedule.databinding.FragmentTasksBinding
 import com.tent1s.android.schedule.ui.tasks.TasksAdapter
 import com.tent1s.android.schedule.ui.timetable.TimetableAdapter
+import com.tent1s.android.schedule.ui.timetable.timetablelist.TimetableViewModelFactory
 
 class TasksFragment : Fragment() {
 
     private lateinit var tasksViewModel: TasksViewModel
     private lateinit var binding: FragmentTasksBinding
-
+    private lateinit var viewModelFactory: TasksViewModelFactory
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -27,8 +29,12 @@ class TasksFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_tasks, container, false)
         val binding = FragmentTasksBinding.inflate(inflater)
 
+
+
+        val myRepository = (requireActivity().application as ScheduleApplication).repository
+        viewModelFactory = TasksViewModelFactory(myRepository)
         tasksViewModel =
-                ViewModelProvider(this).get(TasksViewModel::class.java)
+                ViewModelProvider(this, viewModelFactory ).get(TasksViewModel::class.java)
 
         binding.viewModel = tasksViewModel
 

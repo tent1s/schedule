@@ -9,16 +9,7 @@ import timber.log.Timber
 import java.util.*
 
 
-class ScheduleRepository : Application()  {
-
-    override fun onCreate() {
-        super.onCreate()
-        Timber.plant(Timber.DebugTree())
-        getList()
-    }
-
-
-    companion object {
+class ScheduleRepository {
         fun getList(): ArrayList<ListItem> {
             val arrayList = ArrayList<ListItem>()
             val date = getAllTimetable()
@@ -35,9 +26,9 @@ class ScheduleRepository : Application()  {
                     5 -> header.header = "Суббота"
                 }
 
-                arrayList.add(header)
                 val count = getCount(j, date)
                 var findDay = 0
+                if (count!=0) arrayList.add(header)
                 for (i in 0 until count) {
                     val item = ListItem.ContentItem()
 
@@ -116,9 +107,9 @@ class ScheduleRepository : Application()  {
                     0 -> m = true
                     1 -> m = false
                 }
-                arrayList.add(header)
                 val count = getCountTasks(m, date)
                 var findDay = 0
+                if (count != 0) arrayList.add(header)
                 for (i in 0 until count) {
                     val item = TasksItem.ContentTask()
 
@@ -146,7 +137,7 @@ class ScheduleRepository : Application()  {
             return count
         }
     }
-}
+
 
 sealed class ListItem {
     class Header : ListItem() var header: String? = null

@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.tent1s.android.schedule.repository.ScheduleRepository
 
-class TasksViewModel : ViewModel() {
+class TasksViewModel(repository: ScheduleRepository) : ViewModel() {
 
     private val _navigateToSearch = MutableLiveData<Boolean>()
     val navigateToSearch: LiveData<Boolean>
@@ -19,10 +19,10 @@ class TasksViewModel : ViewModel() {
         _navigateToSearch.value = false
     }
 
-    val tasks = ScheduleRepository.getTasks()
+    val tasks = repository.getTasks()
 
     private val _text = MutableLiveData<String>().apply {
-        //value = "Нажмите “+”, чтобы добавить"
+        if (tasks.size == 0) value = "Нажмите “+”, чтобы добавить"
     }
     val text: LiveData<String> = _text
 }

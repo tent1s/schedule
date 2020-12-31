@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.tent1s.android.schedule.repository.ScheduleRepository
 
-class TimetableViewModel : ViewModel() {
+class TimetableViewModel(repository: ScheduleRepository) : ViewModel() {
 
     private val _navigateToSearch = MutableLiveData<Boolean>()
     val navigateToSearch: LiveData<Boolean>
@@ -19,12 +19,14 @@ class TimetableViewModel : ViewModel() {
         _navigateToSearch.value = false
     }
 
-    val timetable = ScheduleRepository.getList()
+    val timetable = repository.getList()
 
     private val _text = MutableLiveData<String>().apply {
-        if (timetable==null) {
-            value = "Нажмите “+”, чтобы добавить"
-        }
+        if (timetable.size == 0) value = "Нажмите “+”, чтобы добавить"
     }
     val text: LiveData<String> = _text
+
+
+
+
 }
