@@ -1,8 +1,11 @@
 package com.tent1s.android.schedule.ui.tasks.newtask
 
+import android.app.DatePickerDialog
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import timber.log.Timber
+import java.util.*
 
 
 class NewTaskViewModel : ViewModel() {
@@ -18,6 +21,7 @@ class NewTaskViewModel : ViewModel() {
     private val _saveTaskInf = MutableLiveData<Boolean>()
     val saveSomeInf: LiveData<Boolean>
         get() = _saveTaskInf
+
 
     fun onSaveButtonClick(){
         _saveTaskInf.value = true
@@ -42,5 +46,4 @@ class NewTaskViewModel : ViewModel() {
     fun getTimePickerDialogData(){
         _timePickerDialogData.value = false
     }
-
 }

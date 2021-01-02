@@ -11,6 +11,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.tent1s.android.schedule.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
+
     private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {

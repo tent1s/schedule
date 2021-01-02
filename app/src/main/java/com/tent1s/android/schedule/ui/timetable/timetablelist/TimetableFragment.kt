@@ -10,13 +10,15 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.tent1s.android.schedule.R
 import com.tent1s.android.schedule.ScheduleApplication
+import com.tent1s.android.schedule.databinding.FragmentTasksBinding
 import com.tent1s.android.schedule.databinding.FragmentTimetableBinding
 import com.tent1s.android.schedule.ui.timetable.TimetableAdapter
 
 class TimetableFragment : Fragment() {
 
     private lateinit var timetableViewModel: TimetableViewModel
-    private lateinit var binding: FragmentTimetableBinding
+    private var _binding: FragmentTimetableBinding? = null
+    private val binding get() = _binding!!
     private lateinit var viewModelFactory: TimetableViewModelFactory
 
     override fun onCreateView(
@@ -25,15 +27,12 @@ class TimetableFragment : Fragment() {
             savedInstanceState: Bundle?
     ): View? {
 
-        val view = inflater.inflate(R.layout.fragment_timetable, container, false)
-        val binding = FragmentTimetableBinding.inflate(inflater)
+        _binding = FragmentTimetableBinding.inflate(inflater)
 
         val myRepository = (requireActivity().application as ScheduleApplication).repository
         viewModelFactory = TimetableViewModelFactory(myRepository)
         timetableViewModel =
                 ViewModelProvider(this,viewModelFactory).get(TimetableViewModel::class.java)
-
-
 
         binding.viewModel = timetableViewModel
 
@@ -48,6 +47,7 @@ class TimetableFragment : Fragment() {
             binding.textTimetable.text = it
         })
 
+
         timetableViewModel.navigateToSearch.observe(viewLifecycleOwner,
                 Observer<Boolean> { shouldNavigate ->
                     if (shouldNavigate == true) {
@@ -56,6 +56,11 @@ class TimetableFragment : Fragment() {
                         timetableViewModel.onNavigationToSearch()
                     }
                 })
+
         return binding.root
+    }
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

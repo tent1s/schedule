@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -18,7 +19,8 @@ import com.tent1s.android.schedule.ui.timetable.timetablelist.TimetableViewModel
 class TasksFragment : Fragment() {
 
     private lateinit var tasksViewModel: TasksViewModel
-    private lateinit var binding: FragmentTasksBinding
+    private var _binding: FragmentTasksBinding? = null
+    private val binding get() = _binding!!
     private lateinit var viewModelFactory: TasksViewModelFactory
 
     override fun onCreateView(
@@ -26,8 +28,13 @@ class TasksFragment : Fragment() {
             container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_tasks, container, false)
-        val binding = FragmentTasksBinding.inflate(inflater)
+
+        _binding = DataBindingUtil.inflate(
+            inflater,
+            R.layout.fragment_tasks,
+            container,
+            false
+        )
 
 
 
@@ -35,12 +42,14 @@ class TasksFragment : Fragment() {
         viewModelFactory = TasksViewModelFactory(myRepository)
         tasksViewModel =
                 ViewModelProvider(this, viewModelFactory ).get(TasksViewModel::class.java)
-
         binding.viewModel = tasksViewModel
+
+
 
         tasksViewModel.text.observe(viewLifecycleOwner, Observer {
             binding.textTasks.text = it
         })
+
 
 
         val adapter = TasksAdapter(tasksViewModel.tasks)
@@ -57,6 +66,12 @@ class TasksFragment : Fragment() {
                     }
                 })
 
+
         return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

@@ -59,10 +59,10 @@ class  ScheduleDatabaseTest {
         runBlocking {
             val task = TasksList()
             tasksDao.insert(task)
-            task.taskDiligence = 2
+            task.isTaskDone = false
             task.taskTitle = "test"
             tasksDao.update(task)
-            assertEquals(task?.taskDiligence, 2)
+            assertEquals(task?.isTaskDone, false)
             assertEquals(task?.taskTitle, "test")
         }
     }
@@ -76,7 +76,7 @@ class  ScheduleDatabaseTest {
 
            val lastTask = tasksDao.getLastTask()
 
-           assertEquals(lastTask?.taskDiligence, -1)
+           assertEquals(lastTask?.isTaskDone, false)
        }
     }
 

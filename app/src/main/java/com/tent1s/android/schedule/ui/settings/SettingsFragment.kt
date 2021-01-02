@@ -10,13 +10,17 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.tent1s.android.schedule.R
+import com.tent1s.android.schedule.databinding.FragmentNewtaskBinding
 import com.tent1s.android.schedule.databinding.FragmentSettingsBinding
 import com.tent1s.android.schedule.databinding.FragmentTasksBinding
 
 class SettingsFragment : Fragment() {
 
     private lateinit var settingsViewModel: SettingsViewModel
-    private lateinit var binding: FragmentSettingsBinding
+
+    private var _binding: FragmentSettingsBinding? = null
+    private val binding get() = _binding!!
+
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
@@ -25,7 +29,7 @@ class SettingsFragment : Fragment() {
 
         settingsViewModel = ViewModelProvider(this).get(SettingsViewModel::class.java)
 
-        binding = DataBindingUtil.inflate(
+        _binding = DataBindingUtil.inflate(
             inflater,
             R.layout.fragment_settings,
             container,
@@ -33,5 +37,9 @@ class SettingsFragment : Fragment() {
         )
 
         return binding.root
+    }
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

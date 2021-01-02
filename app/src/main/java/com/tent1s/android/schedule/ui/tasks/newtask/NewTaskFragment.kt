@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.tent1s.android.schedule.R
 import com.tent1s.android.schedule.databinding.FragmentNewtaskBinding
+import com.tent1s.android.schedule.utils.convertMonthToString
 import com.tent1s.android.schedule.utils.shortToast
 import timber.log.Timber
 import java.util.*
@@ -20,7 +21,10 @@ import java.util.*
 class NewTaskFragment : Fragment() {
 
     private lateinit var newTaskViewModel: NewTaskViewModel
-    private lateinit var binding: FragmentNewtaskBinding
+
+
+    private var _binding: FragmentNewtaskBinding? = null
+    private val binding get() = _binding!!
 
     private var dayTask : Int = 0
     private var monthTask :Int = 0
@@ -32,7 +36,7 @@ class NewTaskFragment : Fragment() {
             savedInstanceState: Bundle?
     ): View? {
 
-        binding = DataBindingUtil.inflate(
+        _binding = DataBindingUtil.inflate(
                 inflater,
                 R.layout.fragment_newtask,
                 container,
@@ -50,6 +54,10 @@ class NewTaskFragment : Fragment() {
         return binding.root
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 
 
     private fun observeToTasksNavigate(){
@@ -78,10 +86,10 @@ class NewTaskFragment : Fragment() {
 
                             val navController = binding.root.findNavController()
                             navController.navigate(R.id.action_newTaskFragment_to_navigation_tasks)
-                            newTaskViewModel.onSaveButtonClickComplete()
                         }else {
                             context?.shortToast("Вы ввели не всю информацию!!")
                         }
+                        newTaskViewModel.onSaveButtonClickComplete()
                     }
                 })
     }
@@ -96,6 +104,7 @@ class NewTaskFragment : Fragment() {
             }
         })
     }
+
     private fun getDate(){
 
         val c = Calendar.getInstance()
@@ -105,10 +114,10 @@ class NewTaskFragment : Fragment() {
 
             val dpd = context?.let { it ->
                 DatePickerDialog(it, DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
-                    Timber.i("$dayOfMonth.$monthOfYear.$year")
                     dayTask = dayOfMonth
                     monthTask = monthOfYear + 1
                     yearTask = year
+                    binding.dateTask.text = "$dayTask ${convertMonthToString(monthTask)}"
                 }, year, month, day)
             }
             dpd?.show()
