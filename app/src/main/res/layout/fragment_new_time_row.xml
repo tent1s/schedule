@@ -27,6 +27,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/inputTitle"
+                android:text="@{viewModel.title}"
+                app:addTextChangedListener="@{viewModel.titleWatcher()}"
                 android:hint="@string/title" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -47,6 +49,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/inputAbout"
+                android:text="@{viewModel.about}"
+                app:addTextChangedListener="@{viewModel.aboutWatcher()}"
                 android:hint="@string/task_about_text" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -58,7 +62,8 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
             android:onClick="@{()->viewModel.onDayOfWeekButtonClick()}"
-            android:text="День недели"
+            android:text="@{viewModel.dayOfWeekString}"
+            app:addTextChangedListener="@{viewModel.dayOfWeekWatcher()}"
             android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -74,7 +79,8 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
             android:onClick="@{()->viewModel.onTimetableStartTimeButtonClick()}"
-            android:text="Начало"
+            android:text="@{viewModel.startTime}"
+            app:addTextChangedListener="@{viewModel.startTimeWatcher()}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -88,7 +94,8 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
-            android:text="Конец"
+            android:text="@{viewModel.endTime}"
+            app:addTextChangedListener="@{viewModel.endTimeWatcher()}"
             android:onClick="@{()->viewModel.onTimetableEndTimeButtonClick()}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -118,7 +125,8 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
-            android:text="Выбор цвета"
+            android:text="@{viewModel.colorString}"
+            app:addTextChangedListener="@{viewModel.colorWatcher()}"
             android:onClick="@{()->viewModel.onColorButtonClick()}"
             android:textSize="18sp"
             app:layout_constraintBottom_toTopOf="@+id/button_save"

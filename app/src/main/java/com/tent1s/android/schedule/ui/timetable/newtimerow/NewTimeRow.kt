@@ -20,14 +20,6 @@ import timber.log.Timber
 
 class NewTimeRow : Fragment() {
 
-    var dayOfWeek = -1
-    var startMinute = -1
-    var endMinute = -1
-    var startHour = -1
-    var endHour = -1
-    var color = -1
-
-
     private lateinit var newTimeRowViewModel: NewTimeRowViewModel
     private var _binding: FragmentNewTimeRowBinding? = null
     private val binding get() = _binding!!
@@ -55,21 +47,8 @@ class NewTimeRow : Fragment() {
         newTimeRowViewModel.saveTimeInf.observe(viewLifecycleOwner,
             Observer<Boolean> { display ->
                 if (display == true) {
-                    val title = binding.inputTitle.text.toString()
-                    val about = binding.inputAbout.text.toString()
-                    if (title.isNotBlank() && about.isNotBlank() && dayOfWeek != -1 && startMinute != -1  && endMinute != -1 && startHour != -1 && endHour != -1 && color != -1){
-                        if ((startHour > endHour) || ((startHour == endHour) && (startMinute > endMinute))){
-                            context?.shortToast("Начальное время больше конечного!")
-                        }else{
-
-                            Timber.i("День недели: $dayOfWeek Начальное время: $startHour:$startMinute Конечное время: $endHour:$endMinute Заголовок: $title Описание: $about Цвет: $color")
-
-                            val navController = binding.root.findNavController()
-                            navController.navigate(R.id.action_newTimeRow_to_navigation_timetable)
-                        }
-                    }else{
-                        context?.shortToast("Вы ввели не всю информацию!!")
-                    }
+                    val navController = binding.root.findNavController()
+                    navController.navigate(R.id.action_newTimeRow_to_navigation_timetable)
                     newTimeRowViewModel.onSaveTimeInfButtonClickComplete()
                 }
             })
@@ -94,7 +73,6 @@ class NewTimeRow : Fragment() {
                                 4 -> binding.buttonDayOfWeek.text = "Пятница"
                                 5 -> binding.buttonDayOfWeek.text = "Суббота"
                             }
-                            dayOfWeek = which
                         })
 
                     val dialog: AlertDialog = builder.create()
@@ -119,12 +97,11 @@ class NewTimeRow : Fragment() {
                                         3 -> binding.colorButton.text = "Желтый"
                                         4 -> binding.colorButton.text = "Красный"
                                     }
-                                    color = which
                                 })
 
                         val dialog: AlertDialog = builder.create()
                         dialog.show()
-                        newTimeRowViewModel.onSaveTimeInfButtonClickComplete()
+                        newTimeRowViewModel.onColorButtonClickComplete()
                     }
                 })
 
@@ -138,8 +115,6 @@ class NewTimeRow : Fragment() {
                     val tpd = context?.let { it ->
                         TimePickerDialog( it, TimePickerDialog.OnTimeSetListener{ view, hour, minute ->
                             binding.buttonTimeStart.text = "$hour:$minute"
-                            startHour = hour
-                            startMinute = minute
                         }, hour, minute, true)
                     }
                     tpd?.show()
@@ -156,8 +131,6 @@ class NewTimeRow : Fragment() {
                     val tpd = context?.let { it ->
                         TimePickerDialog( it, TimePickerDialog.OnTimeSetListener{ view, hour, minute ->
                             binding.buttonTimeEnd.text = "$hour:$minute"
-                            endHour = hour
-                            endMinute = minute
                         }, hour, minute, true)
                     }
                     tpd?.show()
@@ -165,6 +138,22 @@ class NewTimeRow : Fragment() {
                     newTimeRowViewModel.onTimetableEndTimeButtonClickComplete()
                 }
             })
+
+        newTimeRowViewModel.errorNullDate.observe(viewLifecycleOwner,
+                Observer<Boolean> { display ->
+                    if (display == true) {
+                        context?.shortToast("Вы ввели не всю информацию!!")
+                        newTimeRowViewModel.errorNullDateComplete()
+                    }
+                })
+
+        newTimeRowViewModel.errorInvalidTime.observe(viewLifecycleOwner,
+                Observer<Boolean> { display ->
+                    if (display == true) {
+                        context?.shortToast("Конечная дата меньше начальной!")
+                        newTimeRowViewModel.errorInvalidTimeComplete()
+                    }
+                })
 
         
         return binding.root

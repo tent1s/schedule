@@ -26,15 +26,12 @@ class NewTaskFragment : Fragment() {
     private var _binding: FragmentNewtaskBinding? = null
     private val binding get() = _binding!!
 
-    private var dayTask : Int = 0
-    private var monthTask :Int = 0
-    private var yearTask :Int = 0
 
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         _binding = DataBindingUtil.inflate(
                 inflater,
@@ -42,7 +39,7 @@ class NewTaskFragment : Fragment() {
                 container,
                 false
         )
-        newTaskViewModel = ViewModelProvider(this)
+        newTaskViewModel = ViewModelProvider(this, )
                 .get(NewTaskViewModel::class.java)
 
         binding.viewModel = newTaskViewModel
@@ -50,6 +47,15 @@ class NewTaskFragment : Fragment() {
         observeToSaveInf()
         observeToTasksNavigate()
         observeTimePickerDialogData()
+
+        newTaskViewModel.errorToast.observe(viewLifecycleOwner,
+                Observer<Boolean> { display ->
+                    if (display == true) {
+                        context?.shortToast("Вы ввели не всю информацию!!")
+                        newTaskViewModel.errorEnd()
+                    }
+                })
+
 
         return binding.root
     }
@@ -75,20 +81,8 @@ class NewTaskFragment : Fragment() {
         newTaskViewModel.saveSomeInf.observe(viewLifecycleOwner,
                 Observer<Boolean> { saveSomeInf ->
                     if (saveSomeInf == true) {
-                        val title = binding.taskTitleInput.text.toString()
-                        val about = binding.taskAboutInput.text.toString()
-                        val isDone = binding.isTaskDone.isChecked
-                        if(title.isNotBlank() && about.isNotBlank() && dayTask != 0 && monthTask != 0 && yearTask != 0 ){
-
-                            //TODO: вызов фун из модуля для добавления в бд
-                            Timber.i("Title : $title  about : $about  date: $dayTask.$monthTask.$yearTask  isDone:$isDone")
-
-
-                            val navController = binding.root.findNavController()
-                            navController.navigate(R.id.action_newTaskFragment_to_navigation_tasks)
-                        }else {
-                            context?.shortToast("Вы ввели не всю информацию!!")
-                        }
+                        val navController = binding.root.findNavController()
+                        navController.navigate(R.id.action_newTaskFragment_to_navigation_tasks)
                         newTaskViewModel.onSaveButtonClickComplete()
                     }
                 })
@@ -114,13 +108,10 @@ class NewTaskFragment : Fragment() {
 
             val dpd = context?.let { it ->
                 DatePickerDialog(it, DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
-                    dayTask = dayOfMonth
-                    monthTask = monthOfYear + 1
-                    yearTask = year
-                    binding.dateTask.text = "$dayTask ${convertMonthToString(monthTask)}"
+                    val monthNorm = month + 1
+                    binding.dateTask.text = "$day.$monthNorm.$year"
                 }, year, month, day)
             }
             dpd?.show()
         }
-
 }
