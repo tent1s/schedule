@@ -10,7 +10,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import timber.log.Timber
-import java.util.*
 
 
 class NewTaskViewModel : ViewModel() {
@@ -70,6 +69,10 @@ class NewTaskViewModel : ViewModel() {
     val date = ObservableField("Выбор даты")
     val complete = ObservableBoolean(false)
 
+    private var day = -1
+    private var month = -1
+    private var year = -1
+
     private fun validation() {
         val isValidTitle = !TextUtils.isEmpty(title.get())
         val isValidAbout = !TextUtils.isEmpty(about.get())
@@ -117,23 +120,17 @@ class NewTaskViewModel : ViewModel() {
     fun saveGender(isChecked: Boolean) {
         complete.set(isChecked)
     }
+    fun getDate(newDay:Int, newMonth:Int, newYear: Int ){
+        day = newDay
+        month = newMonth
+        year = newYear
+    }
 
      private fun saveInf(){
         if (isValid.get()){
-            var day = -1
-            var dayOfWeek = -1
-            var year = -1
-
-            val delimiter = "."
-            val subStr = date.get()!!.split(delimiter)
-            for (i in 0..2) {
-                day = subStr[0].toInt()
-                dayOfWeek = subStr[1].toInt()
-                year = subStr[2].toInt()
-            }
 
             //TODO ЗАПИСЬ В БД
-            Timber.i("Title : ${title.get()}  about : ${about.get()}  day: $day dayOfWeek $dayOfWeek year:$year  isDone:${complete.get()}")
+            Timber.i("Title : ${title.get()}  about : ${about.get()}  day: $day dayOfWeek $month year:$year  isDone:${complete.get()}")
 
 
             _saveTaskInf.value = true

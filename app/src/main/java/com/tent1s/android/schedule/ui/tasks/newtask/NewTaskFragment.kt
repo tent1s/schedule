@@ -108,8 +108,9 @@ class NewTaskFragment : Fragment() {
 
             val dpd = context?.let { it ->
                 DatePickerDialog(it, DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
-                    val monthNorm = month + 1
-                    binding.dateTask.text = "$day.$monthNorm.$year"
+                    val monthNorm = monthOfYear + 1
+                    newTaskViewModel.getDate(dayOfMonth,monthNorm,year)
+                    binding.dateTask.text = "$dayOfMonth ${convertMonthToString(monthNorm)}"
                 }, year, month, day)
             }
             dpd?.show()
