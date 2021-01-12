@@ -3,11 +3,13 @@ package com.tent1s.android.schedule.ui.tasks
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.tent1s.android.schedule.databinding.HeaderTimetableBinding
 import com.tent1s.android.schedule.databinding.ListItemTasksBinding
 import com.tent1s.android.schedule.repository.ScheduleRepository
-import com.tent1s.android.schedule.repository.TasksItem
+
+import com.tent1s.android.schedule.ui.tasks.taskslist.TasksItem
 
 
 private const val ITEM_VIEW_TYPE_HEADER = 0
@@ -90,3 +92,4 @@ class TasksAdapter(var list: List<TasksItem>) : RecyclerView.Adapter<RecyclerVie
         }
     }
 }
+
