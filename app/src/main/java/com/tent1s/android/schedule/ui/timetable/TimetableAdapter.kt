@@ -7,8 +7,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.tent1s.android.schedule.databinding.HeaderTimetableBinding
 import com.tent1s.android.schedule.databinding.ListItemTimetableBinding
-import com.tent1s.android.schedule.repository.ListItem
+
 import com.tent1s.android.schedule.repository.ScheduleRepository
+import com.tent1s.android.schedule.ui.timetable.timetablelist.ListItem
 
 
 private const val ITEM_VIEW_TYPE_HEADER = 0

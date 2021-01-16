@@ -107,7 +107,7 @@ class NewTaskFragment : Fragment() {
         val day = c.get(Calendar.DAY_OF_MONTH)
 
             val dpd = context?.let { it ->
-                DatePickerDialog(it, DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
+                DatePickerDialog(it,R.style.DialogTheme, DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
                     val monthNorm = monthOfYear + 1
                     newTaskViewModel.getDate(dayOfMonth,monthNorm,year)
                     binding.dateTask.text = "$dayOfMonth ${convertMonthToString(monthNorm)}"
