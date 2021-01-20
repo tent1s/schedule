@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -16,6 +17,7 @@ import com.tent1s.android.schedule.databinding.FragmentTasksBinding
 import com.tent1s.android.schedule.ui.tasks.TasksAdapter
 import com.tent1s.android.schedule.ui.timetable.TimetableAdapter
 import com.tent1s.android.schedule.ui.timetable.timetablelist.TimetableViewModelFactory
+import com.tent1s.android.schedule.utils.shortToast
 import timber.log.Timber
 
 class TasksFragment : Fragment() {
@@ -72,12 +74,17 @@ class TasksFragment : Fragment() {
             }
         }
 
+        val adapter = TasksAdapter {
+            Timber.i("Clicked on item ${it.title}")
+        }
+        binding.taskList.adapter = adapter
+
+
 
 
 
         tasksViewModel.state.observe(viewLifecycleOwner){
-            val adapter = TasksAdapter(it)
-            binding.taskList.adapter = adapter
+            adapter.setData(it)
         }
 
 

@@ -66,6 +66,7 @@ class TasksViewModel() : ViewModel() {
                             item.inf = itemDate.information
                             item.taskDeadlineDay = itemDate.deadlineDay
                             item.taskDeadlineMount = itemDate.deadlineMount
+                            item.id = itemDate.id
                             break
                         }
                     }
@@ -85,13 +86,13 @@ class TasksViewModel() : ViewModel() {
     }
 
 
-
 }
 
 sealed class TasksItem {
     class HeaderTask : TasksItem() var header: String? = null
 
     class ContentTask : TasksItem() {
+        var id : Long = 0L
         var title: String? = null
         var inf: String? = null
         var taskDeadlineDay: Int = -1

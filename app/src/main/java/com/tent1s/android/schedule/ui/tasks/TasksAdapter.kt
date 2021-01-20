@@ -1,23 +1,27 @@
 package com.tent1s.android.schedule.ui.tasks
 
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.tent1s.android.schedule.database.TasksList
 import com.tent1s.android.schedule.databinding.HeaderTimetableBinding
 import com.tent1s.android.schedule.databinding.ListItemTasksBinding
-import com.tent1s.android.schedule.repository.ScheduleRepository
 
 import com.tent1s.android.schedule.ui.tasks.taskslist.TasksItem
 import com.tent1s.android.schedule.utils.convertMonthToString
+import timber.log.Timber
 
 
 private const val ITEM_VIEW_TYPE_HEADER = 0
 private const val ITEM_VIEW_TYPE_ITEM = 1
 
-class TasksAdapter(var list: List<TasksItem>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class TasksAdapter(val clickListener: (TasksItem.ContentTask) -> Unit) :
+        RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
+    var list = emptyList<TasksItem>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return if (viewType == ITEM_VIEW_TYPE_HEADER) {
@@ -35,6 +39,7 @@ class TasksAdapter(var list: List<TasksItem>) : RecyclerView.Adapter<RecyclerVie
         } else if (holder is ViewHolderItem) {
             val item = list[position] as TasksItem.ContentTask
             holder.bind(item)
+            holder.binding.row.setOnClickListener { clickListener(item) }
         }
     }
 
@@ -84,6 +89,7 @@ class TasksAdapter(var list: List<TasksItem>) : RecyclerView.Adapter<RecyclerVie
             binding.deadline.text = "${item.taskDeadlineDay} ${convertMonthToString(item.taskDeadlineMount)}"
         }
 
+
         companion object {
             fun from(parent: ViewGroup): ViewHolderItem {
                 val layoutInflater = LayoutInflater.from(parent.context)
@@ -92,6 +98,15 @@ class TasksAdapter(var list: List<TasksItem>) : RecyclerView.Adapter<RecyclerVie
                 return ViewHolderItem(binding)
             }
         }
+
     }
+
+    fun setData(listData: List<TasksItem>) {
+        val tasksDiffUtil = TasksDiffUtil(list, listData)
+        val tasksDiffResult = DiffUtil.calculateDiff(tasksDiffUtil)
+        this.list = listData
+        tasksDiffResult.dispatchUpdatesTo(this)
+    }
+
 }
 
