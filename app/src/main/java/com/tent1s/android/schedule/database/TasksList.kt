@@ -7,23 +7,23 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "tasks_list_table")
 data class TasksList(
         @PrimaryKey(autoGenerate = true)
-        var taskId: Long = 0L,
+        var id: Long = 0L,
 
         @ColumnInfo(name = "task_title")
-        var taskTitle: String? = null,
+        var title: String? = null,
 
         @ColumnInfo(name = "task_information")
-        var taskInformation: String? = null,
+        var information: String? = null,
 
         @ColumnInfo(name = "task_deadline_day")
-        var taskDeadlineDay: Int = 0,
+        var deadlineDay: Int = 0,
 
         @ColumnInfo(name = "task_deadline_mount")
-        var taskDeadlineMount: Int = 0,
+        var deadlineMount: Int = 0,
 
         @ColumnInfo(name = "task_deadline_year")
-        var taskDeadlineYear: Int = 0,
+        var deadlineYear: Int = 0,
 
         @ColumnInfo(name = "is_task_done")
-        var isTaskDone: Boolean = false
+        var isTaskDone: Boolean? = false
 )

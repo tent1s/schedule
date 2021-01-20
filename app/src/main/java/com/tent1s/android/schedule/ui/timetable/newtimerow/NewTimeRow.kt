@@ -42,28 +42,38 @@ class NewTimeRow : Fragment() {
 
         binding.viewModel = newTimeRowViewModel
 
+        return binding.root
+    }
 
 
-        newTimeRowViewModel.saveTimeInf.observe(viewLifecycleOwner,
-            Observer<Boolean> { display ->
-                if (display == true) {
-                    val navController = binding.root.findNavController()
-                    navController.navigate(R.id.action_newTimeRow_to_navigation_timetable)
-                    newTimeRowViewModel.onSaveTimeInfButtonClickComplete()
-                }
-            })
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+
+
+        newTimeRowViewModel.saveTimeInf.observe(viewLifecycleOwner) { display ->
+            if (display == true) {
+                val navController = binding.root.findNavController()
+                navController.navigate(R.id.action_newTimeRow_to_navigation_timetable)
+                newTimeRowViewModel.onSaveTimeInfButtonClickComplete()
+            }
+        }
 
 
 
 
-        newTimeRowViewModel.dayOfWeekButton.observe(viewLifecycleOwner,
-            Observer<Boolean> { display ->
-                if (display == true) {
-                    val builder: AlertDialog.Builder = AlertDialog.Builder(context)
-                    builder.setTitle("Выберете день недели")
+        newTimeRowViewModel.dayOfWeekButton.observe(viewLifecycleOwner) { display ->
+            if (display == true) {
+                val builder: AlertDialog.Builder = AlertDialog.Builder(context)
+                builder.setTitle("Выберете день недели")
 
-                    val animals = arrayOf("Понидельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота")
-                    builder.setItems(animals,
+                val animals = arrayOf("Понидельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота")
+                builder.setItems(animals,
                         DialogInterface.OnClickListener { _, which ->
                             when (which) {
                                 0 -> binding.buttonDayOfWeek.text = "Понидельник"
@@ -75,93 +85,80 @@ class NewTimeRow : Fragment() {
                             }
                         })
 
-                    val dialog: AlertDialog = builder.create()
-                    dialog.show()
-                    newTimeRowViewModel.onDayOfWeekButtonClickComplete()
+                val dialog: AlertDialog = builder.create()
+                dialog.show()
+                newTimeRowViewModel.onDayOfWeekButtonClickComplete()
+            }
+        }
+
+        newTimeRowViewModel.colorButton.observe(viewLifecycleOwner) { display ->
+            if (display == true) {
+                val builder: AlertDialog.Builder = AlertDialog.Builder(context)
+                builder.setTitle("Выберете цвет")
+
+                val animals = arrayOf("Черный", "Синий", "Зеленый", "Желтый", "Красный")
+                builder.setItems(animals,
+                        DialogInterface.OnClickListener { _, which ->
+                            when (which) {
+                                0 -> binding.colorButton.text = "Черный"
+                                1 -> binding.colorButton.text = "Синий"
+                                2 -> binding.colorButton.text = "Зеленый"
+                                3 -> binding.colorButton.text = "Желтый"
+                                4 -> binding.colorButton.text = "Красный"
+                            }
+                        })
+
+                val dialog: AlertDialog = builder.create()
+                dialog.show()
+                newTimeRowViewModel.onColorButtonClickComplete()
+            }
+        }
+
+
+
+        newTimeRowViewModel.timetableStartTime.observe(viewLifecycleOwner) { display ->
+            if (display == true) {
+                val hour = 0
+                val minute = 0
+                val tpd = context?.let { it ->
+                    TimePickerDialog( it,R.style.DialogTheme, TimePickerDialog.OnTimeSetListener{ view, hour, minute ->
+                        binding.buttonTimeStart.text = "$hour:$minute"
+                    }, hour, minute, true)
                 }
-            })
+                tpd?.show()
 
-        newTimeRowViewModel.colorButton.observe(viewLifecycleOwner,
-                Observer<Boolean> { display ->
-                    if (display == true) {
-                        val builder: AlertDialog.Builder = AlertDialog.Builder(context)
-                        builder.setTitle("Выберете цвет")
+                newTimeRowViewModel.onTimetableStartTimeButtonClickComplete()
+            }
+        }
 
-                        val animals = arrayOf("Черный", "Синий", "Зеленый", "Желтый", "Красный")
-                        builder.setItems(animals,
-                                DialogInterface.OnClickListener { _, which ->
-                                    when (which) {
-                                        0 -> binding.colorButton.text = "Черный"
-                                        1 -> binding.colorButton.text = "Синий"
-                                        2 -> binding.colorButton.text = "Зеленый"
-                                        3 -> binding.colorButton.text = "Желтый"
-                                        4 -> binding.colorButton.text = "Красный"
-                                    }
-                                })
-
-                        val dialog: AlertDialog = builder.create()
-                        dialog.show()
-                        newTimeRowViewModel.onColorButtonClickComplete()
-                    }
-                })
-
-
-
-        newTimeRowViewModel.timetableStartTime.observe(viewLifecycleOwner,
-            Observer<Boolean> { display ->
-                if (display == true) {
-                    val hour = 0
-                    val minute = 0
-                    val tpd = context?.let { it ->
-                        TimePickerDialog( it,R.style.DialogTheme, TimePickerDialog.OnTimeSetListener{ view, hour, minute ->
-                            binding.buttonTimeStart.text = "$hour:$minute"
-                        }, hour, minute, true)
-                    }
-                    tpd?.show()
-
-                    newTimeRowViewModel.onTimetableStartTimeButtonClickComplete()
+        newTimeRowViewModel.timetableEndTime.observe(viewLifecycleOwner) { display ->
+            if (display == true) {
+                val hour = 0
+                val minute = 0
+                val tpd = context?.let { it ->
+                    TimePickerDialog( it, R.style.DialogTheme, TimePickerDialog.OnTimeSetListener{ view, hour, minute ->
+                        binding.buttonTimeEnd.text = "$hour:$minute"
+                    }, hour, minute, true)
                 }
-            })
+                tpd?.show()
 
-        newTimeRowViewModel.timetableEndTime.observe(viewLifecycleOwner,
-            Observer<Boolean> { display ->
-                if (display == true) {
-                    val hour = 0
-                    val minute = 0
-                    val tpd = context?.let { it ->
-                        TimePickerDialog( it, R.style.DialogTheme, TimePickerDialog.OnTimeSetListener{ view, hour, minute ->
-                            binding.buttonTimeEnd.text = "$hour:$minute"
-                        }, hour, minute, true)
-                    }
-                    tpd?.show()
+                newTimeRowViewModel.onTimetableEndTimeButtonClickComplete()
+            }
+        }
 
-                    newTimeRowViewModel.onTimetableEndTimeButtonClickComplete()
-                }
-            })
+        newTimeRowViewModel.errorNullDate.observe(viewLifecycleOwner) { display ->
+            if (display == true) {
+                context?.shortToast("Вы ввели не всю информацию!!")
+                newTimeRowViewModel.errorNullDateComplete()
+            }
+        }
 
-        newTimeRowViewModel.errorNullDate.observe(viewLifecycleOwner,
-                Observer<Boolean> { display ->
-                    if (display == true) {
-                        context?.shortToast("Вы ввели не всю информацию!!")
-                        newTimeRowViewModel.errorNullDateComplete()
-                    }
-                })
-
-        newTimeRowViewModel.errorInvalidTime.observe(viewLifecycleOwner,
-                Observer<Boolean> { display ->
-                    if (display == true) {
-                        context?.shortToast("Конечная дата меньше начальной!")
-                        newTimeRowViewModel.errorInvalidTimeComplete()
-                    }
-                })
-
-        
-        return binding.root
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+        newTimeRowViewModel.errorInvalidTime.observe(viewLifecycleOwner) { display ->
+            if (display == true) {
+                context?.shortToast("Конечная дата меньше начальной!")
+                newTimeRowViewModel.errorInvalidTimeComplete()
+            }
+        }
     }
 
 }

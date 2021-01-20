@@ -1,18 +1,20 @@
 package com.tent1s.android.schedule.ui.tasks.newtask
 
 
+import android.app.Application
 import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
 import androidx.databinding.ObservableBoolean
 import androidx.databinding.ObservableField
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
+import com.tent1s.android.schedule.database.TasksDatabaseDao
+import com.tent1s.android.schedule.database.TasksList
+import kotlinx.coroutines.launch
 import timber.log.Timber
 
 
-class NewTaskViewModel : ViewModel() {
+class NewTaskViewModel(val database: TasksDatabaseDao, application: Application) : AndroidViewModel(application) {
 
     private val _timePickerDialogData = MutableLiveData<Boolean>()
     val timePickerDialogData: LiveData<Boolean>
@@ -41,6 +43,9 @@ class NewTaskViewModel : ViewModel() {
 
     fun onDelButtonClick(){
         _navigateToTasks.value = true
+        viewModelScope.launch {
+            clear()
+        }
     }
 
     fun onNavigateToTasks(){
@@ -61,6 +66,7 @@ class NewTaskViewModel : ViewModel() {
     fun errorEnd(){
         _errorToast.value = false
     }
+
 
 
     private val isValid = ObservableBoolean(false)
@@ -126,10 +132,14 @@ class NewTaskViewModel : ViewModel() {
         year = newYear
     }
 
-     private fun saveInf(){
+    private fun saveInf(){
         if (isValid.get()){
 
-            //TODO ЗАПИСЬ В БД
+            viewModelScope.launch {
+
+                insert(TasksList(0, title.get(), about.get(), day, month, year, complete.get()))
+
+            }
             Timber.i("Title : ${title.get()}  about : ${about.get()}  day: $day dayOfWeek $month year:$year  isDone:${complete.get()}")
 
 
@@ -137,5 +147,15 @@ class NewTaskViewModel : ViewModel() {
         }else{
             errorStart()
         }
+    }
+
+
+
+
+    private suspend fun insert(task: TasksList) {
+        database.insert(task)
+    }
+    private suspend fun clear() {
+        database.clear()
     }
 }

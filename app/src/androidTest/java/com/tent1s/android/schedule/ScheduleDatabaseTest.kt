@@ -8,7 +8,6 @@ import com.tent1s.android.schedule.database.*
 import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -60,10 +59,10 @@ class  ScheduleDatabaseTest {
             val task = TasksList()
             tasksDao.insert(task)
             task.isTaskDone = false
-            task.taskTitle = "test"
+            task.title = "test"
             tasksDao.update(task)
             assertEquals(task?.isTaskDone, false)
-            assertEquals(task?.taskTitle, "test")
+            assertEquals(task?.title, "test")
         }
     }
 

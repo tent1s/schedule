@@ -18,7 +18,7 @@ interface TasksDatabaseDao {
     suspend fun update(task: TasksList)
 
 
-    @Query("SELECT * from tasks_list_table WHERE taskId = :key")
+    @Query("SELECT * from tasks_list_table WHERE id = :key")
     suspend fun get(key: Long): TasksList?
 
 
@@ -26,10 +26,10 @@ interface TasksDatabaseDao {
     suspend fun clear()
 
 
-    @Query("SELECT * FROM tasks_list_table ORDER BY taskId DESC")
+    @Query("SELECT * FROM tasks_list_table ORDER BY id DESC")
     fun getAllTasks(): LiveData<List<TasksList>>
 
-    @Query("SELECT * FROM tasks_list_table ORDER BY taskId DESC LIMIT 1")
+    @Query("SELECT * FROM tasks_list_table ORDER BY id DESC LIMIT 1")
     suspend fun getLastTask(): TasksList?
 
 

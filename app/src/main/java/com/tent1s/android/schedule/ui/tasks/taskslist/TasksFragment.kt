@@ -11,23 +11,25 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.tent1s.android.schedule.R
 import com.tent1s.android.schedule.ScheduleApplication
+import com.tent1s.android.schedule.database.ScheduleDatabase
 import com.tent1s.android.schedule.databinding.FragmentTasksBinding
 import com.tent1s.android.schedule.ui.tasks.TasksAdapter
 import com.tent1s.android.schedule.ui.timetable.TimetableAdapter
 import com.tent1s.android.schedule.ui.timetable.timetablelist.TimetableViewModelFactory
+import timber.log.Timber
 
 class TasksFragment : Fragment() {
 
     private lateinit var tasksViewModel: TasksViewModel
     private var _binding: FragmentTasksBinding? = null
     private val binding get() = _binding!!
-    private lateinit var viewModelFactory: TasksViewModelFactory
+
 
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         _binding = DataBindingUtil.inflate(
             inflater,
@@ -39,35 +41,55 @@ class TasksFragment : Fragment() {
 
 
         val myRepository = (requireActivity().application as ScheduleApplication).repository
-        viewModelFactory = TasksViewModelFactory(myRepository)
+
+
         tasksViewModel =
-                ViewModelProvider(this, viewModelFactory ).get(TasksViewModel::class.java)
+                ViewModelProvider(this).get(TasksViewModel::class.java)
         binding.viewModel = tasksViewModel
 
-
-
-        tasksViewModel.text.observe(viewLifecycleOwner, Observer {
-            binding.textTasks.text = it
-        })
-
-
-
-        val adapter = TasksAdapter(tasksViewModel.tasks)
-        binding.taskList.adapter = adapter
-
-
-
-        tasksViewModel.navigateToSearch.observe(viewLifecycleOwner,
-                Observer<Boolean> { shouldNavigate ->
-                    if (shouldNavigate == true) {
-                        val navController = binding.root.findNavController()
-                        navController.navigate(R.id.action_navigation_tasks_to_newTaskFragment)
-                        tasksViewModel.onNavigationToSearch()
-                    }
-                })
-
+        myRepository.tasks.observe(viewLifecycleOwner){
+            tasksViewModel.getTasks(it)
+            if (it.isEmpty()){
+                tasksViewModel.listIsEmpty()
+            }else{
+                tasksViewModel.listIsNotEmpty()
+            }
+        }
 
         return binding.root
+    }
+
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+
+
+        tasksViewModel.checkEmptyList.observe(viewLifecycleOwner) {
+            if (it) {
+                binding.textTasks.text = "Нажмите “+”, чтобы добавить"
+            }else{
+                binding.textTasks.text = ""
+            }
+        }
+
+
+
+
+        tasksViewModel.state.observe(viewLifecycleOwner){
+            val adapter = TasksAdapter(it)
+            binding.taskList.adapter = adapter
+        }
+
+
+
+
+        tasksViewModel.navigateToSearch.observe(viewLifecycleOwner) { shouldNavigate ->
+            if (shouldNavigate == true) {
+                val navController = binding.root.findNavController()
+                navController.navigate(R.id.action_navigation_tasks_to_newTaskFragment)
+                tasksViewModel.onNavigationToSearch()
+            }
+        }
     }
 
     override fun onDestroyView() {

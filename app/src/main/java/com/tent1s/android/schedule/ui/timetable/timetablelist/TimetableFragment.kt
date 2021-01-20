@@ -21,11 +21,12 @@ class TimetableFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var viewModelFactory: TimetableViewModelFactory
 
+
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         _binding = FragmentTimetableBinding.inflate(inflater)
 
@@ -36,31 +37,38 @@ class TimetableFragment : Fragment() {
 
         binding.viewModel = timetableViewModel
 
-
-
-        val adapter = TimetableAdapter(timetableViewModel.timetable)
-        binding.timetableList.adapter = adapter
-
-
-
-        timetableViewModel.text.observe(viewLifecycleOwner, Observer {
-            binding.textTimetable.text = it
-        })
-
-
-        timetableViewModel.navigateToSearch.observe(viewLifecycleOwner,
-                Observer<Boolean> { shouldNavigate ->
-                    if (shouldNavigate == true) {
-                        val navController = binding.root.findNavController()
-                        navController.navigate(R.id.action_navigation_timetable_to_newTimeRow)
-                        timetableViewModel.onNavigationToSearch()
-                    }
-                })
-
         return binding.root
     }
+
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+
+        timetableViewModel.text.observe(viewLifecycleOwner) {
+            binding.textTimetable.text = it
+        }
+
+
+        timetableViewModel.state.observe(viewLifecycleOwner){
+            val adapter = TimetableAdapter(it)
+            binding.timetableList.adapter = adapter
+        }
+
+
+        timetableViewModel.navigateToSearch.observe(viewLifecycleOwner) { shouldNavigate ->
+            if (shouldNavigate == true) {
+                val navController = binding.root.findNavController()
+                navController.navigate(R.id.action_navigation_timetable_to_newTimeRow)
+                timetableViewModel.onNavigationToSearch()
+            }
+        }
+
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
+
+
 }

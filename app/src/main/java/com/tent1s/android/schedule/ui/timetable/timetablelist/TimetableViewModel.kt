@@ -5,7 +5,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.tent1s.android.schedule.database.TimetableList
 import com.tent1s.android.schedule.repository.ScheduleRepository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import java.util.ArrayList
+
 
 class TimetableViewModel(Repository: ScheduleRepository) : ViewModel() {
 
@@ -22,18 +26,28 @@ class TimetableViewModel(Repository: ScheduleRepository) : ViewModel() {
         _navigateToSearch.value = false
     }
 
-    val timetable = getList()
+
+    private val _state = MutableLiveData<List<ListItem>>().apply {
+        value = getList()
+    }
+    val state: LiveData<List<ListItem>> = _state
+
 
     private val _text = MutableLiveData<String>().apply {
-        if (timetable.size == 0) value = "Нажмите “+”, чтобы добавить"
+        if (_state.value!!.isEmpty()) value = "Нажмите “+”, чтобы добавить"
     }
     val text: LiveData<String> = _text
 
 
 
+
+
+
+
+
     private fun getList(): ArrayList<ListItem> {
         val arrayList = ArrayList<ListItem>()
-        val date = repository.getAllTimetable()
+        val date = repository.timetable
 
         for (j in 0..5) {
             val header = ListItem.Header()

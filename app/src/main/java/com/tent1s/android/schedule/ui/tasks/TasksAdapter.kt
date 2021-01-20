@@ -10,6 +10,7 @@ import com.tent1s.android.schedule.databinding.ListItemTasksBinding
 import com.tent1s.android.schedule.repository.ScheduleRepository
 
 import com.tent1s.android.schedule.ui.tasks.taskslist.TasksItem
+import com.tent1s.android.schedule.utils.convertMonthToString
 
 
 private const val ITEM_VIEW_TYPE_HEADER = 0
@@ -80,6 +81,7 @@ class TasksAdapter(var list: List<TasksItem>) : RecyclerView.Adapter<RecyclerVie
         fun bind(item: TasksItem.ContentTask){
             binding.taskTitle.text = item.title
             binding.taskInf.text = item.inf
+            binding.deadline.text = "${item.taskDeadlineDay} ${convertMonthToString(item.taskDeadlineMount)}"
         }
 
         companion object {

@@ -1,19 +1,24 @@
 package com.tent1s.android.schedule.repository
 
 import android.app.Application
-import android.os.Parcel
-import android.os.Parcelable
-import com.tent1s.android.schedule.database.TasksList
-import com.tent1s.android.schedule.database.TimetableList
-import timber.log.Timber
+import androidx.lifecycle.LiveData
+import com.tent1s.android.schedule.database.*
 import java.util.*
 
 
-class ScheduleRepository {
+class ScheduleRepository(application: Application)  {
 
-    fun getAllTimetable(): ArrayList<TimetableList> {
-        var timetable = ArrayList<TimetableList>()
 
+
+    private val dataSourceForTasksList = ScheduleDatabase.getInstance(application).tasksDatabaseDao
+    val tasks = dataSourceForTasksList.getAllTasks()
+
+    //private val dataSourceForTimetableList = ScheduleDatabase.getInstance(application).timetableDatabaseDao
+    //val timetable = dataSourceForTimetableList.getAllTimetable()
+
+    var timetable = ArrayList<TimetableList>()
+
+    init {
         timetable.add(TimetableList(0, "Матем", "Лекция", 1, 0))
         timetable.add(TimetableList(1, "Матем", "Практика", 0, 0))
         timetable.add(TimetableList(2, "Схемотехника", "Лекция", 1, 1))
@@ -27,21 +32,19 @@ class ScheduleRepository {
         timetable.add(TimetableList(10, "ОС", "Лекция", 4, 3))
         timetable.add(TimetableList(11, "Тервер", "Практика", 0, 4))
         timetable.add(TimetableList(12, "Тервер", "Лекция", 0, 4))
-
-        return timetable
     }
 
-    fun getAllTasks(): ArrayList<TasksList> {
-        var tasks = ArrayList<TasksList>()
+//    fun getAllTasks(): ArrayList<TasksList> {
+//
+//        tasks.add(TasksList(0, "Сделать", "быстро", 1, 0, 0, false))
+//        tasks.add(TasksList(1, "Задание", "ааааа", 1, 0, 0, true))
+//        tasks.add(TasksList(2, "Нужно", "выполнить это", 1, 0, 0, false))
+//        tasks.add(TasksList(3, "Выполнить", "не надо", 1, 0, 0, true))
+//        tasks.add(TasksList(4, "1234", "1111", 1, 0, 0, true))
+//
+//        return tasks
+//    }
 
-        tasks.add(TasksList(0, "Сделать", "быстро", 1, 0, 0, false))
-        tasks.add(TasksList(1, "Задание", "ааааа", 1, 0, 0, true))
-        tasks.add(TasksList(2, "Нужно", "выполнить это", 1, 0, 0, false))
-        tasks.add(TasksList(3, "Выполнить", "не надо", 1, 0, 0, true))
-        tasks.add(TasksList(4, "1234", "1111", 1, 0, 0, true))
-
-        return tasks
-    }
 }
 
 
