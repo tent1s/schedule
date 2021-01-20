@@ -121,7 +121,7 @@ class NewTimeRow : Fragment() {
                 val hour = 0
                 val minute = 0
                 val tpd = context?.let { it ->
-                    TimePickerDialog( it,R.style.DialogTheme, TimePickerDialog.OnTimeSetListener{ view, hour, minute ->
+                    TimePickerDialog( it,R.style.DialogTheme, TimePickerDialog.OnTimeSetListener{ _, hour, minute ->
                         binding.buttonTimeStart.text = "$hour:$minute"
                     }, hour, minute, true)
                 }
@@ -136,7 +136,7 @@ class NewTimeRow : Fragment() {
                 val hour = 0
                 val minute = 0
                 val tpd = context?.let { it ->
-                    TimePickerDialog( it, R.style.DialogTheme, TimePickerDialog.OnTimeSetListener{ view, hour, minute ->
+                    TimePickerDialog( it, R.style.DialogTheme, TimePickerDialog.OnTimeSetListener{ _, hour, minute ->
                         binding.buttonTimeEnd.text = "$hour:$minute"
                     }, hour, minute, true)
                 }

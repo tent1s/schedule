@@ -21,6 +21,8 @@ interface TasksDatabaseDao {
     @Query("SELECT * from tasks_list_table WHERE id = :key")
     suspend fun get(key: Long): TasksList?
 
+    @Query("DELETE FROM tasks_list_table WHERE id = :key")
+    suspend fun del(key: Long)
 
     @Query("DELETE FROM tasks_list_table")
     suspend fun clear()

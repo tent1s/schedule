@@ -43,9 +43,10 @@ class NewTaskFragment : Fragment() {
                 false
         )
 
+        var args = arguments?.let { NewTaskFragmentArgs.fromBundle(it) }
         val application = requireNotNull(this.activity).application
         val dataSource = ScheduleDatabase.getInstance(application).tasksDatabaseDao
-        viewModelFactory = NewTaskViewModelFactory(dataSource, application)
+        viewModelFactory = NewTaskViewModelFactory(dataSource, application, args!!.taskId)
         newTaskViewModel = ViewModelProvider(this, viewModelFactory)
                 .get(NewTaskViewModel::class.java)
 
@@ -106,7 +107,7 @@ class NewTaskFragment : Fragment() {
         val day = c.get(Calendar.DAY_OF_MONTH)
 
         val dpd = context?.let { it ->
-            DatePickerDialog(it,R.style.DialogTheme, DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
+            DatePickerDialog(it,R.style.DialogTheme, DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
                 val monthNorm = monthOfYear + 1
                 newTaskViewModel.getDate(dayOfMonth,monthNorm,year)
                 binding.dateTask.text = "$dayOfMonth ${convertMonthToString(monthNorm)}"

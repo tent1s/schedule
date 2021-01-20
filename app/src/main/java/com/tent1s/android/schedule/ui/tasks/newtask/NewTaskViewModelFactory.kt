@@ -8,11 +8,11 @@ import com.tent1s.android.schedule.ui.tasks.taskslist.TasksViewModel
 
 
 class NewTaskViewModelFactory(private val dataSource: TasksDatabaseDao,
-                            private val application: Application) : ViewModelProvider.Factory {
+                            private val application: Application, private val taskId: Long) : ViewModelProvider.Factory {
     @Suppress("unchecked_cast")
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(NewTaskViewModel::class.java)) {
-            return NewTaskViewModel(dataSource, application) as T
+            return NewTaskViewModel(dataSource, application, taskId) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

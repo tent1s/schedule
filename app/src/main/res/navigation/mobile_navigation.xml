@@ -3,50 +3,53 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@id/navigation_timetable">
+    app:startDestination="@id/timetable">
 
     <fragment
-        android:id="@+id/navigation_tasks"
+        android:id="@+id/tasks"
         android:name="com.tent1s.android.schedule.ui.tasks.taskslist.TasksFragment"
         android:label="@string/title_tasks"
         tools:layout="@layout/fragment_tasks" >
         <action
             android:id="@+id/action_navigation_tasks_to_newTaskFragment"
-            app:destination="@id/navigation_newTask"
+            app:destination="@id/newTask"
             app:popUpToInclusive="false" />
     </fragment>
 
     <fragment
-        android:id="@+id/navigation_timetable"
+        android:id="@+id/timetable"
         android:name="com.tent1s.android.schedule.ui.timetable.timetablelist.TimetableFragment"
         android:label="@string/title_timetable"
         tools:layout="@layout/fragment_timetable" >
         <action
             android:id="@+id/action_navigation_timetable_to_newTimeRow"
-            app:destination="@id/navigation_newTimeRow" />
+            app:destination="@id/newTimeRow" />
     </fragment>
 
     <fragment
-        android:id="@+id/navigation_settings"
+        android:id="@+id/settings"
         android:name="com.tent1s.android.schedule.ui.settings.SettingsFragment"
         android:label="@string/title_settings"
         tools:layout="@layout/fragment_settings" />
     <fragment
-        android:id="@+id/navigation_newTask"
+        android:id="@+id/newTask"
         android:name="com.tent1s.android.schedule.ui.tasks.newtask.NewTaskFragment"
         android:label="@string/newObject">
         <action
             android:id="@+id/action_newTaskFragment_to_navigation_tasks"
-            app:destination="@id/navigation_tasks"
-            app:popUpTo="@id/navigation_newTask"
+            app:destination="@id/tasks"
+            app:popUpTo="@id/newTask"
             app:popUpToInclusive="true" />
+        <argument
+            android:name="taskId"
+            app:argType="long" />
     </fragment>
     <fragment
-        android:id="@+id/navigation_newTimeRow"
+        android:id="@+id/newTimeRow"
         android:name="com.tent1s.android.schedule.ui.timetable.newtimerow.NewTimeRow"
         android:label="@string/newObject">
         <action
             android:id="@+id/action_newTimeRow_to_navigation_timetable"
-            app:destination="@id/navigation_timetable" />
+            app:destination="@id/timetable" />
     </fragment>
 </navigation>

@@ -10,11 +10,48 @@ import androidx.databinding.ObservableField
 import androidx.lifecycle.*
 import com.tent1s.android.schedule.database.TasksDatabaseDao
 import com.tent1s.android.schedule.database.TasksList
+import com.tent1s.android.schedule.utils.convertMonthToString
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
 
-class NewTaskViewModel(val database: TasksDatabaseDao, application: Application) : AndroidViewModel(application) {
+class NewTaskViewModel(val database: TasksDatabaseDao, application: Application,
+                       private val taskId: Long
+) : AndroidViewModel(application) {
+
+
+    private var taskIsExist = false
+
+    private val isValid = ObservableBoolean(false)
+    val title = ObservableField<String>()
+    val about = ObservableField<String>()
+    val date = ObservableField("Выбор даты")
+    val complete = ObservableBoolean(false)
+
+    private var day = -1
+    private var month = -1
+    private var year = -1
+
+    init {
+        if(taskId != -1L){
+            viewModelScope.launch {
+
+                val task = get(taskId)
+                if (task != null) {
+                    taskIsExist = true
+                    title.set(task.title)
+                    about.set(task.information)
+                    day = task.deadlineDay
+                    month = task.deadlineMount
+                    year = task.deadlineYear
+                    task.isTaskDone?.let { complete.set(it) }
+                    date.set("$day ${convertMonthToString(month)}")
+                }
+
+            }
+        }
+        Timber.i("Title : ${title.get()}  about : ${about.get()}  day: $day dayOfWeek $month year:$year  isDone:${complete.get()}")
+    }
 
     private val _timePickerDialogData = MutableLiveData<Boolean>()
     val timePickerDialogData: LiveData<Boolean>
@@ -42,10 +79,12 @@ class NewTaskViewModel(val database: TasksDatabaseDao, application: Application)
     }
 
     fun onDelButtonClick(){
-        _navigateToTasks.value = true
         viewModelScope.launch {
-            clear()
+            if (taskIsExist){
+                del(taskId)
+            }
         }
+        _navigateToTasks.value = true
     }
 
     fun onNavigateToTasks(){
@@ -68,16 +107,6 @@ class NewTaskViewModel(val database: TasksDatabaseDao, application: Application)
     }
 
 
-
-    private val isValid = ObservableBoolean(false)
-    val title = ObservableField<String>()
-    val about = ObservableField<String>()
-    val date = ObservableField("Выбор даты")
-    val complete = ObservableBoolean(false)
-
-    private var day = -1
-    private var month = -1
-    private var year = -1
 
     private fun validation() {
         val isValidTitle = !TextUtils.isEmpty(title.get())
@@ -136,13 +165,13 @@ class NewTaskViewModel(val database: TasksDatabaseDao, application: Application)
         if (isValid.get()){
 
             viewModelScope.launch {
-
-                insert(TasksList(0, title.get(), about.get(), day, month, year, complete.get()))
+                if (taskIsExist){
+                    update(TasksList(taskId, title.get(), about.get(), day, month, year, complete.get()))
+                }else {
+                    insert(TasksList(0, title.get(), about.get(), day, month, year, complete.get()))
+                }
 
             }
-            Timber.i("Title : ${title.get()}  about : ${about.get()}  day: $day dayOfWeek $month year:$year  isDone:${complete.get()}")
-
-
             _saveTaskInf.value = true
         }else{
             errorStart()
@@ -155,7 +184,14 @@ class NewTaskViewModel(val database: TasksDatabaseDao, application: Application)
     private suspend fun insert(task: TasksList) {
         database.insert(task)
     }
-    private suspend fun clear() {
-        database.clear()
+
+    private suspend fun update(task: TasksList) {
+        database.update(task)
+    }
+    private suspend fun get(key: Long): TasksList? {
+        return database.get(key)
+    }
+    private suspend fun del(key: Long) {
+        database.del(key)
     }
 }
