@@ -43,12 +43,12 @@ class TasksViewModel() : ViewModel() {
                 val header = TasksItem.HeaderTask()
                 var m = true
                 when (j) {
-                    0 -> header.header = "Выполнено"
-                    1 -> header.header = "Не выполнено"
+                    0 -> header.header = "Не выполнено"
+                    1 -> header.header = "Выполнено"
                 }
                 when (j) {
-                    0 -> m = true
-                    1 -> m = false
+                    0 -> m = false
+                    1 -> m = true
                 }
                 val count = getCountTasks(m, tasks)
                 var findDay = 0

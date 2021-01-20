@@ -47,10 +47,8 @@ class NewTaskViewModel(val database: TasksDatabaseDao, application: Application,
                     task.isTaskDone?.let { complete.set(it) }
                     date.set("$day ${convertMonthToString(month)}")
                 }
-
             }
         }
-        Timber.i("Title : ${title.get()}  about : ${about.get()}  day: $day dayOfWeek $month year:$year  isDone:${complete.get()}")
     }
 
     private val _timePickerDialogData = MutableLiveData<Boolean>()
@@ -170,7 +168,6 @@ class NewTaskViewModel(val database: TasksDatabaseDao, application: Application,
                 }else {
                     insert(TasksList(0, title.get(), about.get(), day, month, year, complete.get()))
                 }
-
             }
             _saveTaskInf.value = true
         }else{
