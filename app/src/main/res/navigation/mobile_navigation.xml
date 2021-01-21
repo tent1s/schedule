@@ -46,10 +46,13 @@
     </fragment>
     <fragment
         android:id="@+id/newTimeRow"
-        android:name="com.tent1s.android.schedule.ui.timetable.newtimerow.NewTimeRow"
+        android:name="com.tent1s.android.schedule.ui.timetable.newtimerow.NewTimeRowFragment"
         android:label="@string/newObject">
         <action
             android:id="@+id/action_newTimeRow_to_navigation_timetable"
             app:destination="@id/timetable" />
+        <argument
+            android:name="timetableId"
+            app:argType="long" />
     </fragment>
 </navigation>

@@ -8,13 +8,15 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.tent1s.android.schedule.databinding.HeaderTimetableBinding
 import com.tent1s.android.schedule.databinding.ListItemTimetableBinding
+import com.tent1s.android.schedule.ui.tasks.TasksItem
 import com.tent1s.android.schedule.utils.timetableTimeToString
 
 
 private const val ITEM_VIEW_TYPE_HEADER = 0
 private const val ITEM_VIEW_TYPE_ITEM = 1
 
-class TimetableAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class TimetableAdapter(val clickListener: (TimetableItem.ContentItem) -> Unit) :
+        RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     var timetable = emptyList<TimetableItem>()
 
@@ -34,6 +36,7 @@ class TimetableAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         } else if (holder is ViewHolderItem) {
             val item = timetable[position] as TimetableItem.ContentItem
             holder.bind(item)
+            holder.binding.row.setOnClickListener { clickListener(item) }
         }
     }
 

@@ -16,6 +16,7 @@ import com.tent1s.android.schedule.database.ScheduleDatabase
 import com.tent1s.android.schedule.databinding.FragmentNewtaskBinding
 
 import com.tent1s.android.schedule.utils.convertMonthToString
+import com.tent1s.android.schedule.utils.hideKeyboard
 import com.tent1s.android.schedule.utils.shortToast
 import timber.log.Timber
 import java.util.*
@@ -43,7 +44,7 @@ class NewTaskFragment : Fragment() {
                 false
         )
 
-        var args = arguments?.let { NewTaskFragmentArgs.fromBundle(it) }
+        val args = arguments?.let { NewTaskFragmentArgs.fromBundle(it) }
         val application = requireNotNull(this.activity).application
         val dataSource = ScheduleDatabase.getInstance(application).tasksDatabaseDao
         viewModelFactory = NewTaskViewModelFactory(dataSource, application, args!!.taskId)
@@ -84,6 +85,7 @@ class NewTaskFragment : Fragment() {
 
             newTaskViewModel.timePickerDialogData.observe(viewLifecycleOwner) { display ->
                 if (display == true) {
+                    activity?.hideKeyboard()
                     getDate()
                     newTaskViewModel.getTimePickerDialogData()
                 }

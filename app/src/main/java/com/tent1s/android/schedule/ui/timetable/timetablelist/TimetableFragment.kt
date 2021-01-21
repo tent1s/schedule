@@ -13,7 +13,10 @@ import com.tent1s.android.schedule.R
 import com.tent1s.android.schedule.ScheduleApplication
 import com.tent1s.android.schedule.databinding.FragmentTasksBinding
 import com.tent1s.android.schedule.databinding.FragmentTimetableBinding
+import com.tent1s.android.schedule.ui.tasks.TasksAdapter
+import com.tent1s.android.schedule.ui.tasks.taskslist.TasksFragmentDirections
 import com.tent1s.android.schedule.ui.timetable.TimetableAdapter
+import timber.log.Timber
 
 class TimetableFragment : Fragment() {
 
@@ -55,8 +58,13 @@ class TimetableFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        val adapter = TimetableAdapter()
+
+        val adapter = TimetableAdapter {
+            val navController = binding.root.findNavController()
+            navController.navigate(TimetableFragmentDirections.actionNavigationTimetableToNewTimeRow(it.id))
+        }
         binding.timetableList.adapter = adapter
+
 
         timetableViewModel.state.observe(viewLifecycleOwner){
             adapter.setData(it)
@@ -66,7 +74,7 @@ class TimetableFragment : Fragment() {
         timetableViewModel.navigateToSearch.observe(viewLifecycleOwner) { shouldNavigate ->
             if (shouldNavigate == true) {
                 val navController = binding.root.findNavController()
-                navController.navigate(R.id.action_navigation_timetable_to_newTimeRow)
+                navController.navigate(TimetableFragmentDirections.actionNavigationTimetableToNewTimeRow(-1L))
                 timetableViewModel.onNavigationToSearch()
             }
         }

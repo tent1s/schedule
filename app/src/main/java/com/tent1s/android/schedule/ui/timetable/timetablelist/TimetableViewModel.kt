@@ -71,6 +71,7 @@ class TimetableViewModel() : ViewModel() {
                         item.endTimeMinute = itemDate.EndTimeMinute
                         item.startTimeHour = itemDate.StartTimeHour
                         item.startTimeMinute = itemDate.StartTimeMinute
+                        item.id = itemDate.id
                         break
                     }
                 }

@@ -1,6 +1,8 @@
 package com.tent1s.android.schedule.utils
 
+import android.app.Activity
 import android.content.Context
+import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
@@ -28,16 +30,7 @@ fun convertMonthToString(mount: Int) : String{
 
 fun timetableTimeToString(startHour :Int, startMinute :Int, endHour :Int, endMinute :Int) : String {
     var str  = ""
-    str += if (startHour < 10){
-        "0$startHour"
-    }else{
-        startHour.toString()
-    }
-    str += if (startMinute < 10){
-        ":0$startMinute"
-    }else{
-        ":$startMinute"
-    }
+    str = timetableStartTimeToString(startHour,startMinute)
     str += if (endHour < 10){
         "-0$endHour"
     }else{
@@ -49,4 +42,30 @@ fun timetableTimeToString(startHour :Int, startMinute :Int, endHour :Int, endMin
         ":$endMinute"
     }
     return str
+}
+fun timetableStartTimeToString(startHour :Int, startMinute :Int) : String{
+    var str  = ""
+    str += if (startHour < 10){
+        "0$startHour"
+    }else{
+        startHour.toString()
+    }
+    str += if (startMinute < 10){
+        ":0$startMinute"
+    }else{
+        ":$startMinute"
+    }
+    return str
+}
+
+fun Activity.hideKeyboard() {
+    val inputMethodManager =
+            getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+
+    val currentFocusedView = currentFocus
+    currentFocusedView?.let {
+        inputMethodManager.hideSoftInputFromWindow(
+                currentFocusedView.windowToken, InputMethodManager.HIDE_NOT_ALWAYS
+        )
+    }
 }

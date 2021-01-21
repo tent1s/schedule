@@ -14,8 +14,9 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 
 
-class NewTimeRowViewModel(val database: TimetableDatabaseDao, application: Application)
+class NewTimeRowViewModel(val database: TimetableDatabaseDao, application: Application, timetableId : Long)
     : AndroidViewModel(application) {
+
 
     private val _dayOfWeekButton = MutableLiveData<Boolean>()
     val dayOfWeekButton: LiveData<Boolean>

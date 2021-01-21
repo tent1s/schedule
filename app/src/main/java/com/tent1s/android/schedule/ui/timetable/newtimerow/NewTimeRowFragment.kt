@@ -15,12 +15,14 @@ import androidx.navigation.findNavController
 import com.tent1s.android.schedule.R
 import com.tent1s.android.schedule.database.ScheduleDatabase
 import com.tent1s.android.schedule.databinding.FragmentNewTimeRowBinding
+import com.tent1s.android.schedule.ui.tasks.newtask.NewTaskFragmentArgs
 import com.tent1s.android.schedule.ui.tasks.newtask.NewTaskViewModelFactory
+import com.tent1s.android.schedule.utils.hideKeyboard
 import com.tent1s.android.schedule.utils.shortToast
 import timber.log.Timber
 
 
-class NewTimeRow : Fragment() {
+class NewTimeRowFragment : Fragment() {
 
     private lateinit var newTimeRowViewModel: NewTimeRowViewModel
     private var _binding: FragmentNewTimeRowBinding? = null
@@ -40,9 +42,10 @@ class NewTimeRow : Fragment() {
             false
         )
 
+        val args = arguments?.let { NewTimeRowArgs.fromBundle(it) }
         val application = requireNotNull(this.activity).application
         val dataSource = ScheduleDatabase.getInstance(application).timetableDatabaseDao
-        viewModelFactory = NewTimeRowViewModelFactory(dataSource, application)
+        viewModelFactory = NewTimeRowViewModelFactory(dataSource, application, args!!.timetableId)
         newTimeRowViewModel =
             ViewModelProvider(this, viewModelFactory).get(NewTimeRowViewModel::class.java)
 
@@ -75,6 +78,7 @@ class NewTimeRow : Fragment() {
 
         newTimeRowViewModel.dayOfWeekButton.observe(viewLifecycleOwner) { display ->
             if (display == true) {
+                activity?.hideKeyboard()
                 val builder: AlertDialog.Builder = AlertDialog.Builder(context)
                 builder.setTitle("Выберете день недели")
 
@@ -98,6 +102,7 @@ class NewTimeRow : Fragment() {
 
         newTimeRowViewModel.colorButton.observe(viewLifecycleOwner) { display ->
             if (display == true) {
+                activity?.hideKeyboard()
                 val builder: AlertDialog.Builder = AlertDialog.Builder(context)
                 builder.setTitle("Выберете цвет")
 
@@ -122,6 +127,7 @@ class NewTimeRow : Fragment() {
 
         newTimeRowViewModel.timetableStartTime.observe(viewLifecycleOwner) { display ->
             if (display == true) {
+                activity?.hideKeyboard()
                 val hour = 0
                 val minute = 0
                 val tpd = context?.let { it ->
@@ -137,6 +143,7 @@ class NewTimeRow : Fragment() {
 
         newTimeRowViewModel.timetableEndTime.observe(viewLifecycleOwner) { display ->
             if (display == true) {
+                activity?.hideKeyboard()
                 val hour = 0
                 val minute = 0
                 val tpd = context?.let { it ->
