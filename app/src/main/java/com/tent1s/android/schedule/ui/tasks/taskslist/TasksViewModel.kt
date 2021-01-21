@@ -2,7 +2,7 @@ package com.tent1s.android.schedule.ui.tasks.taskslist
 
 import androidx.lifecycle.*
 import com.tent1s.android.schedule.database.TasksList
-import timber.log.Timber
+import com.tent1s.android.schedule.ui.tasks.TasksItem
 import java.util.ArrayList
 
 class TasksViewModel() : ViewModel() {
@@ -65,6 +65,7 @@ class TasksViewModel() : ViewModel() {
                             item.taskDeadlineDay = itemDate.deadlineDay
                             item.taskDeadlineMount = itemDate.deadlineMount
                             item.id = itemDate.id
+                            item.taskDeadlineYear = itemDate.deadlineYear
                             break
                         }
                     }

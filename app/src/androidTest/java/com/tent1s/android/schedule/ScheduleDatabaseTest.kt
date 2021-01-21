@@ -48,7 +48,7 @@ class  ScheduleDatabaseTest {
 
             val lastTimetableRow = timetableDao.get(1)
 
-            assertEquals(lastTimetableRow?.timetableColorId, -1)
+            assertEquals(lastTimetableRow?.colorId, -1)
         }
     }
 
@@ -85,11 +85,11 @@ class  ScheduleDatabaseTest {
         runBlocking {
             val timetableRow = TimetableList()
             timetableDao.insert(timetableRow)
-            timetableRow.timetableInformation = "mat"
-            timetableRow.timetableTitle = "test"
+            timetableRow.information = "mat"
+            timetableRow.title = "test"
             timetableDao.update(timetableRow)
-            assertEquals(timetableRow?.timetableInformation, "mat")
-            assertEquals(timetableRow?.timetableTitle, "test")
+            assertEquals(timetableRow?.information, "mat")
+            assertEquals(timetableRow?.title, "test")
         }
     }
 }

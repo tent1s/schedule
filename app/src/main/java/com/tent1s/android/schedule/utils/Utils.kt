@@ -25,3 +25,28 @@ fun convertMonthToString(mount: Int) : String{
         else -> "Error"
     }
 }
+
+fun timetableTimeToString(startHour :Int, startMinute :Int, endHour :Int, endMinute :Int) : String {
+    var str  = ""
+    str += if (startHour < 10){
+        "0$startHour"
+    }else{
+        startHour.toString()
+    }
+    str += if (startMinute < 10){
+        ":0$startMinute"
+    }else{
+        ":$startMinute"
+    }
+    str += if (endHour < 10){
+        "-0$endHour"
+    }else{
+        "-$endHour"
+    }
+    str += if (endMinute < 10){
+        ":0$endMinute"
+    }else{
+        ":$endMinute"
+    }
+    return str
+}

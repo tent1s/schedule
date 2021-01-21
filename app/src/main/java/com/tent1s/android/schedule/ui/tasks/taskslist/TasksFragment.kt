@@ -8,14 +8,12 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
+import androidx.recyclerview.widget.RecyclerView
 import com.tent1s.android.schedule.R
 import com.tent1s.android.schedule.ScheduleApplication
 import com.tent1s.android.schedule.databinding.FragmentTasksBinding
 import com.tent1s.android.schedule.ui.tasks.TasksAdapter
-import com.tent1s.android.schedule.ui.timetable.TimetableAdapter
-import com.tent1s.android.schedule.ui.timetable.timetablelist.TimetableViewModelFactory
-import com.tent1s.android.schedule.utils.shortToast
-import timber.log.Timber
+
 
 class TasksFragment : Fragment() {
 
@@ -31,10 +29,10 @@ class TasksFragment : Fragment() {
     ): View {
 
         _binding = DataBindingUtil.inflate(
-            inflater,
-            R.layout.fragment_tasks,
-            container,
-            false
+                inflater,
+                R.layout.fragment_tasks,
+                container,
+                false
         )
 
 
@@ -86,6 +84,14 @@ class TasksFragment : Fragment() {
         }
 
 
+
+
+        binding.taskList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                if (dy < 0 && !binding.floatingActionButtonTask.isShown) binding.floatingActionButtonTask.show() else
+                    if (dy > 0 && binding.floatingActionButtonTask.isShown) binding.floatingActionButtonTask.hide()
+            }
+        })
 
 
         tasksViewModel.navigateToSearch.observe(viewLifecycleOwner) { shouldNavigate ->

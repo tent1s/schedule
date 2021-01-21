@@ -12,7 +12,6 @@ import com.tent1s.android.schedule.database.TasksDatabaseDao
 import com.tent1s.android.schedule.database.TasksList
 import com.tent1s.android.schedule.utils.convertMonthToString
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 
 class NewTaskViewModel(val database: TasksDatabaseDao, application: Application,

@@ -1,17 +1,22 @@
 package com.tent1s.android.schedule.ui.timetable.newtimerow
 
+import android.app.Application
 import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
 import androidx.databinding.ObservableBoolean
 import androidx.databinding.ObservableField
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
+import com.tent1s.android.schedule.database.TasksList
+import com.tent1s.android.schedule.database.TimetableDatabaseDao
+import com.tent1s.android.schedule.database.TimetableList
+import kotlinx.coroutines.launch
 import timber.log.Timber
 
 
-class NewTimeRowViewModel() : ViewModel() {
+class NewTimeRowViewModel(val database: TimetableDatabaseDao, application: Application)
+    : AndroidViewModel(application) {
+
     private val _dayOfWeekButton = MutableLiveData<Boolean>()
     val dayOfWeekButton: LiveData<Boolean>
         get() = _dayOfWeekButton
@@ -197,13 +202,13 @@ class NewTimeRowViewModel() : ViewModel() {
             val delimiter = ":"
             var subStr = startTime.get()!!.split(delimiter)
             for (i in 0..1) {
-                startMinute = subStr[0].toInt()
-                startHour = subStr[1].toInt()
+                startMinute = subStr[1].toInt()
+                startHour = subStr[0].toInt()
             }
             subStr = endTime.get()!!.split(delimiter)
             for (i in 0..1) {
-                endMinute = subStr[0].toInt()
-                endHour = subStr[1].toInt()
+                endMinute = subStr[1].toInt()
+                endHour = subStr[0].toInt()
             }
 
             dayOfWeek = dayOfWeekToInt()
@@ -212,9 +217,11 @@ class NewTimeRowViewModel() : ViewModel() {
             if ((startHour > endHour) || ((startHour == endHour) && (startMinute > endMinute))){
                 errorInvalidTime()
             }else{
+                viewModelScope.launch {
 
-                //TODO ЗАПИСЬ В БД
-                Timber.i("День недели: $dayOfWeek Начальное время: $startHour:$startMinute Конечное время: $endHour:$endMinute Заголовок: $title Описание: $about Цвет: $color")
+                    insert(TimetableList(0, title.get(), about.get(), startHour, startMinute, endHour, endMinute, dayOfWeek, color))
+                    Timber.i("День недели: $dayOfWeek Начальное время: $startHour:$startMinute Конечное время: $endHour:$endMinute Заголовок: $title Описание: $about Цвет: $color")
+                }
                 _saveTimeInf.value = true
             }
         }else{
@@ -245,5 +252,17 @@ class NewTimeRowViewModel() : ViewModel() {
         }
         return colorInt
     }
+    private suspend fun insert(timetable: TimetableList) {
+        database.insert(timetable)
+    }
 
+    private suspend fun update(timetable: TimetableList) {
+        database.update(timetable)
+    }
+    private suspend fun get(key: Long): TimetableList? {
+        return database.get(key)
+    }
+    private suspend fun del(key: Long) {
+        database.del(key)
+    }
 }

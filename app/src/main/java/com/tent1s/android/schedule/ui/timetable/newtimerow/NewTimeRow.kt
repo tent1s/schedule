@@ -13,7 +13,9 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.tent1s.android.schedule.R
+import com.tent1s.android.schedule.database.ScheduleDatabase
 import com.tent1s.android.schedule.databinding.FragmentNewTimeRowBinding
+import com.tent1s.android.schedule.ui.tasks.newtask.NewTaskViewModelFactory
 import com.tent1s.android.schedule.utils.shortToast
 import timber.log.Timber
 
@@ -23,6 +25,7 @@ class NewTimeRow : Fragment() {
     private lateinit var newTimeRowViewModel: NewTimeRowViewModel
     private var _binding: FragmentNewTimeRowBinding? = null
     private val binding get() = _binding!!
+    private lateinit var viewModelFactory: NewTimeRowViewModelFactory
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -37,8 +40,11 @@ class NewTimeRow : Fragment() {
             false
         )
 
+        val application = requireNotNull(this.activity).application
+        val dataSource = ScheduleDatabase.getInstance(application).timetableDatabaseDao
+        viewModelFactory = NewTimeRowViewModelFactory(dataSource, application)
         newTimeRowViewModel =
-            ViewModelProvider(this).get(NewTimeRowViewModel::class.java)
+            ViewModelProvider(this, viewModelFactory).get(NewTimeRowViewModel::class.java)
 
         binding.viewModel = newTimeRowViewModel
 
@@ -72,9 +78,8 @@ class NewTimeRow : Fragment() {
                 val builder: AlertDialog.Builder = AlertDialog.Builder(context)
                 builder.setTitle("Выберете день недели")
 
-                val animals = arrayOf("Понидельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота")
-                builder.setItems(animals,
-                        DialogInterface.OnClickListener { _, which ->
+                val dayOfWeek = arrayOf("Понидельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота")
+                builder.setItems(dayOfWeek) { _, which ->
                             when (which) {
                                 0 -> binding.buttonDayOfWeek.text = "Понидельник"
                                 1 -> binding.buttonDayOfWeek.text = "Вторник"
@@ -83,7 +88,7 @@ class NewTimeRow : Fragment() {
                                 4 -> binding.buttonDayOfWeek.text = "Пятница"
                                 5 -> binding.buttonDayOfWeek.text = "Суббота"
                             }
-                        })
+                        }
 
                 val dialog: AlertDialog = builder.create()
                 dialog.show()
@@ -96,9 +101,8 @@ class NewTimeRow : Fragment() {
                 val builder: AlertDialog.Builder = AlertDialog.Builder(context)
                 builder.setTitle("Выберете цвет")
 
-                val animals = arrayOf("Черный", "Синий", "Зеленый", "Желтый", "Красный")
-                builder.setItems(animals,
-                        DialogInterface.OnClickListener { _, which ->
+                val color = arrayOf("Черный", "Синий", "Зеленый", "Желтый", "Красный")
+                builder.setItems(color){ _, which ->
                             when (which) {
                                 0 -> binding.colorButton.text = "Черный"
                                 1 -> binding.colorButton.text = "Синий"
@@ -106,7 +110,7 @@ class NewTimeRow : Fragment() {
                                 3 -> binding.colorButton.text = "Желтый"
                                 4 -> binding.colorButton.text = "Красный"
                             }
-                        })
+                        }
 
                 val dialog: AlertDialog = builder.create()
                 dialog.show()

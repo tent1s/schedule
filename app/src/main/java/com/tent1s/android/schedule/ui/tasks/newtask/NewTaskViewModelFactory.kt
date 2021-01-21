@@ -4,7 +4,6 @@ import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.tent1s.android.schedule.database.TasksDatabaseDao
-import com.tent1s.android.schedule.ui.tasks.taskslist.TasksViewModel
 
 
 class NewTaskViewModelFactory(private val dataSource: TasksDatabaseDao,

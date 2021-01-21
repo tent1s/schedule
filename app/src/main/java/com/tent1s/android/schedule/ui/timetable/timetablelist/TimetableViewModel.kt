@@ -4,16 +4,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.tent1s.android.schedule.database.TimetableList
-import com.tent1s.android.schedule.repository.ScheduleRepository
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
+import com.tent1s.android.schedule.ui.timetable.TimetableItem
 import java.util.ArrayList
 
 
-class TimetableViewModel(Repository: ScheduleRepository) : ViewModel() {
+class TimetableViewModel() : ViewModel() {
 
-    private val repository = Repository
+
     private val _navigateToSearch = MutableLiveData<Boolean>()
     val navigateToSearch: LiveData<Boolean>
         get() = _navigateToSearch
@@ -26,31 +23,27 @@ class TimetableViewModel(Repository: ScheduleRepository) : ViewModel() {
         _navigateToSearch.value = false
     }
 
+    private val _checkEmptyList = MutableLiveData<Boolean>()
+    val checkEmptyList: LiveData<Boolean>
+        get() = _checkEmptyList
 
-    private val _state = MutableLiveData<List<ListItem>>().apply {
-        value = getList()
+    fun listIsEmpty(){
+        _checkEmptyList.value = true
     }
-    val state: LiveData<List<ListItem>> = _state
-
-
-    private val _text = MutableLiveData<String>().apply {
-        if (_state.value!!.isEmpty()) value = "Нажмите “+”, чтобы добавить"
+    fun listIsNotEmpty(){
+        _checkEmptyList.value = false
     }
-    val text: LiveData<String> = _text
 
 
+    private val _state = MutableLiveData<List<TimetableItem>>()
+    val state: LiveData<List<TimetableItem>> = _state
 
 
-
-
-
-
-    private fun getList(): ArrayList<ListItem> {
-        val arrayList = ArrayList<ListItem>()
-        val date = repository.timetable
+     fun getTimetable(date : List<TimetableList>) {
+        val arrayList = ArrayList<TimetableItem>()
 
         for (j in 0..5) {
-            val header = ListItem.Header()
+            val header = TimetableItem.Header()
 
             when (j) {
                 0 -> header.header = "Понидельник"
@@ -65,15 +58,19 @@ class TimetableViewModel(Repository: ScheduleRepository) : ViewModel() {
             var findDay = 0
             if (count != 0) arrayList.add(header)
             for (i in 0 until count) {
-                val item = ListItem.ContentItem()
+                val item = TimetableItem.ContentItem()
 
                 for (x in findDay until date.size) {
                     val itemDate = date[x]
-                    if (itemDate.timetableDayWeek == j) {
+                    if (itemDate.dayWeek == j) {
                         findDay = x + 1
-                        item.title = itemDate.timetableTitle
-                        item.inf = itemDate.timetableInformation
-                        item.colorId = itemDate.timetableColorId
+                        item.title = itemDate.title
+                        item.inf = itemDate.information
+                        item.colorId = itemDate.colorId
+                        item.endTimeHour = itemDate.EndTimeHour
+                        item.endTimeMinute = itemDate.EndTimeMinute
+                        item.startTimeHour = itemDate.StartTimeHour
+                        item.startTimeMinute = itemDate.StartTimeMinute
                         break
                     }
                 }
@@ -81,26 +78,17 @@ class TimetableViewModel(Repository: ScheduleRepository) : ViewModel() {
                 arrayList.add(item)
             }
         }
-        return arrayList
+        _state.value = arrayList
     }
 
 
-    private fun getCount(dayOfWeek: Int, date: ArrayList<TimetableList>): Int {
+    private fun getCount(dayOfWeek: Int, date : List<TimetableList>): Int {
         var count = 0
         for (i in 0 until date.size) {
             val item = date[i]
-            if (item.timetableDayWeek == dayOfWeek) count += 1
+            if (item.dayWeek == dayOfWeek) count += 1
         }
         return count
     }
 }
 
-sealed class ListItem {
-    class Header : ListItem() var header: String? = null
-
-    class ContentItem : ListItem() {
-        var title: String? = null
-        var inf: String? = null
-        var colorId: Int? = null
-    }
-}

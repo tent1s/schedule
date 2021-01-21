@@ -1,11 +1,11 @@
-package com.tent1s.android.schedule.ui.tasks
+package com.tent1s.android.schedule.ui.timetable
 
 import androidx.recyclerview.widget.DiffUtil
 
 
-class TasksDiffUtil(
-        private val oldList: List<TasksItem>,
-        private val newList: List<TasksItem>
+class TimetableDiffUtil(
+        private val oldList: List<TimetableItem>,
+        private val newList: List<TimetableItem>
 ) : DiffUtil.Callback() {
 
     override fun getOldListSize(): Int {
@@ -21,8 +21,8 @@ class TasksDiffUtil(
     }
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        val oldItem = oldList[oldItemPosition] as TasksItem.ContentTask
-        val newItem = newList[newItemPosition] as TasksItem.ContentTask
+        val oldItem = oldList[oldItemPosition] as TimetableItem.ContentItem
+        val newItem = newList[newItemPosition] as TimetableItem.ContentItem
         return oldItem.id  == newItem.id
     }
 }

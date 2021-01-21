@@ -1,4 +1,4 @@
-package com.tent1s.android.schedule.ui.tasks.taskslist
+package com.tent1s.android.schedule.ui.tasks
 
 sealed class TasksItem {
     class HeaderTask : TasksItem() var header: String? = null

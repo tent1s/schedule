@@ -4,19 +4,19 @@ import android.graphics.Color
 import android.graphics.PorterDuff
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.tent1s.android.schedule.databinding.HeaderTimetableBinding
 import com.tent1s.android.schedule.databinding.ListItemTimetableBinding
-
-import com.tent1s.android.schedule.repository.ScheduleRepository
-import com.tent1s.android.schedule.ui.timetable.timetablelist.ListItem
+import com.tent1s.android.schedule.utils.timetableTimeToString
 
 
 private const val ITEM_VIEW_TYPE_HEADER = 0
 private const val ITEM_VIEW_TYPE_ITEM = 1
 
-class TimetableAdapter(var list: List<ListItem>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class TimetableAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
+    var timetable = emptyList<TimetableItem>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return if (viewType == ITEM_VIEW_TYPE_HEADER) {
@@ -29,10 +29,10 @@ class TimetableAdapter(var list: List<ListItem>) : RecyclerView.Adapter<Recycler
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is ViewHolderHeader) {
-            val item = list[position] as ListItem.Header
+            val item = timetable[position] as TimetableItem.Header
             holder.bind(item)
         } else if (holder is ViewHolderItem) {
-            val item = list[position] as ListItem.ContentItem
+            val item = timetable[position] as TimetableItem.ContentItem
             holder.bind(item)
         }
     }
@@ -43,22 +43,22 @@ class TimetableAdapter(var list: List<ListItem>) : RecyclerView.Adapter<Recycler
     }
 
     private fun isPositionHeader(position: Int): Boolean {
-        return when(list[position]){
-            is ListItem.Header -> true
-            is ListItem.ContentItem -> false
+        return when(timetable[position]){
+            is TimetableItem.Header -> true
+            is TimetableItem.ContentItem -> false
         }
     }
 
 
     override fun getItemCount(): Int {
-        return list.size
+        return timetable.size
     }
 
 
 
     class ViewHolderHeader private constructor(val binding: HeaderTimetableBinding): RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: ListItem.Header) {
+        fun bind(item: TimetableItem.Header) {
             binding.header.text = item.header
         }
 
@@ -77,7 +77,7 @@ class TimetableAdapter(var list: List<ListItem>) : RecyclerView.Adapter<Recycler
 
     class ViewHolderItem private constructor(val binding: ListItemTimetableBinding): RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: ListItem.ContentItem){
+        fun bind(item: TimetableItem.ContentItem){
             binding.timetableTitle.text = item.title
             binding.timetableInf.text = item.inf
             when(item.colorId) {
@@ -87,6 +87,7 @@ class TimetableAdapter(var list: List<ListItem>) : RecyclerView.Adapter<Recycler
                 3 -> binding.timetableColor.setColorFilter(Color.YELLOW, PorterDuff.Mode.SRC_ATOP)
                 4 -> binding.timetableColor.setColorFilter(Color.RED, PorterDuff.Mode.SRC_ATOP)
             }
+            binding.timetableTime.text = timetableTimeToString(item.startTimeHour,item.startTimeMinute, item.endTimeHour, item.endTimeMinute)
         }
 
         companion object {
@@ -97,5 +98,12 @@ class TimetableAdapter(var list: List<ListItem>) : RecyclerView.Adapter<Recycler
                 return ViewHolderItem(binding)
             }
         }
+    }
+
+    fun setData(listData: List<TimetableItem>) {
+        val timetableDiffUtil = TimetableDiffUtil(timetable, listData)
+        val timetableDiffResult = DiffUtil.calculateDiff(timetableDiffUtil)
+        this.timetable = listData
+        timetableDiffResult.dispatchUpdatesTo(this)
     }
 }

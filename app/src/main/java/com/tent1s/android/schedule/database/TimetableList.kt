@@ -7,24 +7,30 @@ import javax.security.auth.Subject
 
 @Entity(tableName = "timetable_table")
 data class TimetableList(
-    @PrimaryKey(autoGenerate = true)
-    var timetableId: Long = 0L,
+        @PrimaryKey(autoGenerate = true)
+        var id: Long = 0L,
 
-    @ColumnInfo(name = "task_title")
-    var timetableTitle:  String? = null,
+        @ColumnInfo(name = "title")
+        var title:  String? = null,
 
-    @ColumnInfo(name = "task_information")
-    var timetableInformation: String? = null,
+        @ColumnInfo(name = "information")
+        var information: String? = null,
 
-//    @ColumnInfo(name = "timetable_start_time")
-//    var timetableStartTime: Long = 2,
-//
-//    @ColumnInfo(name = "timetable_end_time")
-//    var timetableEndTime: Long =??,
+        @ColumnInfo(name = "start_time_hour")
+        var StartTimeHour: Int = -1,
 
-    @ColumnInfo(name = "timetable_day_week")
-    var timetableDayWeek: Int = -1,
+        @ColumnInfo(name = "start_time_minute")
+        var StartTimeMinute: Int = -1,
 
-    @ColumnInfo(name = "timetable_color_id")
-    var timetableColorId: Int = -1
+        @ColumnInfo(name = "timetable_end_hour")
+        var EndTimeHour: Int = -1,
+
+        @ColumnInfo(name = "timetable_end_minute")
+        var EndTimeMinute: Int = -1,
+
+        @ColumnInfo(name = "timetable_day_week")
+        var dayWeek: Int = -1,
+
+        @ColumnInfo(name = "timetable_color_id")
+        var colorId: Int = -1
 )

@@ -1,18 +1,14 @@
 package com.tent1s.android.schedule.ui.tasks
 
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.tent1s.android.schedule.database.TasksList
 import com.tent1s.android.schedule.databinding.HeaderTimetableBinding
 import com.tent1s.android.schedule.databinding.ListItemTasksBinding
 
-import com.tent1s.android.schedule.ui.tasks.taskslist.TasksItem
 import com.tent1s.android.schedule.utils.convertMonthToString
-import timber.log.Timber
 
 
 private const val ITEM_VIEW_TYPE_HEADER = 0
@@ -86,7 +82,7 @@ class TasksAdapter(val clickListener: (TasksItem.ContentTask) -> Unit) :
         fun bind(item: TasksItem.ContentTask){
             binding.taskTitle.text = item.title
             binding.taskInf.text = item.inf
-            binding.deadline.text = "${item.taskDeadlineDay} ${convertMonthToString(item.taskDeadlineMount)}"
+            binding.deadline.text = "${item.taskDeadlineDay} ${convertMonthToString(item.taskDeadlineMount)} ${item.taskDeadlineYear}"
         }
 
 

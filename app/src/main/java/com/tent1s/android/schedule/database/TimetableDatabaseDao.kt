@@ -18,15 +18,17 @@ interface TimetableDatabaseDao {
     suspend fun update(task: TimetableList)
 
 
-    @Query("SELECT * from timetable_table WHERE timetableId = :key")
+    @Query("SELECT * from timetable_table WHERE id = :key")
     suspend fun get(key: Long): TimetableList?
 
+    @Query("DELETE FROM timetable_table WHERE id = :key")
+    suspend fun del(key: Long)
 
     @Query("DELETE FROM timetable_table")
     suspend fun clear()
 
 
-    @Query("SELECT * FROM timetable_table ORDER BY timetableId DESC")
+    @Query("SELECT * FROM timetable_table ORDER BY id DESC")
     fun getAllTimetable(): LiveData<List<TimetableList>>
 
 
