@@ -7,16 +7,42 @@ import android.text.TextWatcher
 import androidx.databinding.ObservableBoolean
 import androidx.databinding.ObservableField
 import androidx.lifecycle.*
-import com.tent1s.android.schedule.database.TasksList
 import com.tent1s.android.schedule.database.TimetableDatabaseDao
 import com.tent1s.android.schedule.database.TimetableList
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
 
-class NewTimeRowViewModel(val database: TimetableDatabaseDao, application: Application, timetableId : Long)
-    : AndroidViewModel(application) {
+class NewTimeRowViewModel(val database: TimetableDatabaseDao, application: Application,
+                          private val timetableId : Long) : AndroidViewModel(application) {
 
+    private var timetableIsExist = false
+
+    private val isValid = ObservableBoolean(false)
+    val title = ObservableField<String>()
+    val about = ObservableField<String>()
+    val dayOfWeekString = ObservableField("день недели")
+    val startTime = ObservableField("начало")
+    val endTime = ObservableField("конец")
+    val colorString = ObservableField("выбор цвета")
+
+    init {
+        if(timetableId != -1L){
+            viewModelScope.launch {
+
+                val timetable = get(timetableId)
+                if (timetable != null) {
+                    timetableIsExist = true
+                    title.set(timetable.title)
+                    about.set(timetable.information)
+                    dayOfWeekString.set(colorIntToString(timetable.dayWeek))
+                    colorString.set(colorIntToString(timetable.colorId))
+                    startTime.set("${timetable.StartTimeHour}:${timetable.StartTimeMinute}")
+                    endTime.set("${timetable.EndTimeHour}:${timetable.EndTimeMinute}")
+                }
+            }
+        }
+    }
 
     private val _dayOfWeekButton = MutableLiveData<Boolean>()
     val dayOfWeekButton: LiveData<Boolean>
@@ -45,6 +71,10 @@ class NewTimeRowViewModel(val database: TimetableDatabaseDao, application: Appli
     private val _errorInvalidTime = MutableLiveData<Boolean>()
     val errorInvalidTime: LiveData<Boolean>
         get() = _errorInvalidTime
+
+    private val _delButtonClick = MutableLiveData<Boolean>()
+    val delButtonClick: LiveData<Boolean>
+        get() = _delButtonClick
 
     fun onDayOfWeekButtonClick() {
         _dayOfWeekButton.value = true
@@ -97,14 +127,20 @@ class NewTimeRowViewModel(val database: TimetableDatabaseDao, application: Appli
         _errorInvalidTime.value = false
     }
 
+    fun delButtonOnclick() {
+        viewModelScope.launch {
+            if (timetableIsExist){
+                del(timetableId)
+            }
+        }
+        _delButtonClick.value = true
+    }
 
-    private val isValid = ObservableBoolean(false)
-    val title = ObservableField<String>()
-    val about = ObservableField<String>()
-    val dayOfWeekString = ObservableField("день недели")
-    val startTime = ObservableField("начало")
-    val endTime = ObservableField("конец")
-    val colorString = ObservableField("выбор цвета")
+    fun delButtonOnclickComplete(){
+        _delButtonClick.value = false
+    }
+
+
 
     private fun validation() {
         val isValidTitle = !TextUtils.isEmpty(title.get())
@@ -219,9 +255,11 @@ class NewTimeRowViewModel(val database: TimetableDatabaseDao, application: Appli
                 errorInvalidTime()
             }else{
                 viewModelScope.launch {
-
-                    insert(TimetableList(0, title.get(), about.get(), startHour, startMinute, endHour, endMinute, dayOfWeek, color))
-                    Timber.i("День недели: $dayOfWeek Начальное время: $startHour:$startMinute Конечное время: $endHour:$endMinute Заголовок: $title Описание: $about Цвет: $color")
+                    if (timetableIsExist) {
+                        update(TimetableList(timetableId, title.get(), about.get(), startHour, startMinute, endHour, endMinute, dayOfWeek, color))
+                    }else {
+                        insert(TimetableList(0, title.get(), about.get(), startHour, startMinute, endHour, endMinute, dayOfWeek, color))
+                    }
                 }
                 _saveTimeInf.value = true
             }
@@ -252,6 +290,27 @@ class NewTimeRowViewModel(val database: TimetableDatabaseDao, application: Appli
             "Красный" -> colorInt = 4
         }
         return colorInt
+    }
+    fun colorIntToString(which: Int) : String {
+        return when (which) {
+            0 -> "Черный"
+            1 -> "Синий"
+            2 -> "Зеленый"
+            3 -> "Желтый"
+            4 -> "Красный"
+            else -> "выбор цвета"
+        }
+    }
+    fun dayOfWeekIntToString(which: Int) : String {
+        return when (which) {
+            0 ->  "Понидельник"
+            1 ->  "Вторник"
+            2 ->  "Среда"
+            3 ->  "Четверг"
+            4 ->  "Пятница"
+            5 ->  "Суббота"
+            else -> "день недели"
+        }
     }
     private suspend fun insert(timetable: TimetableList) {
         database.insert(timetable)

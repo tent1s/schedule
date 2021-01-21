@@ -42,7 +42,7 @@ class NewTimeRowFragment : Fragment() {
             false
         )
 
-        val args = arguments?.let { NewTimeRowArgs.fromBundle(it) }
+        val args = arguments?.let { NewTimeRowFragmentArgs.fromBundle(it) }
         val application = requireNotNull(this.activity).application
         val dataSource = ScheduleDatabase.getInstance(application).timetableDatabaseDao
         viewModelFactory = NewTimeRowViewModelFactory(dataSource, application, args!!.timetableId)
@@ -84,14 +84,7 @@ class NewTimeRowFragment : Fragment() {
 
                 val dayOfWeek = arrayOf("Понидельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота")
                 builder.setItems(dayOfWeek) { _, which ->
-                            when (which) {
-                                0 -> binding.buttonDayOfWeek.text = "Понидельник"
-                                1 -> binding.buttonDayOfWeek.text = "Вторник"
-                                2 -> binding.buttonDayOfWeek.text = "Среда"
-                                3 -> binding.buttonDayOfWeek.text = "Четверг"
-                                4 -> binding.buttonDayOfWeek.text = "Пятница"
-                                5 -> binding.buttonDayOfWeek.text = "Суббота"
-                            }
+                            binding.buttonDayOfWeek.text = newTimeRowViewModel.dayOfWeekIntToString(which)
                         }
 
                 val dialog: AlertDialog = builder.create()
@@ -108,13 +101,7 @@ class NewTimeRowFragment : Fragment() {
 
                 val color = arrayOf("Черный", "Синий", "Зеленый", "Желтый", "Красный")
                 builder.setItems(color){ _, which ->
-                            when (which) {
-                                0 -> binding.colorButton.text = "Черный"
-                                1 -> binding.colorButton.text = "Синий"
-                                2 -> binding.colorButton.text = "Зеленый"
-                                3 -> binding.colorButton.text = "Желтый"
-                                4 -> binding.colorButton.text = "Красный"
-                            }
+                           binding.colorButton.text = newTimeRowViewModel.colorIntToString(which)
                         }
 
                 val dialog: AlertDialog = builder.create()
@@ -169,7 +156,18 @@ class NewTimeRowFragment : Fragment() {
                 context?.shortToast("Конечная дата меньше начальной!")
                 newTimeRowViewModel.errorInvalidTimeComplete()
             }
+
+        }
+
+        newTimeRowViewModel.delButtonClick.observe(viewLifecycleOwner) { delButtonClick ->
+            if (delButtonClick == true) {
+                val navController = binding.root.findNavController()
+                navController.navigate(R.id.action_newTimeRow_to_navigation_timetable)
+                newTimeRowViewModel.delButtonOnclickComplete()
+            }
         }
     }
+
+
 
 }

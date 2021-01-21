@@ -106,25 +106,27 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
-            android:layout_marginBottom="16dp"
-            android:text="@string/deleted"
             android:onClick="@{() -> viewModel.onDelButtonClick()}"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/saveTask"
+            android:text="@string/deleted"
+            android:textColor="#FF0202"
+            app:layout_constraintBottom_toTopOf="@+id/saveTask"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/dateTask"
             app:layout_constraintVertical_bias="1.0" />
 
         <Button
             android:id="@+id/saveTask"
-            android:layout_width="181dp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="16dp"
-            android:text="@string/save"
             android:onClick="@{() -> viewModel.onSaveButtonClick()}"
+            android:text="@string/save"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/dateTask"
             app:layout_constraintVertical_bias="1.0" />
 
