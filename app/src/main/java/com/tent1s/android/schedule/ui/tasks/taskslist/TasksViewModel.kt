@@ -3,6 +3,7 @@ package com.tent1s.android.schedule.ui.tasks.taskslist
 import androidx.lifecycle.*
 import com.tent1s.android.schedule.database.TasksList
 import com.tent1s.android.schedule.ui.tasks.TasksItem
+import kotlinx.coroutines.launch
 import java.util.ArrayList
 
 class TasksViewModel() : ViewModel() {
@@ -39,6 +40,8 @@ class TasksViewModel() : ViewModel() {
 
     fun getTasks(tasks : List<TasksList>) {
         val arrayList = ArrayList<TasksItem>()
+        viewModelScope.launch {
+
             for (j in 0..1) {
                 val header = TasksItem.HeaderTask()
                 var m = true
@@ -72,6 +75,8 @@ class TasksViewModel() : ViewModel() {
                     arrayList.add(item)
                 }
             }
+
+        }
         _state.value = arrayList
     }
 

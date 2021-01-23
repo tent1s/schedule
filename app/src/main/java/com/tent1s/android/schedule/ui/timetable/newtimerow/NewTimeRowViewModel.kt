@@ -35,7 +35,7 @@ class NewTimeRowViewModel(val database: TimetableDatabaseDao, application: Appli
                     timetableIsExist = true
                     title.set(timetable.title)
                     about.set(timetable.information)
-                    dayOfWeekString.set(colorIntToString(timetable.dayWeek))
+                    dayOfWeekString.set(dayOfWeekIntToString(timetable.dayWeek))
                     colorString.set(colorIntToString(timetable.colorId))
                     startTime.set("${timetable.StartTimeHour}:${timetable.StartTimeMinute}")
                     endTime.set("${timetable.EndTimeHour}:${timetable.EndTimeMinute}")
@@ -247,7 +247,7 @@ class NewTimeRowViewModel(val database: TimetableDatabaseDao, application: Appli
                 endMinute = subStr[1].toInt()
                 endHour = subStr[0].toInt()
             }
-
+            Timber.i("12321 ${dayOfWeek}, ${dayOfWeekString.get()}")
             dayOfWeek = dayOfWeekToInt()
             color =  colorToInt()
 
@@ -270,14 +270,19 @@ class NewTimeRowViewModel(val database: TimetableDatabaseDao, application: Appli
 
     private fun dayOfWeekToInt() : Int {
         var dayOfWeekInt = -1
-        when (dayOfWeekString.get()) {
-            "Понидельник" -> dayOfWeekInt = 0
-            "Вторник" -> dayOfWeekInt = 1
-            "Среда" -> dayOfWeekInt = 2
-            "Четверг" -> dayOfWeekInt = 3
-            "Пятница" -> dayOfWeekInt = 4
-            "Суббота" -> dayOfWeekInt = 5
-        }
+
+        dayOfWeekInt = try {
+            when (dayOfWeekString.get()) {
+                "Понидельник" -> 0
+                "Вторник" -> 1
+                "Среда" -> 2
+                "Четверг" -> 3
+                "Пятница" -> 4
+                "Суббота" -> 5
+                else -> -1
+            }
+        }catch (e: NumberFormatException) { -1 }
+
         return dayOfWeekInt
     }
     private fun colorToInt() : Int {

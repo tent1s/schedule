@@ -1,9 +1,23 @@
 package com.tent1s.android.schedule.ui.settings
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import androidx.lifecycle.*
+import com.tent1s.android.schedule.database.TasksDatabaseDao
+import com.tent1s.android.schedule.database.TimetableDatabaseDao
+import kotlinx.coroutines.launch
 
-class SettingsViewModel : ViewModel() {
+class SettingsViewModel(private val databaseTimetable: TimetableDatabaseDao, private val databaseTasks: TasksDatabaseDao,
+                        application: Application) : AndroidViewModel(application) {
+
+    fun clearTimetable() {
+        viewModelScope.launch {
+            databaseTimetable.clear()
+        }
+    }
+    fun clearTasks() {
+        viewModelScope.launch {
+            databaseTasks.clear()
+        }
+    }
 
 }

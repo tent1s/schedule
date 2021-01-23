@@ -31,8 +31,5 @@ interface TasksDatabaseDao {
     @Query("SELECT * FROM tasks_list_table ORDER BY id DESC")
     fun getAllTasks(): LiveData<List<TasksList>>
 
-    @Query("SELECT * FROM tasks_list_table ORDER BY id DESC LIMIT 1")
-    suspend fun getLastTask(): TasksList?
-
 
 }

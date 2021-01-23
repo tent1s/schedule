@@ -3,8 +3,11 @@ package com.tent1s.android.schedule.ui.timetable.timetablelist
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.tent1s.android.schedule.database.TimetableList
 import com.tent1s.android.schedule.ui.timetable.TimetableItem
+import kotlinx.coroutines.launch
+import timber.log.Timber
 import java.util.ArrayList
 
 
@@ -41,46 +44,54 @@ class TimetableViewModel() : ViewModel() {
 
      fun getTimetable(date : List<TimetableList>) {
         val arrayList = ArrayList<TimetableItem>()
+         viewModelScope.launch {
 
-        for (j in 0..5) {
-            val header = TimetableItem.Header()
+             for (j in 0..5) {
+                 val header = TimetableItem.Header()
 
-            when (j) {
-                0 -> header.header = "Понидельник"
-                1 -> header.header = "Вторник"
-                2 -> header.header = "Среда"
-                3 -> header.header = "Четрверг"
-                4 -> header.header = "Пятница"
-                5 -> header.header = "Суббота"
-            }
+                 when (j) {
+                     0 -> header.header = "Понидельник"
+                     1 -> header.header = "Вторник"
+                     2 -> header.header = "Среда"
+                     3 -> header.header = "Четрверг"
+                     4 -> header.header = "Пятница"
+                     5 -> header.header = "Суббота"
+                 }
 
-            val count = getCount(j, date)
-            var findDay = 0
-            if (count != 0) arrayList.add(header)
-            for (i in 0 until count) {
-                val item = TimetableItem.ContentItem()
+                 val count = getCount(j, date)
+                 var findDay = 0
+                 if (count != 0) arrayList.add(header)
+                 for (i in 0 until count) {
+                     val item = TimetableItem.ContentItem()
 
-                for (x in findDay until date.size) {
-                    val itemDate = date[x]
-                    if (itemDate.dayWeek == j) {
-                        findDay = x + 1
-                        item.title = itemDate.title
-                        item.inf = itemDate.information
-                        item.colorId = itemDate.colorId
-                        item.endTimeHour = itemDate.EndTimeHour
-                        item.endTimeMinute = itemDate.EndTimeMinute
-                        item.startTimeHour = itemDate.StartTimeHour
-                        item.startTimeMinute = itemDate.StartTimeMinute
-                        item.id = itemDate.id
-                        break
-                    }
-                }
+                     for (x in findDay until date.size) {
+                         val itemDate = date[x]
+                         if (itemDate.dayWeek == j) {
+                             findDay = x + 1
+                             item.title = itemDate.title
+                             item.inf = itemDate.information
+                             item.colorId = itemDate.colorId
+                             item.endTimeHour = itemDate.EndTimeHour
+                             item.endTimeMinute = itemDate.EndTimeMinute
+                             item.startTimeHour = itemDate.StartTimeHour
+                             item.startTimeMinute = itemDate.StartTimeMinute
+                             item.id = itemDate.id
+                             break
+                         }
+                     }
 
-                arrayList.add(item)
-            }
-        }
+                     arrayList.add(item)
+                 }
+             }
+
+         }
         _state.value = arrayList
     }
+
+//    private fun sortTimetable(arrayList :  ArrayList<TimetableItem>):  ArrayList<TimetableItem>{
+//        Timber.i("dsdsd ${listOf(arrayList)}")
+//        return arrayList
+//    }
 
 
     private fun getCount(dayOfWeek: Int, date : List<TimetableList>): Int {

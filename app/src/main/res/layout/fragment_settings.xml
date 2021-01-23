@@ -2,21 +2,88 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.settings.SettingsFragment">
-
-        <ScrollView
+        tools:context=".MainActivity">
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:layout_editor_absoluteX="184dp"
-            tools:layout_editor_absoluteY="208dp">
+            tools:context=".ui.settings.SettingsFragment">
 
-            <LinearLayout
-                android:layout_width="match_parent"
+            <View
+                android:id="@+id/del_tasks_view"
+                android:layout_width="0dp"
+                android:layout_height="59dp"
+                android:background="#ffffff"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0" />
+
+            <View
+                android:id="@+id/view_line"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:background="#222121"
+                app:layout_constraintBottom_toBottomOf="@+id/del_tasks_view"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/del_tasks_view"
+                app:layout_constraintVertical_bias="1.0" />
+
+            <View
+                android:id="@+id/del_timetable_view"
+                android:layout_width="0dp"
+                android:layout_height="59dp"
+                android:background="#ffffff"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/del_tasks_view"
+                app:layout_constraintVertical_bias="0.0" />
+
+            <View
+                android:id="@+id/view_line2"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:background="#3C3A3A"
+                app:layout_constraintBottom_toBottomOf="@+id/del_timetable_view"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/del_tasks_view"
+                app:layout_constraintVertical_bias="1.0" />
+
+            <TextView
+                android:id="@+id/del_tasks_text"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical" />
-        </ScrollView>
-    </androidx.constraintlayout.widget.ConstraintLayout>
+                android:layout_marginStart="16dp"
+                android:text="Удалить все записи заданий"
+                android:textColor="#BF0C0C"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="@+id/del_tasks_view"
+                app:layout_constraintEnd_toEndOf="@+id/del_tasks_view"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/del_tasks_view"
+                app:layout_constraintTop_toTopOf="@+id/del_tasks_view" />
+
+            <TextView
+                android:id="@+id/del_timetable_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="Удалить все записи расписания"
+                android:textColor="#BF0C0C"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="@+id/del_timetable_view"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/del_timetable_view"
+                app:layout_constraintTop_toBottomOf="@+id/view_line" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 </layout>

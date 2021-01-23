@@ -44,6 +44,7 @@ class TimetableFragment : Fragment() {
 
         myRepository.timetable.observe(viewLifecycleOwner){
             timetableViewModel.getTimetable(it)
+            Timber.i("ddddd1 $it")
             if (it.isEmpty()){
                 timetableViewModel.listIsEmpty()
             }else{
