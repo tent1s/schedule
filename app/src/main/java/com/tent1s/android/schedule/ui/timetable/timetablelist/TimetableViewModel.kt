@@ -7,8 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.tent1s.android.schedule.database.TimetableList
 import com.tent1s.android.schedule.ui.timetable.TimetableItem
 import kotlinx.coroutines.launch
-import timber.log.Timber
-import java.util.ArrayList
+import java.util.*
 
 
 class TimetableViewModel() : ViewModel() {
@@ -42,7 +41,7 @@ class TimetableViewModel() : ViewModel() {
     val state: LiveData<List<TimetableItem>> = _state
 
 
-     fun getTimetable(date : List<TimetableList>) {
+     fun getTimetable(date: List<TimetableList>) {
         val arrayList = ArrayList<TimetableItem>()
          viewModelScope.launch {
 
@@ -61,6 +60,7 @@ class TimetableViewModel() : ViewModel() {
                  val count = getCount(j, date)
                  var findDay = 0
                  if (count != 0) arrayList.add(header)
+                 var sortAscending = ArrayList<TimetableItem.ContentItem>()
                  for (i in 0 until count) {
                      val item = TimetableItem.ContentItem()
 
@@ -80,7 +80,13 @@ class TimetableViewModel() : ViewModel() {
                          }
                      }
 
-                     arrayList.add(item)
+                     sortAscending.add(item)
+                 }
+                 if (sortAscending.size != 0) {
+                     sortAscending = sortTimetable(sortAscending)
+                 }
+                 for (p in 0 until sortAscending.size){
+                     arrayList.add(sortAscending[p])
                  }
              }
 
@@ -88,19 +94,64 @@ class TimetableViewModel() : ViewModel() {
         _state.value = arrayList
     }
 
-//    private fun sortTimetable(arrayList :  ArrayList<TimetableItem>):  ArrayList<TimetableItem>{
-//        Timber.i("dsdsd ${listOf(arrayList)}")
-//        return arrayList
-//    }
+
+    private fun sortTimetable(source: ArrayList<TimetableItem.ContentItem>) : ArrayList<TimetableItem.ContentItem> {
+        return quickSort(source, 0, source.size-1)
+    }
+
+    private fun quickSort(source: ArrayList<TimetableItem.ContentItem>, leftBorder: Int, rightBorder: Int) : ArrayList<TimetableItem.ContentItem>{
+        var leftMarker = leftBorder
+        var rightMarker = rightBorder
+        val pivot = source[(leftMarker + rightMarker) / 2].startTimeHour
+        val pivotMinute = source[(leftMarker + rightMarker) / 2].startTimeMinute
+        do {
 
 
-    private fun getCount(dayOfWeek: Int, date : List<TimetableList>): Int {
+            while (source[leftMarker].startTimeHour < pivot || (source[leftMarker].startTimeMinute < pivotMinute && source[leftMarker].startTimeHour == pivot)) {
+                leftMarker++
+            }
+
+
+            while (source[rightMarker].startTimeHour > pivot || (source[rightMarker].startTimeMinute > pivotMinute && source[leftMarker].startTimeHour == pivot)) {
+                rightMarker--
+            }
+
+
+            if (leftMarker <= rightMarker) {
+
+
+                if (leftMarker < rightMarker) {
+                    val tmp = source[leftMarker]
+                    source[leftMarker] = source[rightMarker]
+                    source[rightMarker] = tmp
+                }
+
+
+                leftMarker++
+                rightMarker--
+            }
+        } while (leftMarker <= rightMarker)
+
+
+
+        if (leftMarker < rightBorder) {
+            quickSort(source, leftMarker, rightBorder)
+        }
+        if (leftBorder < rightMarker) {
+            quickSort(source, leftBorder, rightMarker)
+        }
+        return source
+    }
+
+
+
+    private fun getCount(dayOfWeek: Int, date: List<TimetableList>): Int {
         var count = 0
-        for (i in 0 until date.size) {
-            val item = date[i]
-            if (item.dayWeek == dayOfWeek) count += 1
+        for (element in date) {
+            if (element.dayWeek == dayOfWeek) count += 1
         }
         return count
     }
+
 }
 
