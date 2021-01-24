@@ -14,7 +14,7 @@ import timber.log.Timber
 
 
 class NewTimeRowViewModel(val database: TimetableDatabaseDao, application: Application,
-                          private val timetableId : Long) : AndroidViewModel(application) {
+                          private val timetableId : Long, private val weekId :Int) : AndroidViewModel(application) {
 
     private var timetableIsExist = false
 
@@ -233,7 +233,6 @@ class NewTimeRowViewModel(val database: TimetableDatabaseDao, application: Appli
             var endMinute = -1
             var startHour = -1
             var endHour = -1
-            var color = -1
             var dayOfWeek = -1
 
             val delimiter = ":"
@@ -249,16 +248,16 @@ class NewTimeRowViewModel(val database: TimetableDatabaseDao, application: Appli
             }
             Timber.i("12321 ${dayOfWeek}, ${dayOfWeekString.get()}")
             dayOfWeek = dayOfWeekToInt()
-            color =  colorToInt()
+            val color : Int = colorToInt()
 
             if ((startHour > endHour) || ((startHour == endHour) && (startMinute > endMinute))){
                 errorInvalidTime()
             }else{
                 viewModelScope.launch {
                     if (timetableIsExist) {
-                        update(TimetableList(timetableId, title.get(), about.get(), startHour, startMinute, endHour, endMinute, dayOfWeek, color))
+                        update(TimetableList(timetableId, title.get(), about.get(), startHour, startMinute, endHour, endMinute, dayOfWeek, color, weekId))
                     }else {
-                        insert(TimetableList(0, title.get(), about.get(), startHour, startMinute, endHour, endMinute, dayOfWeek, color))
+                        insert(TimetableList(0, title.get(), about.get(), startHour, startMinute, endHour, endMinute, dayOfWeek, color, weekId))
                     }
                 }
                 _saveTimeInf.value = true
@@ -269,9 +268,7 @@ class NewTimeRowViewModel(val database: TimetableDatabaseDao, application: Appli
     }
 
     private fun dayOfWeekToInt() : Int {
-        var dayOfWeekInt = -1
-
-        dayOfWeekInt = try {
+        return try {
             when (dayOfWeekString.get()) {
                 "Понидельник" -> 0
                 "Вторник" -> 1
@@ -282,8 +279,6 @@ class NewTimeRowViewModel(val database: TimetableDatabaseDao, application: Appli
                 else -> -1
             }
         }catch (e: NumberFormatException) { -1 }
-
-        return dayOfWeekInt
     }
     private fun colorToInt() : Int {
         var colorInt = -1

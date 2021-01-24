@@ -14,6 +14,13 @@ class ScheduleRepository(application: Application)  {
     private val dataSourceForTimetableList = ScheduleDatabase.getInstance(application).timetableDatabaseDao
     val timetable = dataSourceForTimetableList.getAllTimetable()
 
+    private var _weekId : Int = 0
+    val weekId
+        get() = _weekId
+
+    fun setWeek(week: Int){
+        _weekId = week
+    }
 }
 
 

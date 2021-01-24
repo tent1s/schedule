@@ -14,5 +14,6 @@ sealed class TimetableItem {
         var startTimeMinute: Int = -1
         var endTimeHour: Int = -1
         var endTimeMinute: Int = -1
+        var weekId: Int = -1
     }
 }

@@ -45,7 +45,7 @@ class NewTimeRowFragment : Fragment() {
         val args = arguments?.let { NewTimeRowFragmentArgs.fromBundle(it) }
         val application = requireNotNull(this.activity).application
         val dataSource = ScheduleDatabase.getInstance(application).timetableDatabaseDao
-        viewModelFactory = NewTimeRowViewModelFactory(dataSource, application, args!!.timetableId)
+        viewModelFactory = NewTimeRowViewModelFactory(dataSource, application, args!!.timetableId, args!!.weekId)
         newTimeRowViewModel =
             ViewModelProvider(this, viewModelFactory).get(NewTimeRowViewModel::class.java)
 

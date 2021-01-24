@@ -54,5 +54,8 @@
         <argument
             android:name="timetableId"
             app:argType="long" />
+        <argument
+            android:name="weekId"
+            app:argType="integer" />
     </fragment>
 </navigation>

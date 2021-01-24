@@ -4,6 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.tent1s.android.schedule.ScheduleApplication
+import com.tent1s.android.schedule.database.ScheduleDatabase
 import com.tent1s.android.schedule.database.TimetableList
 import com.tent1s.android.schedule.ui.timetable.TimetableItem
 import kotlinx.coroutines.launch
@@ -40,8 +42,15 @@ class TimetableViewModel() : ViewModel() {
     private val _state = MutableLiveData<List<TimetableItem>>()
     val state: LiveData<List<TimetableItem>> = _state
 
+    private val _week = MutableLiveData<Int>()
+    val week: LiveData<Int> = _week
 
-     fun getTimetable(date: List<TimetableList>) {
+    fun setWeek(week: Int){
+        _week.value = week
+    }
+
+
+     fun getTimetable(date: List<TimetableList>, week: Int) {
         val arrayList = ArrayList<TimetableItem>()
          viewModelScope.launch {
 
@@ -57,7 +66,7 @@ class TimetableViewModel() : ViewModel() {
                      5 -> header.header = "Суббота"
                  }
 
-                 val count = getCount(j, date)
+                 val count = getCount(j, date, week)
                  var findDay = 0
                  if (count != 0) arrayList.add(header)
                  var sortAscending = ArrayList<TimetableItem.ContentItem>()
@@ -66,7 +75,7 @@ class TimetableViewModel() : ViewModel() {
 
                      for (x in findDay until date.size) {
                          val itemDate = date[x]
-                         if (itemDate.dayWeek == j) {
+                         if (itemDate.dayWeek == j && itemDate.weekId == week) {
                              findDay = x + 1
                              item.title = itemDate.title
                              item.inf = itemDate.information
@@ -75,6 +84,7 @@ class TimetableViewModel() : ViewModel() {
                              item.endTimeMinute = itemDate.EndTimeMinute
                              item.startTimeHour = itemDate.StartTimeHour
                              item.startTimeMinute = itemDate.StartTimeMinute
+                             item.weekId = itemDate.weekId
                              item.id = itemDate.id
                              break
                          }
@@ -145,10 +155,11 @@ class TimetableViewModel() : ViewModel() {
 
 
 
-    private fun getCount(dayOfWeek: Int, date: List<TimetableList>): Int {
+    private fun getCount(dayOfWeek: Int, date: List<TimetableList>, week: Int): Int {
         var count = 0
         for (element in date) {
-            if (element.dayWeek == dayOfWeek) count += 1
+            if (element.dayWeek == dayOfWeek && element.weekId == week) count += 1
+
         }
         return count
     }

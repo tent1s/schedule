@@ -8,11 +8,11 @@ import com.tent1s.android.schedule.database.TimetableDatabaseDao
 
 
 class NewTimeRowViewModelFactory(private val dataSource: TimetableDatabaseDao,
-                              private val application: Application, private val timetableId : Long) : ViewModelProvider.Factory {
+                              private val application: Application, private val timetableId : Long, private val weekId : Int) : ViewModelProvider.Factory {
     @Suppress("unchecked_cast")
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(NewTimeRowViewModel::class.java)) {
-            return NewTimeRowViewModel(dataSource, application, timetableId) as T
+            return NewTimeRowViewModel(dataSource, application, timetableId, weekId) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

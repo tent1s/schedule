@@ -22,15 +22,19 @@ data class TimetableList(
         @ColumnInfo(name = "start_time_minute")
         var StartTimeMinute: Int = -1,
 
-        @ColumnInfo(name = "timetable_end_hour")
+        @ColumnInfo(name = "end_hour")
         var EndTimeHour: Int = -1,
 
-        @ColumnInfo(name = "timetable_end_minute")
+        @ColumnInfo(name = "end_minute")
         var EndTimeMinute: Int = -1,
 
-        @ColumnInfo(name = "timetable_day_week")
+        @ColumnInfo(name = "day_week")
         var dayWeek: Int = -1,
 
-        @ColumnInfo(name = "timetable_color_id")
-        var colorId: Int = -1
+        @ColumnInfo(name = "color_id")
+        var colorId: Int = -1,
+
+        @ColumnInfo(name = "week_id")
+        var weekId: Int = -1
+
 )

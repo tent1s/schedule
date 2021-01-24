@@ -17,4 +17,5 @@ class ScheduleApplication : Application() {
     private val _repository by lazy { ScheduleRepository(application as Application) }
     val repository
         get() = _repository
+
 }

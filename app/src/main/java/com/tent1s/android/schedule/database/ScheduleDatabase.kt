@@ -6,7 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 
 
-@Database(entities = [TasksList::class, TimetableList::class], version = 4, exportSchema = false)
+@Database(entities = [TasksList::class, TimetableList::class], version = 5, exportSchema = false)
 abstract class ScheduleDatabase : RoomDatabase() {
 
 
