@@ -11,8 +11,7 @@
         tools:context=".MainActivity">
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#ffffff">
+            android:layout_height="wrap_content">
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/textInputLayout"
@@ -25,7 +24,10 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.0">
+                app:layout_constraintVertical_bias="0.0"
+                app:boxBackgroundColor="#d5d5d5"
+                app:boxStrokeColor="@color/secondaryColor"
+                app:hintTextColor="@color/secondaryColor">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
@@ -47,7 +49,10 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textInputLayout"
-                app:layout_constraintVertical_bias="0.0">
+                app:layout_constraintVertical_bias="0.0"
+                app:boxBackgroundColor="#d5d5d5"
+                app:boxStrokeColor="@color/secondaryColor"
+                app:hintTextColor="@color/secondaryColor">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
@@ -81,7 +86,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
-                android:layout_marginEnd="16dp"
+                android:layout_marginEnd="210dp"
                 android:onClick="@{()->viewModel.onTimetableStartTimeButtonClick()}"
                 android:text="@{viewModel.startTime}"
                 app:addTextChangedListener="@{viewModel.startTimeWatcher()}"
@@ -95,16 +100,16 @@
                 android:id="@+id/button_time_end"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
+                android:layout_marginStart="210dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="16dp"
+                android:onClick="@{()->viewModel.onTimetableEndTimeButtonClick()}"
                 android:text="@{viewModel.endTime}"
                 app:addTextChangedListener="@{viewModel.endTimeWatcher()}"
-                android:onClick="@{()->viewModel.onTimetableEndTimeButtonClick()}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/button_time_start"
+                app:layout_constraintTop_toBottomOf="@+id/button_day_of_week"
                 app:layout_constraintVertical_bias="0.0" />
 
             <Button
@@ -112,6 +117,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
+                android:layout_marginTop="212dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="16dp"
                 android:onClick="@{()->viewModel.onSaveTimeInfButtonClick()}"
@@ -129,24 +135,26 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="16dp"
-                android:text="@{viewModel.colorString}"
-                app:addTextChangedListener="@{viewModel.colorWatcher()}"
                 android:onClick="@{()->viewModel.onColorButtonClick()}"
+                android:text="@{viewModel.colorString}"
                 android:textSize="18sp"
+                app:addTextChangedListener="@{viewModel.colorWatcher()}"
                 app:layout_constraintBottom_toTopOf="@+id/button_save"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/button_time_end"
+                app:layout_constraintTop_toBottomOf="@+id/button_time_start"
                 app:layout_constraintVertical_bias="0.0" />
+
             <Button
                 android:id="@+id/del_button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
+                android:layout_marginTop="60dp"
                 android:layout_marginEnd="16dp"
+                android:onClick="@{()->viewModel.delButtonOnclick()}"
                 android:text="Удалить"
                 android:textColor="#FF0000"
-                android:onClick="@{()->viewModel.delButtonOnclick()}"
                 app:layout_constraintBottom_toTopOf="@+id/button_save"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

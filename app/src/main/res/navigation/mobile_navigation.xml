@@ -13,6 +13,8 @@
         <action
             android:id="@+id/action_navigation_tasks_to_newTaskFragment"
             app:destination="@id/newTask"
+            app:enterAnim="@anim/slide_up"
+            app:popEnterAnim="@anim/slide_down"
             app:popUpToInclusive="false" />
     </fragment>
 
@@ -23,14 +25,20 @@
         tools:layout="@layout/fragment_timetable" >
         <action
             android:id="@+id/action_navigation_timetable_to_newTimeRow"
-            app:destination="@id/newTimeRow" />
+            app:destination="@id/newTimeRow"
+            app:enterAnim="@anim/slide_up"
+            app:popEnterAnim="@anim/slide_down" />
     </fragment>
 
     <fragment
         android:id="@+id/settings"
         android:name="com.tent1s.android.schedule.ui.settings.SettingsFragment"
         android:label="@string/title_settings"
-        tools:layout="@layout/fragment_settings" />
+        tools:layout="@layout/fragment_settings" >
+        <action
+            android:id="@+id/action_settings_to_aboutMeFragment"
+            app:destination="@id/aboutMeFragment" />
+    </fragment>
     <fragment
         android:id="@+id/newTask"
         android:name="com.tent1s.android.schedule.ui.tasks.newtask.NewTaskFragment"
@@ -38,6 +46,7 @@
         <action
             android:id="@+id/action_newTaskFragment_to_navigation_tasks"
             app:destination="@id/tasks"
+            app:enterAnim="@anim/slide_down"
             app:popUpTo="@id/newTask"
             app:popUpToInclusive="true" />
         <argument
@@ -50,7 +59,10 @@
         android:label="@string/newObject">
         <action
             android:id="@+id/action_newTimeRow_to_navigation_timetable"
-            app:destination="@id/timetable" />
+            app:destination="@id/timetable"
+            app:enterAnim="@anim/slide_down"
+            app:popUpTo="@id/newTimeRow"
+            app:popUpToInclusive="true" />
         <argument
             android:name="timetableId"
             app:argType="long" />
@@ -58,4 +70,8 @@
             android:name="weekId"
             app:argType="integer" />
     </fragment>
+    <fragment
+        android:id="@+id/aboutMeFragment"
+        android:name="com.tent1s.android.schedule.ui.settings.AboutMeFragment"
+        android:label="О приложении" />
 </navigation>

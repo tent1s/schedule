@@ -106,19 +106,19 @@ class TimetableFragment : Fragment() {
         })
 
         binding.textWeek.text = when (timetableViewModel.week.value){
-            0 ->  "1 неделя"
-            1 ->  "2 неделя"
+            0 ->  "четная неделя"
+            1 ->  "нечетная неделя"
             else -> "error"
         }
         binding.Week.setOnClickListener{
             val builder: AlertDialog.Builder = AlertDialog.Builder(context)
             builder.setTitle("Выберете неделю")
 
-            val dayOfWeek = arrayOf("1 неделя", "2 неделя")
+            val dayOfWeek = arrayOf("Четная неделя", "Нечетная неделя")
             builder.setItems(dayOfWeek) { _, which ->
                 when (which){
-                    0 -> binding.textWeek.text = "1 неделя"
-                    1 -> binding.textWeek.text = "2 неделя"
+                    0 -> binding.textWeek.text = "четная неделя"
+                    1 -> binding.textWeek.text = "нечетная неделя"
                 }
                 myRepository.setWeek(which)
                 timetableViewModel.setWeek(which)
@@ -140,7 +140,6 @@ class TimetableFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-        Timber.i("onDestroyView")
     }
 
 

@@ -2,10 +2,8 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".MainActivity">
+
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -20,8 +18,10 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.0" />
+                app:layout_constraintTop_toBottomOf="@+id/notification_view"
+                app:layout_constraintVertical_bias="0.0"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackground" />
 
             <View
                 android:id="@+id/view_line"
@@ -44,7 +44,8 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/del_tasks_view"
-                app:layout_constraintVertical_bias="0.0" />
+                app:layout_constraintVertical_bias="0.0"
+                android:foreground="?android:attr/selectableItemBackground"/>
 
             <View
                 android:id="@+id/view_line2"
@@ -84,6 +85,81 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="@+id/del_timetable_view"
                 app:layout_constraintTop_toBottomOf="@+id/view_line" />
+
+            <View
+                android:id="@+id/about_view"
+                android:layout_width="0dp"
+                android:layout_height="59dp"
+                android:background="#ffffff"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/del_timetable_view"
+                app:layout_constraintVertical_bias="0.0"
+                android:foreground="?android:attr/selectableItemBackground"/>
+            <TextView
+                android:id="@+id/about_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="О приложении"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="@+id/about_view"
+                app:layout_constraintEnd_toEndOf="@+id/about_view"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/about_view"
+                app:layout_constraintTop_toTopOf="@+id/about_view" />
+
+            <View
+                android:id="@+id/view_line3"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:background="#3C3A3A"
+                app:layout_constraintBottom_toBottomOf="@+id/about_view"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/about_view"
+                app:layout_constraintVertical_bias="1.0" />
+
+            <View
+                android:id="@+id/notification_view"
+                android:layout_width="0dp"
+                android:layout_height="59dp"
+                android:background="#ffffff"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0"
+                android:foreground="?android:attr/selectableItemBackground"/>
+
+            <View
+                android:id="@+id/view_line4"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:background="#3C3A3A"
+                app:layout_constraintBottom_toBottomOf="@+id/notification_view"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/notification_view"
+                app:layout_constraintVertical_bias="1.0" />
+
+            <TextView
+                android:id="@+id/notification_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="Уведомление"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="@+id/notification_view"
+                app:layout_constraintEnd_toEndOf="@+id/notification_view"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/notification_view"
+                app:layout_constraintTop_toTopOf="@+id/notification_view" />
+
+
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </ScrollView>
+
 </layout>

@@ -12,10 +12,12 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.findNavController
 import com.tent1s.android.schedule.R
 import com.tent1s.android.schedule.database.ScheduleDatabase
 import com.tent1s.android.schedule.databinding.FragmentSettingsBinding
 import com.tent1s.android.schedule.ui.timetable.newtimerow.NewTimeRowViewModelFactory
+import com.tent1s.android.schedule.ui.timetable.timetablelist.TimetableFragmentDirections
 import kotlinx.coroutines.launch
 
 
@@ -104,6 +106,11 @@ class SettingsFragment : Fragment() {
             dialog.show()
             dialog.getButton(DialogInterface.BUTTON_NEGATIVE).setBackgroundColor(Color.GRAY)
             dialog.getButton(DialogInterface.BUTTON_POSITIVE).setBackgroundColor(Color.RED)
+        }
+
+        binding.aboutView.setOnClickListener{
+            val navController = binding.root.findNavController()
+            navController.navigate(R.id.action_settings_to_aboutMeFragment)
         }
 
     }
