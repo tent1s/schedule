@@ -51,6 +51,7 @@ class TimetableFragment : Fragment() {
                 timetableViewModel.getTimetable(list, it)
             }
         }
+
         return binding.root
     }
 

@@ -26,7 +26,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.0"
-                app:boxBackgroundColor="#d5d5d5"
+                app:boxBackgroundColor="@color/textInputBackground"
                 app:boxStrokeColor="@color/secondaryColor"
                 app:hintTextColor="@color/secondaryColor">
 
@@ -51,7 +51,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/taskTitle"
                 app:layout_constraintVertical_bias="0.0"
-                app:boxBackgroundColor="#d5d5d5"
+                app:boxBackgroundColor="@color/textInputBackground"
                 app:boxStrokeColor="@color/secondaryColor"
                 app:hintTextColor="@color/secondaryColor">
 

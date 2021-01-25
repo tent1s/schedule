@@ -7,18 +7,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
+import android.widget.CompoundButton
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewModelScope
 import androidx.navigation.findNavController
 import com.tent1s.android.schedule.R
+import com.tent1s.android.schedule.ScheduleApplication
 import com.tent1s.android.schedule.database.ScheduleDatabase
 import com.tent1s.android.schedule.databinding.FragmentSettingsBinding
-import com.tent1s.android.schedule.ui.timetable.newtimerow.NewTimeRowViewModelFactory
-import com.tent1s.android.schedule.ui.timetable.timetablelist.TimetableFragmentDirections
-import kotlinx.coroutines.launch
+import com.tent1s.android.schedule.repository.ScheduleRepository
 
 
 class SettingsFragment : Fragment() {
@@ -28,6 +27,7 @@ class SettingsFragment : Fragment() {
     private var _binding: FragmentSettingsBinding? = null
     private val binding get() = _binding!!
     private lateinit var viewModelFactory: SettingsViewModelFactory
+    private lateinit var myRepository : ScheduleRepository
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -48,6 +48,7 @@ class SettingsFragment : Fragment() {
         val dataSourceTasks = ScheduleDatabase.getInstance(application).tasksDatabaseDao
         viewModelFactory = SettingsViewModelFactory(dataSourceTimetable, dataSourceTasks, application)
         settingsViewModel = ViewModelProvider(this, viewModelFactory).get(SettingsViewModel::class.java)
+        myRepository = (requireActivity().application as ScheduleApplication).repository
 
         return binding.root
     }
@@ -93,11 +94,11 @@ class SettingsFragment : Fragment() {
             builder.setTitle(title)
 
 
-            builder.setPositiveButton(button1String) { _ , _ ->
+            builder.setPositiveButton(button1String) { _, _ ->
                 settingsViewModel.clearTimetable()
             }
 
-            builder.setNegativeButton(button2String) { _ , _ -> }
+            builder.setNegativeButton(button2String) { _, _ -> }
 
 
             builder.setCancelable(true);
@@ -108,10 +109,26 @@ class SettingsFragment : Fragment() {
             dialog.getButton(DialogInterface.BUTTON_POSITIVE).setBackgroundColor(Color.RED)
         }
 
+
+        binding.switchTheme.isChecked = myRepository.theme
+
+        binding.switchTheme.setOnCheckedChangeListener{_, switch: Boolean ->
+            if (switch){
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            }else{
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            }
+            myRepository.setTheme(switch)
+        }
+
+
+
+
         binding.aboutView.setOnClickListener{
             val navController = binding.root.findNavController()
             navController.navigate(R.id.action_settings_to_aboutMeFragment)
         }
 
     }
+
 }

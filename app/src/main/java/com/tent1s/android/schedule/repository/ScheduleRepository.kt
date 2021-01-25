@@ -1,9 +1,8 @@
 package com.tent1s.android.schedule.repository
 
 import android.app.Application
-import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.tent1s.android.schedule.database.*
-import java.util.*
 
 
 class ScheduleRepository(application: Application)  {
@@ -21,6 +20,15 @@ class ScheduleRepository(application: Application)  {
     fun setWeek(week: Int){
         _weekId = week
     }
+
+    private var _theme : Boolean = false
+    val theme
+        get() = _theme
+
+    fun setTheme(theme: Boolean){
+        _theme = theme
+    }
+
 }
 
 

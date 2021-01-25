@@ -10,7 +10,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#ffffff"
+        android:background="@color/primaryLightColor"
         android:id="@+id/row"
         android:foreground="?android:attr/selectableItemBackground">
 
@@ -21,7 +21,6 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="9dp"
             android:layout_marginEnd="8dp"
-            android:text="Мат логика"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/timetable_time"
             app:layout_constraintHorizontal_bias="0.0"
@@ -35,7 +34,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:layout_marginEnd="8dp"
-            android:text="**:**-**:**"
             android:textSize="12sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -68,7 +66,6 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
-            android:text="Лекция, 206б"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/timetable_time"
             app:layout_constraintHorizontal_bias="0.0"
@@ -81,7 +78,7 @@
             android:layout_width="0dp"
             android:layout_height="1dp"
             android:layout_marginStart="32dp"
-            android:background="#3C3A3A"
+            android:background="@color/bottomLine"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

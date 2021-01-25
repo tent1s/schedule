@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">schedule</string>
+    <string name="app_name">MySchedule</string>
     <string name="title_tasks">Задачи</string>
     <string name="title_timetable">Расписание</string>
     <string name="title_settings">Настройки</string>
@@ -14,4 +14,9 @@
     <string name="notification">Оповещение</string>
     <string name="deleted">УДАЛИТЬ</string>
     <string name="save">СОХРАНИТЬ</string>
+    <string name="del_task_text">Удалить все записи заданий</string>
+    <string name="del_timetable_text">Удалить все записи расписания</string>
+    <string name="about_me_text">О приложении</string>
+    <string name="notification_text">Уведомление</string>
+    <string name="theme_text">Темная тема</string>
 </resources>
