@@ -5,6 +5,7 @@ import com.tent1s.android.schedule.database.TasksList
 import com.tent1s.android.schedule.ui.tasks.TasksItem
 import com.tent1s.android.schedule.ui.timetable.TimetableItem
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import java.util.ArrayList
 
 class TasksViewModel() : ViewModel() {
@@ -76,13 +77,14 @@ class TasksViewModel() : ViewModel() {
                     }
                     sortAscending.add(item)
                 }
+
                 if (sortAscending.size != 0) {
                     sortAscending = sortTasks(sortAscending)
                 }
                 for (p in 0 until sortAscending.size){
                     arrayList.add(sortAscending[p])
                 }
-            }
+                            }
 
         }
         _state.value = arrayList
@@ -105,9 +107,10 @@ class TasksViewModel() : ViewModel() {
             }
 
 
-            while (source[rightMarker].taskDeadlineYear > pivotYear || (source[rightMarker].taskDeadlineMount > pivotMount && source[leftMarker].taskDeadlineYear == pivotYear)
-                    || (source[leftMarker].taskDeadlineDay > pivotDay && source[leftMarker].taskDeadlineMount == pivotMount && source[leftMarker].taskDeadlineYear == pivotYear)) {
+            while (source[rightMarker].taskDeadlineYear > pivotYear || (source[rightMarker].taskDeadlineMount > pivotMount && source[rightMarker].taskDeadlineYear == pivotYear)
+                    || (source[rightMarker].taskDeadlineDay > pivotDay && source[rightMarker].taskDeadlineMount == pivotMount && source[rightMarker].taskDeadlineYear == pivotYear)) {
                 rightMarker--
+
             }
 
 
@@ -134,6 +137,7 @@ class TasksViewModel() : ViewModel() {
         if (leftBorder < rightMarker) {
             quickSort(source, leftBorder, rightMarker)
         }
+
         return source
     }
 

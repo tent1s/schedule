@@ -122,7 +122,7 @@ class TimetableViewModel() : ViewModel() {
             }
 
 
-            while (source[rightMarker].startTimeHour > pivot || (source[rightMarker].startTimeMinute > pivotMinute && source[leftMarker].startTimeHour == pivot)) {
+            while (source[rightMarker].startTimeHour > pivot || (source[rightMarker].startTimeMinute > pivotMinute && source[rightMarker].startTimeHour == pivot)) {
                 rightMarker--
             }
 
