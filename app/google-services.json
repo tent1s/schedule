@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "637156086773",
+    "project_id": "myschedule-95992",
+    "storage_bucket": "myschedule-95992.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:637156086773:android:1f1f6deda074fd35ef06bc",
+        "android_client_info": {
+          "package_name": "com.tent1s.android.schedule"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "637156086773-bj4d9mtnt5sir65gpr1dlcah1qahekku.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD2DnjsSTTQX_Fh6wjxErrm7mTlTb3aKGA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "637156086773-bj4d9mtnt5sir65gpr1dlcah1qahekku.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

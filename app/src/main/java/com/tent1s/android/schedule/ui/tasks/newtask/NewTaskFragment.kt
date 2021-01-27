@@ -1,24 +1,24 @@
 package com.tent1s.android.schedule.ui.tasks.newtask
 
-import android.app.DatePickerDialog
+import android.os.Build
 import android.os.Bundle
-import android.text.Editable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
+import com.google.android.material.datepicker.MaterialDatePicker
 import com.tent1s.android.schedule.R
 import com.tent1s.android.schedule.database.ScheduleDatabase
 import com.tent1s.android.schedule.databinding.FragmentNewtaskBinding
-
-import com.tent1s.android.schedule.utils.convertMonthToString
 import com.tent1s.android.schedule.utils.hideKeyboard
 import com.tent1s.android.schedule.utils.shortToast
-import timber.log.Timber
+import java.time.Instant
+import java.time.ZoneId
 import java.util.*
 
 
@@ -101,20 +101,21 @@ class NewTaskFragment : Fragment() {
     }
 
 
+
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun getDate(){
 
-        val c = Calendar.getInstance()
-        val year = c.get(Calendar.YEAR)
-        val month = c.get(Calendar.MONTH)
-        val day = c.get(Calendar.DAY_OF_MONTH)
+        val builder = MaterialDatePicker.Builder.datePicker()
+        builder.setTheme(R.style.MaterialCalendarTheme);
+        val picker = builder.build()
+        val fragmentManager = (activity as FragmentActivity).supportFragmentManager
 
-        val dpd = context?.let { it ->
-            DatePickerDialog(it,R.style.DialogTheme, DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
-                val monthNorm = monthOfYear + 1
-                newTaskViewModel.getDate(dayOfMonth,monthNorm,year)
-                binding.dateTask.text = "$dayOfMonth ${convertMonthToString(monthNorm)}"
-            }, year, month, day)
+        picker.show(fragmentManager, picker.toString())
+
+        picker.addOnPositiveButtonClickListener {
+            val dt = Instant.ofEpochSecond(it / 1000L).atZone(ZoneId.systemDefault()).toLocalDateTime()
+            newTaskViewModel.getDate(dt)
+            binding.dateTask.text = picker.headerText
         }
-        dpd?.show()
     }
 }

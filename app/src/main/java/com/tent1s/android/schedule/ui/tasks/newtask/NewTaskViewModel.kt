@@ -12,6 +12,8 @@ import com.tent1s.android.schedule.database.TasksDatabaseDao
 import com.tent1s.android.schedule.database.TasksList
 import com.tent1s.android.schedule.utils.convertMonthToString
 import kotlinx.coroutines.launch
+import timber.log.Timber
+import java.time.LocalDateTime
 
 
 class NewTaskViewModel(val database: TasksDatabaseDao, application: Application,
@@ -152,10 +154,19 @@ class NewTaskViewModel(val database: TasksDatabaseDao, application: Application,
     fun saveGender(isChecked: Boolean) {
         complete.set(isChecked)
     }
-    fun getDate(newDay:Int, newMonth:Int, newYear: Int ){
-        day = newDay
-        month = newMonth
-        year = newYear
+    fun getDate(date : LocalDateTime){
+
+        val str = date.toString().substring(0, date.toString().lastIndexOf("T"))
+
+        val delimiter = "-"
+        val subStr = str.split(delimiter)
+
+        for (i in 0..2) {
+            day = subStr[2].toInt()
+            month = subStr[1].toInt()
+            year = subStr[0].toInt()
+        }
+
     }
 
     private fun saveInf(){
