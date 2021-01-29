@@ -1,10 +1,13 @@
 package com.tent1s.android.schedule.ui.timetable.timetablelist
 
 import android.app.AlertDialog
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -26,7 +29,7 @@ class TimetableFragment : Fragment() {
     private var _binding: FragmentTimetableBinding? = null
     private val binding get() = _binding!!
     private lateinit var myRepository : ScheduleRepository
-
+    private lateinit var prefs : SharedPreferences
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -44,12 +47,16 @@ class TimetableFragment : Fragment() {
 
 
 
-        timetableViewModel.setWeek( myRepository.weekId)
-
         myRepository.timetable.observe(viewLifecycleOwner){ list ->
             timetableViewModel.week.observe(viewLifecycleOwner){
                 timetableViewModel.getTimetable(list, it)
             }
+        }
+
+        prefs = activity!!.getSharedPreferences("settings", Context.MODE_PRIVATE)
+
+        if(prefs.contains("week")){
+            timetableViewModel.setWeek( prefs.getInt("week", 0))
         }
 
         return binding.root
@@ -120,7 +127,8 @@ class TimetableFragment : Fragment() {
                     0 -> binding.textWeek.text = "четная неделя"
                     1 -> binding.textWeek.text = "нечетная неделя"
                 }
-                myRepository.setWeek(which)
+                val editor = prefs.edit()
+                editor.putInt("week", which).apply()
                 timetableViewModel.setWeek(which)
             }
             val dialog: AlertDialog = builder.create()
@@ -141,6 +149,5 @@ class TimetableFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
-
 
 }

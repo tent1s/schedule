@@ -1,7 +1,9 @@
 package com.tent1s.android.schedule.ui.settings
 
 import android.app.AlertDialog
+import android.content.Context
 import android.content.DialogInterface
+import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -18,12 +20,13 @@ import com.tent1s.android.schedule.ScheduleApplication
 import com.tent1s.android.schedule.database.ScheduleDatabase
 import com.tent1s.android.schedule.databinding.FragmentSettingsBinding
 import com.tent1s.android.schedule.repository.ScheduleRepository
+import kotlinx.android.synthetic.main.fragment_settings.*
 
 
 class SettingsFragment : Fragment() {
 
     private lateinit var settingsViewModel: SettingsViewModel
-
+    private lateinit var prefs : SharedPreferences
     private var _binding: FragmentSettingsBinding? = null
     private val binding get() = _binding!!
     private lateinit var viewModelFactory: SettingsViewModelFactory
@@ -33,7 +36,7 @@ class SettingsFragment : Fragment() {
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
 
         _binding = DataBindingUtil.inflate(
@@ -49,6 +52,9 @@ class SettingsFragment : Fragment() {
         viewModelFactory = SettingsViewModelFactory(dataSourceTimetable, dataSourceTasks, application)
         settingsViewModel = ViewModelProvider(this, viewModelFactory).get(SettingsViewModel::class.java)
         myRepository = (requireActivity().application as ScheduleApplication).repository
+
+
+        prefs = activity!!.getSharedPreferences("settings", Context.MODE_PRIVATE)
 
         return binding.root
     }
@@ -110,15 +116,17 @@ class SettingsFragment : Fragment() {
         }
 
 
-        binding.switchTheme.isChecked = myRepository.theme
+
 
         binding.switchTheme.setOnCheckedChangeListener{_, switch: Boolean ->
+            val editor = prefs.edit()
             if (switch){
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                editor.putBoolean("theme", binding.switchTheme.isChecked).apply()
             }else{
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                editor.putBoolean("theme", binding.switchTheme.isChecked).apply()
             }
-            myRepository.setTheme(switch)
         }
 
 
@@ -131,4 +139,12 @@ class SettingsFragment : Fragment() {
 
     }
 
+
+    override fun onResume() {
+        super.onResume()
+
+        if(prefs.contains("theme")){
+            binding.switchTheme.isChecked = prefs.getBoolean("theme", false)
+        }
+    }
 }
