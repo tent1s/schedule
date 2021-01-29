@@ -4,8 +4,6 @@ import android.app.Application
 import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
-import androidx.databinding.ObservableBoolean
-import androidx.databinding.ObservableField
 import androidx.lifecycle.*
 import com.tent1s.android.schedule.database.TimetableDatabaseDao
 import com.tent1s.android.schedule.database.TimetableList
@@ -25,16 +23,22 @@ class NewTimeRowViewModel(val database: TimetableDatabaseDao, application: Appli
         get() = _isValid
 
 
-    private val _titleLive = MutableLiveData<String>()
-    val titleLive: LiveData<String>
-        get() = _titleLive
-    private var title = ""
+    private val _titleDatabase = MutableLiveData<String>()
+    val titleDatabase: LiveData<String>
+        get() = _titleDatabase
+
+    private val _title = MutableLiveData("")
+    val title: LiveData<String>
+        get() = _title
 
 
     private val _aboutLive = MutableLiveData<String>()
     val aboutLive: LiveData<String>
         get() = _aboutLive
-    private var about = ""
+
+    private val _about = MutableLiveData("")
+    val about: LiveData<String>
+        get() = _about
 
 
     private val _dayOfWeekString = MutableLiveData("день недели")
@@ -63,10 +67,10 @@ class NewTimeRowViewModel(val database: TimetableDatabaseDao, application: Appli
                 val timetable = get(timetableId)
                 if (timetable != null) {
                     timetableIsExist = true
-                    title = timetable.title!!
-                    _titleLive.value = timetable.title!!
+                    _title.value = timetable.title!!
+                    _titleDatabase.value = timetable.title!!
                     _aboutLive.value = timetable.information!!
-                    about = timetable.information!!
+                    _about.value = timetable.information!!
                     _dayOfWeekString.value = dayOfWeekIntToString(timetable.dayWeek)
                     _colorString.value = colorIntToString(timetable.colorId)
                     _startTime.value = timetableStartTimeToString(timetable.StartTimeHour, timetable.StartTimeMinute)
@@ -102,8 +106,8 @@ class NewTimeRowViewModel(val database: TimetableDatabaseDao, application: Appli
 
 
     private fun validation() {
-        val isValidTitle = !TextUtils.isEmpty(title)
-        val isValidAbout = !TextUtils.isEmpty(about)
+        val isValidTitle = !TextUtils.isEmpty(title.value)
+        val isValidAbout = !TextUtils.isEmpty(about.value)
         val isValidDayOfWeekString = !dayOfWeekString.value.equals("день недели")
         val isValidStartTime = !startTime.value.equals("начало")
         val isValidEndTime = !endTime.value.equals("конец")
@@ -116,7 +120,7 @@ class NewTimeRowViewModel(val database: TimetableDatabaseDao, application: Appli
         return object : TextWatcher {
             override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
             override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
-                title = charSequence.toString()
+                _title.postValue(charSequence.toString())
             }
 
             override fun afterTextChanged(editable: Editable) {
@@ -128,7 +132,7 @@ class NewTimeRowViewModel(val database: TimetableDatabaseDao, application: Appli
         return object : TextWatcher {
             override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
             override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
-                about = charSequence.toString()
+                _about.postValue(charSequence.toString())
             }
 
             override fun afterTextChanged(editable: Editable) {
@@ -213,9 +217,9 @@ class NewTimeRowViewModel(val database: TimetableDatabaseDao, application: Appli
             }else{
                 viewModelScope.launch {
                     if (timetableIsExist) {
-                        update(TimetableList(timetableId, title, about, startHour, startMinute, endHour, endMinute, dayOfWeek, color, weekId))
+                        update(TimetableList(timetableId, title.value, about.value, startHour, startMinute, endHour, endMinute, dayOfWeek, color, weekId))
                     }else {
-                        insert(TimetableList(0, title, about, startHour, startMinute, endHour, endMinute, dayOfWeek, color, weekId))
+                        insert(TimetableList(0, title.value, about.value, startHour, startMinute, endHour, endMinute, dayOfWeek, color, weekId))
                     }
                 }
             }

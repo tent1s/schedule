@@ -3,6 +3,7 @@ package com.tent1s.android.schedule.ui.tasks.newtask
 import android.os.Build
 import android.os.Bundle
 import android.text.Editable
+import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -126,6 +127,21 @@ class NewTaskFragment : Fragment() {
             binding.taskAboutInput.setText(it)
         }
 
+        newTaskViewModel.title.observe(viewLifecycleOwner){
+            if (TextUtils.isEmpty(it)){
+                binding.taskTitle.error = "Поле не лоджно быть пустым"
+            }else{
+                binding.taskTitle.error = null
+            }
+        }
+
+        newTaskViewModel.about.observe(viewLifecycleOwner){
+            if (TextUtils.isEmpty(it)){
+                binding.taskAbout.error = "Поле не лоджно быть пустым"
+            }else{
+                binding.taskAbout.error = null
+            }
+        }
     }
 }
 

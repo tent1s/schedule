@@ -2,29 +2,23 @@ package com.tent1s.android.schedule.ui.timetable.newtimerow
 
 import android.app.AlertDialog
 import android.app.TimePickerDialog
-import android.content.DialogInterface
+import android.os.Build
 import android.os.Bundle
+import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TimePicker
+import androidx.annotation.RequiresApi
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
-import com.google.android.material.timepicker.MaterialTimePicker
-import com.google.android.material.timepicker.TimeFormat
 import com.tent1s.android.schedule.R
 import com.tent1s.android.schedule.database.ScheduleDatabase
 import com.tent1s.android.schedule.databinding.FragmentNewTimeRowBinding
-import com.tent1s.android.schedule.ui.tasks.newtask.NewTaskFragmentArgs
-import com.tent1s.android.schedule.ui.tasks.newtask.NewTaskViewModelFactory
 import com.tent1s.android.schedule.utils.hideKeyboard
 import com.tent1s.android.schedule.utils.shortToast
 import com.tent1s.android.schedule.utils.timetableStartTimeToString
-
 import timber.log.Timber
 
 
@@ -64,6 +58,8 @@ class NewTimeRowFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
+
 
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -158,7 +154,7 @@ class NewTimeRowFragment : Fragment() {
         }
 
         binding.inputTitle.addTextChangedListener( newTimeRowViewModel.titleWatcher() )
-        newTimeRowViewModel.titleLive.observe(viewLifecycleOwner){
+        newTimeRowViewModel.titleDatabase.observe(viewLifecycleOwner){
             binding.inputTitle.setText(it)
         }
 
@@ -184,6 +180,24 @@ class NewTimeRowFragment : Fragment() {
         newTimeRowViewModel.colorString.observe(viewLifecycleOwner){
             binding.colorButton.text = it
         }
+
+        newTimeRowViewModel.title.observe(viewLifecycleOwner){
+            if (TextUtils.isEmpty(it)){
+                binding.textInputLayout.error = "Поле не лоджно быть пустым"
+            }else{
+                binding.textInputLayout.error = null
+            }
+        }
+
+        newTimeRowViewModel.about.observe(viewLifecycleOwner){
+            if (TextUtils.isEmpty(it)){
+                binding.textInputLayout2.error = "Поле не лоджно быть пустым"
+            }else{
+                binding.textInputLayout2.error = null
+            }
+        }
+
+
 
     }
 

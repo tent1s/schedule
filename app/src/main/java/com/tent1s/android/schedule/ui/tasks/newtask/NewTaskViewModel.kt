@@ -30,13 +30,17 @@ class NewTaskViewModel(val database: TasksDatabaseDao, application: Application,
     private val _titleLive = MutableLiveData<String>()
     val titleLive: LiveData<String>
         get() = _titleLive
-    private var title = ""
+    private val _title = MutableLiveData("")
+    val title: LiveData<String>
+        get() = _title
 
 
     private val _aboutLive = MutableLiveData<String>()
     val aboutLive: LiveData<String>
         get() = _aboutLive
-    private var about = ""
+    private val _about = MutableLiveData("")
+    val about: LiveData<String>
+        get() = _about
 
     private val _date = MutableLiveData("Выбор даты")
     val date: LiveData<String>
@@ -64,9 +68,9 @@ class NewTaskViewModel(val database: TasksDatabaseDao, application: Application,
                     _date.value = "$day ${convertMonthToString(month)}"
                     taskIsExist = true
                     _titleLive.postValue(task.title)
-                    title = task.title!!
+                    _title.value = task.title!!
                     _aboutLive.postValue(task.information)
-                    about = task.information!!
+                    _about.value = task.information!!
                     _complete.value = task.isTaskDone
                 }
             }
@@ -87,8 +91,8 @@ class NewTaskViewModel(val database: TasksDatabaseDao, application: Application,
 
 
     private fun validation() {
-        val isValidTitle = !TextUtils.isEmpty(title)
-        val isValidAbout = !TextUtils.isEmpty(about)
+        val isValidTitle = !TextUtils.isEmpty(title.value)
+        val isValidAbout = !TextUtils.isEmpty(about.value)
         val isValidDayOfWeek = !date.value.equals("Выбор даты")
 
         _isValid.postValue(isValidTitle && isValidAbout && isValidDayOfWeek)
@@ -98,7 +102,7 @@ class NewTaskViewModel(val database: TasksDatabaseDao, application: Application,
         return object : TextWatcher {
             override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
             override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
-                title = charSequence.toString()
+                _title.postValue(charSequence.toString())
             }
 
             override fun afterTextChanged(editable: Editable) {
@@ -110,7 +114,7 @@ class NewTaskViewModel(val database: TasksDatabaseDao, application: Application,
         return object : TextWatcher {
             override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
             override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
-                about = charSequence.toString()
+                _about.postValue(charSequence.toString())
             }
 
             override fun afterTextChanged(editable: Editable) {
@@ -154,9 +158,9 @@ class NewTaskViewModel(val database: TasksDatabaseDao, application: Application,
 
          viewModelScope.launch {
              if (taskIsExist){
-                 update(TasksList(taskId, title, about, day, month, year, complete.value))
+                 update(TasksList(taskId, title.value, about.value, day, month, year, complete.value))
              }else {
-                 insert(TasksList(0, title, about, day, month, year, complete.value))
+                 insert(TasksList(0, title.value, about.value, day, month, year, complete.value))
              }
          }
 
