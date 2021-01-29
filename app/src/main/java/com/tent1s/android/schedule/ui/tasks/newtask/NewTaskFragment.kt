@@ -2,6 +2,7 @@ package com.tent1s.android.schedule.ui.tasks.newtask
 
 import android.os.Build
 import android.os.Bundle
+import android.text.Editable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,7 +20,6 @@ import com.tent1s.android.schedule.utils.hideKeyboard
 import com.tent1s.android.schedule.utils.shortToast
 import java.time.Instant
 import java.time.ZoneId
-import java.util.*
 
 
 class NewTaskFragment : Fragment() {
@@ -51,8 +51,6 @@ class NewTaskFragment : Fragment() {
         newTaskViewModel = ViewModelProvider(this, viewModelFactory)
                 .get(NewTaskViewModel::class.java)
 
-        binding.viewModel = newTaskViewModel
-
         return binding.root
     }
 
@@ -61,61 +59,73 @@ class NewTaskFragment : Fragment() {
         _binding = null
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-            newTaskViewModel.navigateToTasks.observe(viewLifecycleOwner) { shouldNavigate ->
-                if (shouldNavigate == true) {
-                    val navController = binding.root.findNavController()
-                    navController.navigate(R.id.action_newTaskFragment_to_navigation_tasks)
-                    newTaskViewModel.onNavigateToTasks()
-                }
-            }
 
+        binding.delTask.setOnClickListener {
+            newTaskViewModel.onDelButtonClick()
 
-            newTaskViewModel.saveSomeInf.observe(viewLifecycleOwner) { saveSomeInf ->
-                if (saveSomeInf == true) {
-                    val navController = binding.root.findNavController()
-                    navController.navigate(R.id.action_newTaskFragment_to_navigation_tasks)
-                    newTaskViewModel.onSaveButtonClickComplete()
-                }
-            }
-
-
-
-            newTaskViewModel.timePickerDialogData.observe(viewLifecycleOwner) { display ->
-                if (display == true) {
-                    activity?.hideKeyboard()
-                    getDate()
-                    newTaskViewModel.getTimePickerDialogData()
-                }
-            }
-
-            newTaskViewModel.errorToast.observe(viewLifecycleOwner){ display ->
-                if (display == true) {
-                    context?.shortToast("Вы ввели не всю информацию!!")
-                    newTaskViewModel.errorEnd()
-                }
-            }
-
-    }
-
-
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    private fun getDate(){
-
-        val builder = MaterialDatePicker.Builder.datePicker()
-        builder.setTheme(R.style.MaterialCalendarTheme);
-        val picker = builder.build()
-        val fragmentManager = (activity as FragmentActivity).supportFragmentManager
-
-        picker.show(fragmentManager, picker.toString())
-
-        picker.addOnPositiveButtonClickListener {
-            val dt = Instant.ofEpochSecond(it / 1000L).atZone(ZoneId.systemDefault()).toLocalDateTime()
-            newTaskViewModel.getDate(dt)
-            binding.dateTask.text = picker.headerText
+            val navController = binding.root.findNavController()
+            navController.navigate(R.id.action_newTaskFragment_to_navigation_tasks)
         }
+
+
+
+
+        binding.saveTask.setOnClickListener{
+            if (newTaskViewModel.isValid.value == true) {
+                newTaskViewModel.saveInf()
+                val navController = binding.root.findNavController()
+                navController.navigate(R.id.action_newTaskFragment_to_navigation_tasks)
+            }else{
+                context?.shortToast("Вы ввели не всю информацию!!")
+            }
+        }
+
+
+        binding.dateTask.setOnClickListener {
+            activity?.hideKeyboard()
+
+            val builder = MaterialDatePicker.Builder.datePicker()
+            builder.setTheme(R.style.MaterialCalendarTheme)
+            builder.setTitleText("Выбор даты")
+            val picker = builder.build()
+            val fragmentManager = (activity as FragmentActivity).supportFragmentManager
+
+            picker.show(fragmentManager, picker.toString())
+
+            picker.addOnPositiveButtonClickListener {
+                val dt = Instant.ofEpochSecond(it / 1000L).atZone(ZoneId.systemDefault()).toLocalDateTime()
+                newTaskViewModel.getDate(dt)
+                binding.dateTask.text = picker.headerText
+            }
+        }
+
+        binding.dateTask.addTextChangedListener( newTaskViewModel.dateWatcher())
+        newTaskViewModel.date.observe(viewLifecycleOwner){
+            binding.dateTask.text = it
+        }
+
+        binding.isTaskDone.setOnCheckedChangeListener { _, boolean ->
+            newTaskViewModel.saveIsDoneTask(boolean)
+        }
+
+        newTaskViewModel.complete.observe(viewLifecycleOwner){
+            binding.isTaskDone.isChecked = it
+        }
+
+        binding.taskTitleInput.addTextChangedListener( newTaskViewModel.titleWatcher() )
+        newTaskViewModel.titleLive.observe(viewLifecycleOwner){
+            binding.taskTitleInput.setText(it)
+        }
+
+        binding.taskAboutInput.addTextChangedListener( newTaskViewModel.aboutWatcher() )
+        newTaskViewModel.aboutLive.observe(viewLifecycleOwner){
+            binding.taskAboutInput.setText(it)
+        }
+
     }
 }
+

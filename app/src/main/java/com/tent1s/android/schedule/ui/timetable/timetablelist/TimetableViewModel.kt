@@ -14,19 +14,6 @@ import java.util.*
 
 class TimetableViewModel() : ViewModel() {
 
-
-    private val _navigateToSearch = MutableLiveData<Boolean>()
-    val navigateToSearch: LiveData<Boolean>
-        get() = _navigateToSearch
-
-    fun onFabClicked(){
-        _navigateToSearch.value = true
-    }
-
-    fun onNavigationToSearch(){
-        _navigateToSearch.value = false
-    }
-
     private val _checkEmptyList = MutableLiveData<Boolean>()
     val checkEmptyList: LiveData<Boolean>
         get() = _checkEmptyList

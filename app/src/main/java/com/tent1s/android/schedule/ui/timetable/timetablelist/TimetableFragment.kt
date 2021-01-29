@@ -42,7 +42,7 @@ class TimetableFragment : Fragment() {
         timetableViewModel =
                 ViewModelProvider(this).get(TimetableViewModel::class.java)
 
-        binding.viewModel = timetableViewModel
+
 
         timetableViewModel.setWeek( myRepository.weekId)
 
@@ -80,16 +80,14 @@ class TimetableFragment : Fragment() {
 
 
 
-        timetableViewModel.navigateToSearch.observe(viewLifecycleOwner) { shouldNavigate ->
-            if (shouldNavigate == true) {
-                val navController = binding.root.findNavController()
-                val week = timetableViewModel.week.value
-                if (week != null) {
-                    navController.navigate(TimetableFragmentDirections.actionNavigationTimetableToNewTimeRow(-1L, week))
-                }
-                timetableViewModel.onNavigationToSearch()
+        binding.floatingActionButtonTimetable.setOnClickListener {
+            val navController = binding.root.findNavController()
+            val week = timetableViewModel.week.value
+            if (week != null) {
+                navController.navigate(TimetableFragmentDirections.actionNavigationTimetableToNewTimeRow(-1L, week))
             }
         }
+
 
 
         binding.timetableList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -111,6 +109,7 @@ class TimetableFragment : Fragment() {
             1 ->  "нечетная неделя"
             else -> "error"
         }
+
         binding.Week.setOnClickListener{
             val builder: AlertDialog.Builder = AlertDialog.Builder(context)
             builder.setTitle("Выберете неделю")

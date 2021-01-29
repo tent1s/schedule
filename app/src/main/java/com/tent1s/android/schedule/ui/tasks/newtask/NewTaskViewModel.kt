@@ -5,7 +5,6 @@ import android.app.Application
 import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
-import androidx.databinding.ObservableBoolean
 import androidx.databinding.ObservableField
 import androidx.lifecycle.*
 import com.tent1s.android.schedule.database.TasksDatabaseDao
@@ -23,11 +22,31 @@ class NewTaskViewModel(val database: TasksDatabaseDao, application: Application,
 
     private var taskIsExist = false
 
-    private val isValid = ObservableBoolean(false)
-    val title = ObservableField<String>()
-    val about = ObservableField<String>()
-    val date = ObservableField("Выбор даты")
-    val complete = ObservableBoolean(false)
+
+    private val _isValid = MutableLiveData(false)
+    val isValid: LiveData<Boolean>
+        get() = _isValid
+
+    private val _titleLive = MutableLiveData<String>()
+    val titleLive: LiveData<String>
+        get() = _titleLive
+    private var title = ""
+
+
+    private val _aboutLive = MutableLiveData<String>()
+    val aboutLive: LiveData<String>
+        get() = _aboutLive
+    private var about = ""
+
+    private val _date = MutableLiveData("Выбор даты")
+    val date: LiveData<String>
+        get() = _date
+
+
+    private val _complete = MutableLiveData( false )
+    val complete: LiveData<Boolean>
+        get() = _complete
+
 
     private var day = -1
     private var month = -1
@@ -39,43 +58,22 @@ class NewTaskViewModel(val database: TasksDatabaseDao, application: Application,
 
                 val task = get(taskId)
                 if (task != null) {
-                    taskIsExist = true
-                    title.set(task.title)
-                    about.set(task.information)
                     day = task.deadlineDay
                     month = task.deadlineMount
                     year = task.deadlineYear
-                    task.isTaskDone?.let { complete.set(it) }
-                    date.set("$day ${convertMonthToString(month)}")
+                    _date.value = "$day ${convertMonthToString(month)}"
+                    taskIsExist = true
+                    _titleLive.postValue(task.title)
+                    title = task.title!!
+                    _aboutLive.postValue(task.information)
+                    about = task.information!!
+                    _complete.value = task.isTaskDone
                 }
             }
         }
     }
 
-    private val _timePickerDialogData = MutableLiveData<Boolean>()
-    val timePickerDialogData: LiveData<Boolean>
-        get() = _timePickerDialogData
 
-    private val _navigateToTasks = MutableLiveData<Boolean>()
-    val navigateToTasks: LiveData<Boolean>
-        get() = _navigateToTasks
-
-    private val _saveTaskInf = MutableLiveData<Boolean>()
-    val saveSomeInf: LiveData<Boolean>
-        get() = _saveTaskInf
-
-    private val _errorToast = MutableLiveData<Boolean>()
-    val errorToast: LiveData<Boolean>
-        get() = _errorToast
-
-
-    fun onSaveButtonClick(){
-        saveInf()
-    }
-
-    fun onSaveButtonClickComplete(){
-        _saveTaskInf.value = false
-    }
 
     fun onDelButtonClick(){
         viewModelScope.launch {
@@ -83,43 +81,24 @@ class NewTaskViewModel(val database: TasksDatabaseDao, application: Application,
                 del(taskId)
             }
         }
-        _navigateToTasks.value = true
     }
 
-    fun onNavigateToTasks(){
-        _navigateToTasks.value = false
-    }
-
-    fun onDisplayTimePickerDialogClick() {
-        _timePickerDialogData.value = true
-    }
-
-    fun getTimePickerDialogData(){
-        _timePickerDialogData.value = false
-    }
-    private fun errorStart() {
-        _errorToast.value = true
-    }
-
-    fun errorEnd(){
-        _errorToast.value = false
-    }
 
 
 
     private fun validation() {
-        val isValidTitle = !TextUtils.isEmpty(title.get())
-        val isValidAbout = !TextUtils.isEmpty(about.get())
-        val isValidDayOfWeek = !date.get().equals("Выбор даты")
+        val isValidTitle = !TextUtils.isEmpty(title)
+        val isValidAbout = !TextUtils.isEmpty(about)
+        val isValidDayOfWeek = !date.value.equals("Выбор даты")
 
-        isValid.set(isValidTitle && isValidAbout && isValidDayOfWeek)
+        _isValid.postValue(isValidTitle && isValidAbout && isValidDayOfWeek)
     }
 
     fun titleWatcher(): TextWatcher {
         return object : TextWatcher {
             override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
             override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
-                title.set(charSequence.toString())
+                title = charSequence.toString()
             }
 
             override fun afterTextChanged(editable: Editable) {
@@ -131,7 +110,7 @@ class NewTaskViewModel(val database: TasksDatabaseDao, application: Application,
         return object : TextWatcher {
             override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
             override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
-                about.set(charSequence.toString())
+                about = charSequence.toString()
             }
 
             override fun afterTextChanged(editable: Editable) {
@@ -143,7 +122,7 @@ class NewTaskViewModel(val database: TasksDatabaseDao, application: Application,
         return object : TextWatcher {
             override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
             override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
-                date.set(charSequence.toString())
+                _date.postValue(charSequence.toString())
             }
 
             override fun afterTextChanged(editable: Editable) {
@@ -151,9 +130,11 @@ class NewTaskViewModel(val database: TasksDatabaseDao, application: Application,
             }
         }
     }
-    fun saveGender(isChecked: Boolean) {
-        complete.set(isChecked)
+
+    fun saveIsDoneTask(isChecked: Boolean) {
+        _complete.value = isChecked
     }
+
     fun getDate(date : LocalDateTime){
 
         val str = date.toString().substring(0, date.toString().lastIndexOf("T"))
@@ -169,20 +150,16 @@ class NewTaskViewModel(val database: TasksDatabaseDao, application: Application,
 
     }
 
-    private fun saveInf(){
-        if (isValid.get()){
+     fun saveInf(){
 
-            viewModelScope.launch {
-                if (taskIsExist){
-                    update(TasksList(taskId, title.get(), about.get(), day, month, year, complete.get()))
-                }else {
-                    insert(TasksList(0, title.get(), about.get(), day, month, year, complete.get()))
-                }
-            }
-            _saveTaskInf.value = true
-        }else{
-            errorStart()
-        }
+         viewModelScope.launch {
+             if (taskIsExist){
+                 update(TasksList(taskId, title, about, day, month, year, complete.value))
+             }else {
+                 insert(TasksList(0, title, about, day, month, year, complete.value))
+             }
+         }
+
     }
 
 

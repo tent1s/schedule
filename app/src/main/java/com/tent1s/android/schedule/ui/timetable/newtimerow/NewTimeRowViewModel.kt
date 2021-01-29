@@ -9,6 +9,7 @@ import androidx.databinding.ObservableField
 import androidx.lifecycle.*
 import com.tent1s.android.schedule.database.TimetableDatabaseDao
 import com.tent1s.android.schedule.database.TimetableList
+import com.tent1s.android.schedule.utils.timetableStartTimeToString
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -18,13 +19,42 @@ class NewTimeRowViewModel(val database: TimetableDatabaseDao, application: Appli
 
     private var timetableIsExist = false
 
-    private val isValid = ObservableBoolean(false)
-    val title = ObservableField<String>()
-    val about = ObservableField<String>()
-    val dayOfWeekString = ObservableField("день недели")
-    val startTime = ObservableField("начало")
-    val endTime = ObservableField("конец")
-    val colorString = ObservableField("выбор цвета")
+
+    private val _isValid = MutableLiveData(false)
+    val isValid: LiveData<Boolean>
+        get() = _isValid
+
+
+    private val _titleLive = MutableLiveData<String>()
+    val titleLive: LiveData<String>
+        get() = _titleLive
+    private var title = ""
+
+
+    private val _aboutLive = MutableLiveData<String>()
+    val aboutLive: LiveData<String>
+        get() = _aboutLive
+    private var about = ""
+
+
+    private val _dayOfWeekString = MutableLiveData("день недели")
+    val dayOfWeekString: LiveData<String>
+        get() = _dayOfWeekString
+
+
+    private val _startTime = MutableLiveData("начало")
+    val startTime: LiveData<String>
+        get() = _startTime
+
+
+    private val _endTime = MutableLiveData("конец")
+    val endTime: LiveData<String>
+        get() = _endTime
+
+
+    private val _colorString = MutableLiveData("выбор цвета")
+    val colorString: LiveData<String>
+        get() = _colorString
 
     init {
         if(timetableId != -1L){
@@ -33,92 +63,25 @@ class NewTimeRowViewModel(val database: TimetableDatabaseDao, application: Appli
                 val timetable = get(timetableId)
                 if (timetable != null) {
                     timetableIsExist = true
-                    title.set(timetable.title)
-                    about.set(timetable.information)
-                    dayOfWeekString.set(dayOfWeekIntToString(timetable.dayWeek))
-                    colorString.set(colorIntToString(timetable.colorId))
-                    startTime.set("${timetable.StartTimeHour}:${timetable.StartTimeMinute}")
-                    endTime.set("${timetable.EndTimeHour}:${timetable.EndTimeMinute}")
+                    title = timetable.title!!
+                    _titleLive.value = timetable.title!!
+                    _aboutLive.value = timetable.information!!
+                    about = timetable.information!!
+                    _dayOfWeekString.value = dayOfWeekIntToString(timetable.dayWeek)
+                    _colorString.value = colorIntToString(timetable.colorId)
+                    _startTime.value = timetableStartTimeToString(timetable.StartTimeHour, timetable.StartTimeMinute)
+                    _endTime.value = timetableStartTimeToString(timetable.EndTimeHour,timetable.EndTimeMinute)
                 }
             }
         }
     }
 
-    private val _dayOfWeekButton = MutableLiveData<Boolean>()
-    val dayOfWeekButton: LiveData<Boolean>
-        get() = _dayOfWeekButton
-
-    private val _timetableStartTime = MutableLiveData<Boolean>()
-    val timetableStartTime: LiveData<Boolean>
-        get() = _timetableStartTime
-
-    private val _timetableEndTime = MutableLiveData<Boolean>()
-    val timetableEndTime: LiveData<Boolean>
-        get() = _timetableEndTime
-
-    private val _saveTimeInf = MutableLiveData<Boolean>()
-    val saveTimeInf: LiveData<Boolean>
-        get() = _saveTimeInf
-
-    private val _colorButton = MutableLiveData<Boolean>()
-    val colorButton: LiveData<Boolean>
-        get() = _colorButton
-
-    private val _errorNullDate = MutableLiveData<Boolean>()
-    val errorNullDate: LiveData<Boolean>
-        get() = _errorNullDate
 
     private val _errorInvalidTime = MutableLiveData<Boolean>()
     val errorInvalidTime: LiveData<Boolean>
         get() = _errorInvalidTime
 
-    private val _delButtonClick = MutableLiveData<Boolean>()
-    val delButtonClick: LiveData<Boolean>
-        get() = _delButtonClick
 
-    fun onDayOfWeekButtonClick() {
-        _dayOfWeekButton.value = true
-    }
-
-    fun onDayOfWeekButtonClickComplete(){
-        _dayOfWeekButton.value = false
-    }
-
-    fun onTimetableStartTimeButtonClick() {
-        _timetableStartTime.value = true
-    }
-
-    fun onTimetableStartTimeButtonClickComplete(){
-        _timetableStartTime.value = false
-    }
-    fun onTimetableEndTimeButtonClick() {
-        _timetableEndTime.value = true
-    }
-
-    fun onTimetableEndTimeButtonClickComplete(){
-        _timetableEndTime.value = false
-    }
-    fun onSaveTimeInfButtonClick() {
-        saveInf()
-    }
-
-    fun onSaveTimeInfButtonClickComplete(){
-        _saveTimeInf.value = false
-    }
-    fun onColorButtonClick() {
-        _colorButton.value = true
-    }
-
-    fun onColorButtonClickComplete(){
-        _colorButton.value = false
-    }
-    private fun errorNullDate() {
-        _errorNullDate.value = true
-    }
-
-    fun errorNullDateComplete(){
-        _errorNullDate.value = false
-    }
     private fun errorInvalidTime() {
         _errorInvalidTime.value = true
     }
@@ -127,37 +90,33 @@ class NewTimeRowViewModel(val database: TimetableDatabaseDao, application: Appli
         _errorInvalidTime.value = false
     }
 
+
     fun delButtonOnclick() {
         viewModelScope.launch {
             if (timetableIsExist){
                 del(timetableId)
             }
         }
-        _delButtonClick.value = true
-    }
-
-    fun delButtonOnclickComplete(){
-        _delButtonClick.value = false
     }
 
 
 
     private fun validation() {
-        val isValidTitle = !TextUtils.isEmpty(title.get())
-        val isValidAbout = !TextUtils.isEmpty(about.get())
-        val isValidDayOfWeekString = !dayOfWeekString.get().equals("день недели")
-        val isValidStartTime = !startTime.get().equals("начало")
-        val isValidEndTime = !endTime.get().equals("конец")
-        val isValidColor = !colorString.get().equals("выбор цвета")
+        val isValidTitle = !TextUtils.isEmpty(title)
+        val isValidAbout = !TextUtils.isEmpty(about)
+        val isValidDayOfWeekString = !dayOfWeekString.value.equals("день недели")
+        val isValidStartTime = !startTime.value.equals("начало")
+        val isValidEndTime = !endTime.value.equals("конец")
+        val isValidColor = !colorString.value.equals("выбор цвета")
 
-        isValid.set(isValidTitle && isValidAbout  && isValidDayOfWeekString && isValidStartTime && isValidEndTime && isValidColor)
+        _isValid.postValue(isValidTitle && isValidAbout  && isValidDayOfWeekString && isValidStartTime && isValidEndTime && isValidColor)
     }
 
     fun titleWatcher(): TextWatcher {
         return object : TextWatcher {
             override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
             override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
-                title.set(charSequence.toString())
+                title = charSequence.toString()
             }
 
             override fun afterTextChanged(editable: Editable) {
@@ -169,7 +128,7 @@ class NewTimeRowViewModel(val database: TimetableDatabaseDao, application: Appli
         return object : TextWatcher {
             override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
             override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
-                about.set(charSequence.toString())
+                about = charSequence.toString()
             }
 
             override fun afterTextChanged(editable: Editable) {
@@ -181,7 +140,7 @@ class NewTimeRowViewModel(val database: TimetableDatabaseDao, application: Appli
         return object : TextWatcher {
             override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
             override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
-                dayOfWeekString.set(charSequence.toString())
+                _dayOfWeekString.postValue(charSequence.toString())
             }
 
             override fun afterTextChanged(editable: Editable) {
@@ -193,7 +152,7 @@ class NewTimeRowViewModel(val database: TimetableDatabaseDao, application: Appli
         return object : TextWatcher {
             override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
             override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
-                startTime.set(charSequence.toString())
+                _startTime.postValue(charSequence.toString())
             }
 
             override fun afterTextChanged(editable: Editable) {
@@ -205,7 +164,7 @@ class NewTimeRowViewModel(val database: TimetableDatabaseDao, application: Appli
         return object : TextWatcher {
             override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
             override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
-                endTime.set(charSequence.toString())
+                _endTime.postValue(charSequence.toString())
             }
 
             override fun afterTextChanged(editable: Editable) {
@@ -217,7 +176,7 @@ class NewTimeRowViewModel(val database: TimetableDatabaseDao, application: Appli
         return object : TextWatcher {
             override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
             override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
-                colorString.set(charSequence.toString())
+                _colorString.postValue(charSequence.toString())
             }
 
             override fun afterTextChanged(editable: Editable) {
@@ -227,8 +186,7 @@ class NewTimeRowViewModel(val database: TimetableDatabaseDao, application: Appli
     }
 
 
-    private fun saveInf(){
-        if (isValid.get()){
+    fun saveInf(){
             var startMinute = -1
             var endMinute = -1
             var startHour = -1
@@ -236,17 +194,17 @@ class NewTimeRowViewModel(val database: TimetableDatabaseDao, application: Appli
             var dayOfWeek = -1
 
             val delimiter = ":"
-            var subStr = startTime.get()!!.split(delimiter)
+            var subStr = startTime.value!!.split(delimiter)
             for (i in 0..1) {
                 startMinute = subStr[1].toInt()
                 startHour = subStr[0].toInt()
             }
-            subStr = endTime.get()!!.split(delimiter)
+            subStr = endTime.value!!.split(delimiter)
             for (i in 0..1) {
                 endMinute = subStr[1].toInt()
                 endHour = subStr[0].toInt()
             }
-            Timber.i("12321 ${dayOfWeek}, ${dayOfWeekString.get()}")
+            Timber.i("12321 ${dayOfWeek}, ${dayOfWeekString.value}")
             dayOfWeek = dayOfWeekToInt()
             val color : Int = colorToInt()
 
@@ -255,21 +213,17 @@ class NewTimeRowViewModel(val database: TimetableDatabaseDao, application: Appli
             }else{
                 viewModelScope.launch {
                     if (timetableIsExist) {
-                        update(TimetableList(timetableId, title.get(), about.get(), startHour, startMinute, endHour, endMinute, dayOfWeek, color, weekId))
+                        update(TimetableList(timetableId, title, about, startHour, startMinute, endHour, endMinute, dayOfWeek, color, weekId))
                     }else {
-                        insert(TimetableList(0, title.get(), about.get(), startHour, startMinute, endHour, endMinute, dayOfWeek, color, weekId))
+                        insert(TimetableList(0, title, about, startHour, startMinute, endHour, endMinute, dayOfWeek, color, weekId))
                     }
                 }
-                _saveTimeInf.value = true
             }
-        }else{
-            errorNullDate()
-        }
     }
 
     private fun dayOfWeekToInt() : Int {
         return try {
-            when (dayOfWeekString.get()) {
+            when (dayOfWeekString.value) {
                 "Понидельник" -> 0
                 "Вторник" -> 1
                 "Среда" -> 2
@@ -282,7 +236,7 @@ class NewTimeRowViewModel(val database: TimetableDatabaseDao, application: Appli
     }
     private fun colorToInt() : Int {
         var colorInt = -1
-        when (colorString.get()) {
+        when (colorString.value) {
             "Черный" ->  colorInt = 0
             "Синий" -> colorInt = 1
             "Зеленый" -> colorInt = 2

@@ -42,7 +42,7 @@ class TasksFragment : Fragment() {
 
         tasksViewModel =
                 ViewModelProvider(this).get(TasksViewModel::class.java)
-        binding.viewModel = tasksViewModel
+
 
         myRepository.tasks.observe(viewLifecycleOwner){
             tasksViewModel.getTasks(it)
@@ -94,12 +94,9 @@ class TasksFragment : Fragment() {
         })
 
 
-        tasksViewModel.navigateToSearch.observe(viewLifecycleOwner) { shouldNavigate ->
-            if (shouldNavigate == true) {
+        binding.floatingActionButtonTask.setOnClickListener {
                 val navController = binding.root.findNavController()
                 navController.navigate(TasksFragmentDirections.actionNavigationTasksToNewTaskFragment(-1L))
-                tasksViewModel.onNavigationToSearch()
-            }
         }
     }
 
