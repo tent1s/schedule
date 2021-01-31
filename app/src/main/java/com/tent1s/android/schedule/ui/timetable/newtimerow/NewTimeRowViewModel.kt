@@ -5,6 +5,7 @@ import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
 import androidx.lifecycle.*
+import com.google.firebase.database.*
 import com.tent1s.android.schedule.database.TimetableDatabaseDao
 import com.tent1s.android.schedule.database.TimetableList
 import com.tent1s.android.schedule.utils.timetableStartTimeToString
@@ -13,7 +14,7 @@ import timber.log.Timber
 
 
 class NewTimeRowViewModel(val database: TimetableDatabaseDao, application: Application,
-                          private val timetableId : Long, private val weekId :Int) : AndroidViewModel(application) {
+                          private val timetableId : String, private val weekId :Int, private val firebase: DatabaseReference) : AndroidViewModel(application) {
 
     private var timetableIsExist = false
 
@@ -60,24 +61,54 @@ class NewTimeRowViewModel(val database: TimetableDatabaseDao, application: Appli
     val colorString: LiveData<String>
         get() = _colorString
 
+    private val _timetable = MutableLiveData<TimetableList>()
+    val timetable: LiveData<TimetableList>
+        get() = _timetable
+
     init {
-        if(timetableId != -1L){
+        if(!TextUtils.isEmpty(timetableId)){
             viewModelScope.launch {
 
-                val timetable = get(timetableId)
-                if (timetable != null) {
-                    timetableIsExist = true
-                    _title.value = timetable.title!!
-                    _titleDatabase.value = timetable.title!!
-                    _aboutLive.value = timetable.information!!
-                    _about.value = timetable.information!!
-                    _dayOfWeekString.value = dayOfWeekIntToString(timetable.dayWeek)
-                    _colorString.value = colorIntToString(timetable.colorId)
-                    _startTime.value = timetableStartTimeToString(timetable.StartTimeHour, timetable.StartTimeMinute)
-                    _endTime.value = timetableStartTimeToString(timetable.EndTimeHour,timetable.EndTimeMinute)
-                }
+                // val timetable = get(timetableId)
+
+
+                val postListener = object : ValueEventListener {
+
+                    override fun onDataChange(dataSnapshot: DataSnapshot) {
+
+                        for (child in dataSnapshot.children) {
+
+                            if(child.key == timetableId){
+
+                                _timetable.postValue(child.getValue(TimetableList::class.java))
+
+                            }
+                        }
+                    }
+                    override fun onCancelled(databaseError: DatabaseError) {
+
+
+                        Timber.i("sdsd ")
+
+                        }
+                    }
+                    firebase.addListenerForSingleValueEvent(postListener)
             }
         }
+    }
+
+    fun setVal(timetable :TimetableList ){
+
+            timetableIsExist = true
+            _title.value = timetable.title!!
+            _titleDatabase.value = timetable.title!!
+            _aboutLive.value = timetable.information!!
+            _about.value = timetable.information!!
+            _dayOfWeekString.value = dayOfWeekIntToString(timetable.dayWeek)
+            _colorString.value = colorIntToString(timetable.colorId)
+            _startTime.value = timetableStartTimeToString(timetable.StartTimeHour, timetable.StartTimeMinute)
+            _endTime.value = timetableStartTimeToString(timetable.EndTimeHour,timetable.EndTimeMinute)
+
     }
 
 
@@ -98,7 +129,8 @@ class NewTimeRowViewModel(val database: TimetableDatabaseDao, application: Appli
     fun delButtonOnclick() {
         viewModelScope.launch {
             if (timetableIsExist){
-                del(timetableId)
+                //del(timetableId)
+                firebase.child(timetableId).removeValue()
             }
         }
     }
@@ -176,6 +208,7 @@ class NewTimeRowViewModel(val database: TimetableDatabaseDao, application: Appli
             }
         }
     }
+
     fun colorWatcher(): TextWatcher {
         return object : TextWatcher {
             override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
@@ -217,9 +250,13 @@ class NewTimeRowViewModel(val database: TimetableDatabaseDao, application: Appli
             }else{
                 viewModelScope.launch {
                     if (timetableIsExist) {
-                        update(TimetableList(timetableId, title.value, about.value, startHour, startMinute, endHour, endMinute, dayOfWeek, color, weekId))
+                        //update(TimetableList(timetableId, title.value, about.value, startHour, startMinute, endHour, endMinute, dayOfWeek, color, weekId))
+                        firebase.child(timetableId).setValue(TimetableList(timetableId, title.value, about.value, startHour, startMinute, endHour, endMinute, dayOfWeek, color, weekId))
                     }else {
-                        insert(TimetableList(0, title.value, about.value, startHour, startMinute, endHour, endMinute, dayOfWeek, color, weekId))
+                        val key = firebase.child("posts").push().key
+                        val user = TimetableList(key!!, title.value, about.value, startHour, startMinute, endHour, endMinute, dayOfWeek, color, weekId)
+                        firebase.child(key).setValue(user)
+                        //insert(TimetableList(key, title.value, about.value, startHour, startMinute, endHour, endMinute, dayOfWeek, color, weekId))
                     }
                 }
             }
@@ -277,10 +314,14 @@ class NewTimeRowViewModel(val database: TimetableDatabaseDao, application: Appli
     private suspend fun update(timetable: TimetableList) {
         database.update(timetable)
     }
-    private suspend fun get(key: Long): TimetableList? {
+    private suspend fun get(key: String): TimetableList? {
         return database.get(key)
     }
-    private suspend fun del(key: Long) {
+    private suspend fun del(key: String) {
         database.del(key)
     }
+
+
 }
+
+

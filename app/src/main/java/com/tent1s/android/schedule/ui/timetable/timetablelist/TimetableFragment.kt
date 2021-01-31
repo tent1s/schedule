@@ -3,25 +3,26 @@ package com.tent1s.android.schedule.ui.timetable.timetablelist
 import android.app.AlertDialog
 import android.content.Context
 import android.content.SharedPreferences
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatDelegate
+import android.widget.ProgressBar
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
-import com.tent1s.android.schedule.R
+import com.google.firebase.database.*
 import com.tent1s.android.schedule.ScheduleApplication
-import com.tent1s.android.schedule.databinding.FragmentTasksBinding
 import com.tent1s.android.schedule.databinding.FragmentTimetableBinding
 import com.tent1s.android.schedule.repository.ScheduleRepository
-import com.tent1s.android.schedule.ui.tasks.TasksAdapter
-import com.tent1s.android.schedule.ui.tasks.taskslist.TasksFragmentDirections
 import com.tent1s.android.schedule.ui.timetable.TimetableAdapter
 import timber.log.Timber
+import java.io.IOException
+
 
 class TimetableFragment : Fragment() {
 
@@ -30,6 +31,9 @@ class TimetableFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var myRepository : ScheduleRepository
     private lateinit var prefs : SharedPreferences
+
+
+
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -47,7 +51,8 @@ class TimetableFragment : Fragment() {
 
 
 
-        myRepository.timetable.observe(viewLifecycleOwner){ list ->
+        myRepository.timetableFirebase.observe(viewLifecycleOwner){ list ->
+
             timetableViewModel.week.observe(viewLifecycleOwner){
                 timetableViewModel.getTimetable(list, it)
             }
@@ -56,11 +61,13 @@ class TimetableFragment : Fragment() {
         prefs = activity!!.getSharedPreferences("settings", Context.MODE_PRIVATE)
 
         if(prefs.contains("week")){
-            timetableViewModel.setWeek( prefs.getInt("week", 0))
+            timetableViewModel.setWeek(prefs.getInt("week", 0))
         }
+
 
         return binding.root
     }
+
 
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -70,7 +77,12 @@ class TimetableFragment : Fragment() {
             val navController = binding.root.findNavController()
             val week = timetableViewModel.week.value
             if (week != null) {
-                navController.navigate(TimetableFragmentDirections.actionNavigationTimetableToNewTimeRow(it.id, week))
+                navController.navigate(
+                        TimetableFragmentDirections.actionNavigationTimetableToNewTimeRow(
+                                it.id,
+                                week
+                        )
+                )
             }
         }
         binding.timetableList.adapter = adapter
@@ -91,7 +103,12 @@ class TimetableFragment : Fragment() {
             val navController = binding.root.findNavController()
             val week = timetableViewModel.week.value
             if (week != null) {
-                navController.navigate(TimetableFragmentDirections.actionNavigationTimetableToNewTimeRow(-1L, week))
+                navController.navigate(
+                        TimetableFragmentDirections.actionNavigationTimetableToNewTimeRow(
+                                "",
+                                week
+                        )
+                )
             }
         }
 
@@ -102,8 +119,7 @@ class TimetableFragment : Fragment() {
                 if (dy < 0 && !binding.floatingActionButtonTimetable.isShown) {
                     binding.floatingActionButtonTimetable.show()
                     binding.Week.visibility = View.VISIBLE
-                }
-                else
+                } else
                     if (dy > 0 && binding.floatingActionButtonTimetable.isShown) {
                         binding.floatingActionButtonTimetable.hide()
                         binding.Week.visibility = View.GONE
@@ -112,8 +128,8 @@ class TimetableFragment : Fragment() {
         })
 
         binding.textWeek.text = when (timetableViewModel.week.value){
-            0 ->  "четная неделя"
-            1 ->  "нечетная неделя"
+            0 -> "четная неделя"
+            1 -> "нечетная неделя"
             else -> "error"
         }
 
@@ -143,6 +159,14 @@ class TimetableFragment : Fragment() {
             }
         }
 
+        myRepository.load.observe(viewLifecycleOwner){
+            if (!it){
+                binding.progressBar.visibility = ProgressBar.VISIBLE
+            }else{
+                binding.progressBar.visibility = ProgressBar.INVISIBLE
+            }
+        }
+
     }
 
     override fun onDestroyView() {
@@ -150,4 +174,13 @@ class TimetableFragment : Fragment() {
         _binding = null
     }
 
+    override fun onResume() {
+        super.onResume()
+        val online = timetableViewModel.isOnline(context!!)
+        if (!online) myRepository.updateLoad(online)
+        Timber.i("dfsdf $online")
+    }
+
+
 }
+

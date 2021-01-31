@@ -7,8 +7,8 @@ import javax.security.auth.Subject
 
 @Entity(tableName = "timetable_table")
 data class TimetableList(
-        @PrimaryKey(autoGenerate = true)
-        var id: Long = 0L,
+        @PrimaryKey(autoGenerate = false)
+        var id: String = "",
 
         @ColumnInfo(name = "title")
         var title:  String? = null,

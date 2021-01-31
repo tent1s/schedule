@@ -6,7 +6,7 @@ sealed class TimetableItem {
     class Header : TimetableItem() var header: String? = null
 
     class ContentItem : TimetableItem() {
-        var id : Long = -1
+        var id : String = ""
         var title: String? = null
         var inf: String? = null
         var colorId: Int? = null

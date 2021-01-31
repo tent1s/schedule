@@ -19,10 +19,10 @@ interface TimetableDatabaseDao {
 
 
     @Query("SELECT * from timetable_table WHERE id = :key")
-    suspend fun get(key: Long): TimetableList?
+    suspend fun get(key: String): TimetableList?
 
     @Query("DELETE FROM timetable_table WHERE id = :key")
-    suspend fun del(key: Long)
+    suspend fun del(key: String)
 
     @Query("DELETE FROM timetable_table")
     suspend fun clear()

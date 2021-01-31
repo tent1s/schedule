@@ -1,14 +1,20 @@
 package com.tent1s.android.schedule.ui.timetable.timetablelist
 
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.tent1s.android.schedule.ScheduleApplication
-import com.tent1s.android.schedule.database.ScheduleDatabase
 import com.tent1s.android.schedule.database.TimetableList
 import com.tent1s.android.schedule.ui.timetable.TimetableItem
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
+import java.io.IOException
+import java.net.InetSocketAddress
+import java.net.Socket
+import java.net.SocketAddress
 import java.util.*
 
 
@@ -45,7 +51,7 @@ class TimetableViewModel() : ViewModel() {
                  val header = TimetableItem.Header()
 
                  when (j) {
-                     0 -> header.header = "Понидельник"
+                     0 -> header.header = "Понедельник"
                      1 -> header.header = "Вторник"
                      2 -> header.header = "Среда"
                      3 -> header.header = "Четрверг"
@@ -93,7 +99,7 @@ class TimetableViewModel() : ViewModel() {
 
 
     private fun sortTimetable(source: ArrayList<TimetableItem.ContentItem>) : ArrayList<TimetableItem.ContentItem> {
-        return quickSort(source, 0, source.size-1)
+        return quickSort(source, 0, source.size - 1)
     }
 
     private fun quickSort(source: ArrayList<TimetableItem.ContentItem>, leftBorder: Int, rightBorder: Int) : ArrayList<TimetableItem.ContentItem>{
@@ -149,6 +155,15 @@ class TimetableViewModel() : ViewModel() {
 
         }
         return count
+    }
+
+     fun isOnline(context: Context): Boolean {
+         var activeNetworkInfo: NetworkInfo? = null
+         viewModelScope.launch {
+             val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+             activeNetworkInfo = connectivityManager.activeNetworkInfo
+         }
+        return activeNetworkInfo != null && activeNetworkInfo!!.isConnected
     }
 
 }

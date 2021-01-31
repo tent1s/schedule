@@ -13,6 +13,8 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 import com.tent1s.android.schedule.R
 import com.tent1s.android.schedule.database.ScheduleDatabase
 import com.tent1s.android.schedule.databinding.FragmentNewTimeRowBinding
@@ -28,6 +30,7 @@ class NewTimeRowFragment : Fragment() {
     private var _binding: FragmentNewTimeRowBinding? = null
     private val binding get() = _binding!!
     private lateinit var viewModelFactory: NewTimeRowViewModelFactory
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,7 +48,10 @@ class NewTimeRowFragment : Fragment() {
         val args = arguments?.let { NewTimeRowFragmentArgs.fromBundle(it) }
         val application = requireNotNull(this.activity).application
         val dataSource = ScheduleDatabase.getInstance(application).timetableDatabaseDao
-        viewModelFactory = NewTimeRowViewModelFactory(dataSource, application, args!!.timetableId, args.weekId)
+
+        val firebase = FirebaseDatabase.getInstance().getReference("timetable")
+
+        viewModelFactory = NewTimeRowViewModelFactory(dataSource, application, args!!.timetableId, args.weekId, firebase)
         newTimeRowViewModel =
             ViewModelProvider(this, viewModelFactory).get(NewTimeRowViewModel::class.java)
 
@@ -195,6 +201,11 @@ class NewTimeRowFragment : Fragment() {
             }else{
                 binding.textInputLayout2.error = null
             }
+        }
+
+
+        newTimeRowViewModel.timetable.observe(viewLifecycleOwner){
+            newTimeRowViewModel.setVal(it)
         }
 
 
