@@ -162,12 +162,9 @@ class TimetableViewModel() : ViewModel() {
      fun isOnline(context: Context, m: ScheduleRepository) {
          var activeNetworkInfo: NetworkInfo? = null
          viewModelScope.launch {
-             while (true) {
                  val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
                  activeNetworkInfo = connectivityManager.activeNetworkInfo
                  m.updateLoad( activeNetworkInfo != null && activeNetworkInfo!!.isConnected)
-                 delay(5000L)
-             }
          }
     }
 

@@ -53,8 +53,6 @@ class TimetableFragment : Fragment() {
 
         myRepository.timetableFirebase.observe(viewLifecycleOwner){ list ->
 
-            timetableViewModel.isOnline(context!!, myRepository)
-
             timetableViewModel.week.observe(viewLifecycleOwner){
                 timetableViewModel.getTimetable(list, it)
             }
@@ -177,7 +175,10 @@ class TimetableFragment : Fragment() {
         _binding = null
     }
 
-
+    override fun onResume() {
+        super.onResume()
+        timetableViewModel.isOnline(context!!, myRepository)
+    }
 
 
 }
