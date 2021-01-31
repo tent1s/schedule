@@ -56,6 +56,7 @@ class TimetableFragment : Fragment() {
             timetableViewModel.week.observe(viewLifecycleOwner){
                 timetableViewModel.getTimetable(list, it)
             }
+            binding.progressBar2.visibility = ProgressBar.INVISIBLE
         }
 
 
