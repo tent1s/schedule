@@ -20,6 +20,7 @@ import com.tent1s.android.schedule.ScheduleApplication
 import com.tent1s.android.schedule.databinding.FragmentTimetableBinding
 import com.tent1s.android.schedule.repository.ScheduleRepository
 import com.tent1s.android.schedule.ui.timetable.TimetableAdapter
+import kotlinx.coroutines.delay
 import timber.log.Timber
 import java.io.IOException
 
@@ -50,13 +51,15 @@ class TimetableFragment : Fragment() {
                 ViewModelProvider(this).get(TimetableViewModel::class.java)
 
 
-
         myRepository.timetableFirebase.observe(viewLifecycleOwner){ list ->
+
+            timetableViewModel.isOnline(context!!, myRepository)
 
             timetableViewModel.week.observe(viewLifecycleOwner){
                 timetableViewModel.getTimetable(list, it)
             }
         }
+
 
         prefs = activity!!.getSharedPreferences("settings", Context.MODE_PRIVATE)
 
@@ -174,12 +177,7 @@ class TimetableFragment : Fragment() {
         _binding = null
     }
 
-    override fun onResume() {
-        super.onResume()
-        val online = timetableViewModel.isOnline(context!!)
-        if (!online) myRepository.updateLoad(online)
-        Timber.i("dfsdf $online")
-    }
+
 
 
 }

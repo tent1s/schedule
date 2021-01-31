@@ -8,8 +8,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tent1s.android.schedule.database.TimetableList
+import com.tent1s.android.schedule.repository.ScheduleRepository
 import com.tent1s.android.schedule.ui.timetable.TimetableItem
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.io.IOException
 import java.net.InetSocketAddress
@@ -157,13 +159,16 @@ class TimetableViewModel() : ViewModel() {
         return count
     }
 
-     fun isOnline(context: Context): Boolean {
+     fun isOnline(context: Context, m: ScheduleRepository) {
          var activeNetworkInfo: NetworkInfo? = null
          viewModelScope.launch {
-             val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-             activeNetworkInfo = connectivityManager.activeNetworkInfo
+             while (true) {
+                 val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+                 activeNetworkInfo = connectivityManager.activeNetworkInfo
+                 m.updateLoad( activeNetworkInfo != null && activeNetworkInfo!!.isConnected)
+                 delay(5000L)
+             }
          }
-        return activeNetworkInfo != null && activeNetworkInfo!!.isConnected
     }
 
 }
