@@ -1,35 +1,22 @@
 package com.tent1s.android.schedule.database
 
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.Query
-import androidx.room.Update
+import androidx.room.*
 
 
 @Dao
 interface TimetableDatabaseDao {
 
-    @Insert
-    suspend fun insert(task: TimetableList)
 
-
-    @Update
-    suspend fun update(task: TimetableList)
-
-
-    @Query("SELECT * from timetable_table WHERE id = :key")
-    suspend fun get(key: String): TimetableList?
-
-    @Query("DELETE FROM timetable_table WHERE id = :key")
-    suspend fun del(key: String)
-
-    @Query("DELETE FROM timetable_table")
-    suspend fun clear()
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertAll(tasks: List<TimetableList>)
 
 
     @Query("SELECT * FROM timetable_table ORDER BY id DESC")
     fun getAllTimetable(): LiveData<List<TimetableList>>
+
+    @Query("DELETE FROM timetable_table")
+    suspend fun clear()
 
 
 }

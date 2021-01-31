@@ -20,6 +20,7 @@ import com.tent1s.android.schedule.ScheduleApplication
 import com.tent1s.android.schedule.databinding.FragmentTimetableBinding
 import com.tent1s.android.schedule.repository.ScheduleRepository
 import com.tent1s.android.schedule.ui.timetable.TimetableAdapter
+import com.tent1s.android.schedule.utils.shortToast
 import kotlinx.coroutines.delay
 import timber.log.Timber
 import java.io.IOException
@@ -33,7 +34,7 @@ class TimetableFragment : Fragment() {
     private lateinit var myRepository : ScheduleRepository
     private lateinit var prefs : SharedPreferences
 
-
+    private var loadStatus = false
 
 
     override fun onCreateView(
@@ -51,12 +52,13 @@ class TimetableFragment : Fragment() {
                 ViewModelProvider(this).get(TimetableViewModel::class.java)
 
 
-        myRepository.timetableFirebase.observe(viewLifecycleOwner){ list ->
+        myRepository.timetable.observe(viewLifecycleOwner){ list ->
 
             timetableViewModel.week.observe(viewLifecycleOwner){
                 timetableViewModel.getTimetable(list, it)
             }
-            binding.progressBar2.visibility = ProgressBar.INVISIBLE
+
+            binding.progressBar.visibility = ProgressBar.INVISIBLE
         }
 
 
@@ -66,6 +68,9 @@ class TimetableFragment : Fragment() {
             timetableViewModel.setWeek(prefs.getInt("week", 0))
         }
 
+        myRepository.load.observe(viewLifecycleOwner){
+            loadStatus = it
+        }
 
         return binding.root
     }
@@ -79,12 +84,16 @@ class TimetableFragment : Fragment() {
             val navController = binding.root.findNavController()
             val week = timetableViewModel.week.value
             if (week != null) {
-                navController.navigate(
-                        TimetableFragmentDirections.actionNavigationTimetableToNewTimeRow(
-                                it.id,
-                                week
-                        )
-                )
+                if (loadStatus) {
+                    navController.navigate(
+                            TimetableFragmentDirections.actionNavigationTimetableToNewTimeRow(
+                                    it.id,
+                                    week
+                            )
+                    )
+                }else{
+                    context?.shortToast("Интернет соединения нету! База данных не загруженна! Вы не можете ничего изменить!")
+                }
             }
         }
         binding.timetableList.adapter = adapter
@@ -105,12 +114,16 @@ class TimetableFragment : Fragment() {
             val navController = binding.root.findNavController()
             val week = timetableViewModel.week.value
             if (week != null) {
-                navController.navigate(
-                        TimetableFragmentDirections.actionNavigationTimetableToNewTimeRow(
-                                "",
-                                week
-                        )
-                )
+                if (loadStatus) {
+                    navController.navigate(
+                            TimetableFragmentDirections.actionNavigationTimetableToNewTimeRow(
+                                    "",
+                                    week
+                            )
+                    )
+                }else{
+                    context?.shortToast("Интернет соединения нету! База данных не загруженна! Вы не можете ничего изменить!")
+                }
             }
         }
 
@@ -161,14 +174,6 @@ class TimetableFragment : Fragment() {
             }
         }
 
-        myRepository.load.observe(viewLifecycleOwner){
-            if (!it){
-                binding.progressBar.visibility = ProgressBar.VISIBLE
-            }else{
-                binding.progressBar.visibility = ProgressBar.INVISIBLE
-            }
-        }
-
     }
 
     override fun onDestroyView() {
@@ -178,7 +183,7 @@ class TimetableFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        timetableViewModel.isOnline(context!!, myRepository)
+        if (!timetableViewModel.isOnline(context!!)) context?.shortToast("Интернет соединения нету!")
     }
 
 

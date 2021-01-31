@@ -11,7 +11,7 @@ class SettingsViewModel(private val databaseTimetable: TimetableDatabaseDao, pri
 
     fun clearTimetable() {
         viewModelScope.launch {
-            databaseTimetable.clear()
+
         }
     }
     fun clearTasks() {

@@ -159,13 +159,13 @@ class TimetableViewModel() : ViewModel() {
         return count
     }
 
-     fun isOnline(context: Context, m: ScheduleRepository) {
+     fun isOnline(context: Context) : Boolean {
          var activeNetworkInfo: NetworkInfo? = null
          viewModelScope.launch {
                  val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
                  activeNetworkInfo = connectivityManager.activeNetworkInfo
-                 m.updateLoad( activeNetworkInfo != null && activeNetworkInfo!!.isConnected)
          }
+         return (activeNetworkInfo != null && activeNetworkInfo!!.isConnected)
     }
 
 }

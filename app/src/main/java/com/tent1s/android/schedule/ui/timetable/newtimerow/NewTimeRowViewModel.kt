@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 
 
-class NewTimeRowViewModel(val database: TimetableDatabaseDao, application: Application,
+class NewTimeRowViewModel( application: Application,
                           private val timetableId : String, private val weekId :Int, private val firebase: DatabaseReference) : AndroidViewModel(application) {
 
     private var timetableIsExist = false
@@ -250,13 +250,11 @@ class NewTimeRowViewModel(val database: TimetableDatabaseDao, application: Appli
             }else{
                 viewModelScope.launch {
                     if (timetableIsExist) {
-                        //update(TimetableList(timetableId, title.value, about.value, startHour, startMinute, endHour, endMinute, dayOfWeek, color, weekId))
+
                         firebase.child(timetableId).setValue(TimetableList(timetableId, title.value, about.value, startHour, startMinute, endHour, endMinute, dayOfWeek, color, weekId))
                     }else {
                         val key = firebase.child("posts").push().key
-                        val user = TimetableList(key!!, title.value, about.value, startHour, startMinute, endHour, endMinute, dayOfWeek, color, weekId)
-                        firebase.child(key).setValue(user)
-                        //insert(TimetableList(key, title.value, about.value, startHour, startMinute, endHour, endMinute, dayOfWeek, color, weekId))
+                        firebase.child(key!!).setValue(TimetableList(key, title.value, about.value, startHour, startMinute, endHour, endMinute, dayOfWeek, color, weekId))
                     }
                 }
             }
@@ -307,20 +305,6 @@ class NewTimeRowViewModel(val database: TimetableDatabaseDao, application: Appli
             else -> "день недели"
         }
     }
-    private suspend fun insert(timetable: TimetableList) {
-        database.insert(timetable)
-    }
-
-    private suspend fun update(timetable: TimetableList) {
-        database.update(timetable)
-    }
-    private suspend fun get(key: String): TimetableList? {
-        return database.get(key)
-    }
-    private suspend fun del(key: String) {
-        database.del(key)
-    }
-
 
 }
 
