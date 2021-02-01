@@ -1,26 +1,23 @@
 package com.tent1s.android.schedule.ui.settings
 
-import android.app.AlertDialog
 import android.content.Context
-import android.content.DialogInterface
 import android.content.SharedPreferences
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.CompoundButton
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.firebase.database.FirebaseDatabase
 import com.tent1s.android.schedule.R
 import com.tent1s.android.schedule.ScheduleApplication
 import com.tent1s.android.schedule.database.ScheduleDatabase
 import com.tent1s.android.schedule.databinding.FragmentSettingsBinding
 import com.tent1s.android.schedule.repository.ScheduleRepository
-import kotlinx.android.synthetic.main.fragment_settings.*
 
 
 class SettingsFragment : Fragment() {
@@ -31,6 +28,7 @@ class SettingsFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var viewModelFactory: SettingsViewModelFactory
     private lateinit var myRepository : ScheduleRepository
+
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -47,9 +45,11 @@ class SettingsFragment : Fragment() {
         )
 
         val application = requireNotNull(this.activity).application
-        val dataSourceTimetable = ScheduleDatabase.getInstance(application).timetableDatabaseDao
+
+        val firebase = FirebaseDatabase.getInstance().getReference("timetable")
         val dataSourceTasks = ScheduleDatabase.getInstance(application).tasksDatabaseDao
-        viewModelFactory = SettingsViewModelFactory(dataSourceTimetable, dataSourceTasks, application)
+
+        viewModelFactory = SettingsViewModelFactory(firebase, dataSourceTasks, application)
         settingsViewModel = ViewModelProvider(this, viewModelFactory).get(SettingsViewModel::class.java)
         myRepository = (requireActivity().application as ScheduleApplication).repository
 
@@ -68,51 +68,25 @@ class SettingsFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
 
         binding.delTasksView.setOnClickListener{
-            val title = "Вы уверены?"
-            val button1String = "ДА"
-            val button2String = "НЕТ"
 
-            val builder: AlertDialog.Builder = AlertDialog.Builder(activity)
-            builder.setTitle(title)
+            MaterialAlertDialogBuilder(context!!, R.style.AlertDialogTheme)
+                    .setTitle("Вы уверены?")
+                    .setNegativeButton("ДА") { _, _ ->
+                        settingsViewModel.clearTasks()
+                    }
+                    .setPositiveButton("НЕТ") { _, _ -> }
+                    .show()
 
-
-            builder.setPositiveButton(button1String) { _, _ ->
-                settingsViewModel.clearTasks()
-            }
-
-            builder.setNegativeButton(button2String) { _, _ -> }
-
-
-            builder.setCancelable(true);
-            val dialog: AlertDialog = builder.create()
-
-            dialog.show()
-            dialog.getButton(DialogInterface.BUTTON_NEGATIVE).setBackgroundColor(Color.GRAY)
-            dialog.getButton(DialogInterface.BUTTON_POSITIVE).setBackgroundColor(Color.RED)
         }
 
         binding.delTimetableView.setOnClickListener{
-            val title = "Вы уверены?"
-            val button1String = "ДА"
-            val button2String = "НЕТ"
-
-            val builder: AlertDialog.Builder = AlertDialog.Builder(activity)
-            builder.setTitle(title)
-
-
-            builder.setPositiveButton(button1String) { _, _ ->
-                settingsViewModel.clearTimetable()
-            }
-
-            builder.setNegativeButton(button2String) { _, _ -> }
-
-
-            builder.setCancelable(true);
-            val dialog: AlertDialog = builder.create()
-
-            dialog.show()
-            dialog.getButton(DialogInterface.BUTTON_NEGATIVE).setBackgroundColor(Color.GRAY)
-            dialog.getButton(DialogInterface.BUTTON_POSITIVE).setBackgroundColor(Color.RED)
+            MaterialAlertDialogBuilder(context!!, R.style.AlertDialogTheme)
+                    .setTitle("Вы уверены?")
+                    .setNegativeButton("ДА") { _, _ ->
+                        settingsViewModel.clearTimetable()
+                    }
+                    .setPositiveButton("НЕТ") { _, _ -> }
+                    .show()
         }
 
 

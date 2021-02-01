@@ -8,6 +8,7 @@ import androidx.lifecycle.*
 import com.google.firebase.database.*
 import com.tent1s.android.schedule.database.TimetableDatabaseDao
 import com.tent1s.android.schedule.database.TimetableList
+import com.tent1s.android.schedule.utils.SingleLiveEvent
 import com.tent1s.android.schedule.utils.timetableStartTimeToString
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -69,8 +70,6 @@ class NewTimeRowViewModel( application: Application,
         if(!TextUtils.isEmpty(timetableId)){
             viewModelScope.launch {
 
-                // val timetable = get(timetableId)
-
 
                 val postListener = object : ValueEventListener {
 
@@ -88,7 +87,7 @@ class NewTimeRowViewModel( application: Application,
                     override fun onCancelled(databaseError: DatabaseError) {
 
 
-                        Timber.i("sdsd ")
+                        Timber.i("Error load")
 
                         }
                     }
@@ -112,24 +111,19 @@ class NewTimeRowViewModel( application: Application,
     }
 
 
-    private val _errorInvalidTime = MutableLiveData<Boolean>()
-    val errorInvalidTime: LiveData<Boolean>
-        get() = _errorInvalidTime
 
 
-    private fun errorInvalidTime() {
-        _errorInvalidTime.value = true
+
+    private val errorInvalidTime = SingleLiveEvent<Boolean>()
+    fun getErrorInvalidTime(): SingleLiveEvent<Boolean> {
+        return errorInvalidTime
     }
 
-    fun errorInvalidTimeComplete(){
-        _errorInvalidTime.value = false
-    }
 
 
     fun delButtonOnclick() {
         viewModelScope.launch {
             if (timetableIsExist){
-                //del(timetableId)
                 firebase.child(timetableId).removeValue()
             }
         }
@@ -246,8 +240,9 @@ class NewTimeRowViewModel( application: Application,
             val color : Int = colorToInt()
 
             if ((startHour > endHour) || ((startHour == endHour) && (startMinute > endMinute))){
-                errorInvalidTime()
+                errorInvalidTime.postValue(true)
             }else{
+                errorInvalidTime.postValue(false)
                 viewModelScope.launch {
                     if (timetableIsExist) {
 

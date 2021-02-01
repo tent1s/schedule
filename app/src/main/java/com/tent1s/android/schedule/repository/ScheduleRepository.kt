@@ -25,12 +25,6 @@ class ScheduleRepository(application: Application)  {
     private val firebase: DatabaseReference = FirebaseDatabase.getInstance().getReference("timetable")
 
 
-
-
-//    private val _timetableFirebase = MutableLiveData<List<TimetableList>>()
-//    val timetableFirebase: LiveData<List<TimetableList>> = _timetableFirebase
-
-
     private val _load = MutableLiveData(false)
     val load: LiveData<Boolean> = _load
 

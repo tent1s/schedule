@@ -36,7 +36,7 @@ class NewTimeRowFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         _binding = DataBindingUtil.inflate(
             inflater,
@@ -73,9 +73,17 @@ class NewTimeRowFragment : Fragment() {
 
         binding.buttonSave.setOnClickListener {
             if (newTimeRowViewModel.isValid.value == true) {
+
                 newTimeRowViewModel.saveInf()
-                val navController = binding.root.findNavController()
-                navController.navigate(R.id.action_newTimeRow_to_navigation_timetable)
+
+                newTimeRowViewModel.getErrorInvalidTime().observe(viewLifecycleOwner) { display ->
+                    if (display == true) {
+                        context?.shortToast("Конечная дата меньше начальной!")
+                    }else{
+                        val navController = binding.root.findNavController()
+                        navController.navigate(R.id.action_newTimeRow_to_navigation_timetable)
+                    }
+                }
             }else{
                 context?.shortToast("Вы ввели не всю информацию!!")
             }
@@ -98,6 +106,7 @@ class NewTimeRowFragment : Fragment() {
             val dialog: AlertDialog = builder.create()
             dialog.show()
         }
+
 
         binding.colorButton.setOnClickListener {
             activity?.hideKeyboard()
@@ -143,14 +152,6 @@ class NewTimeRowFragment : Fragment() {
         }
 
 
-
-        newTimeRowViewModel.errorInvalidTime.observe(viewLifecycleOwner) { display ->
-            if (display == true) {
-                context?.shortToast("Конечная дата меньше начальной!")
-                newTimeRowViewModel.errorInvalidTimeComplete()
-            }
-
-        }
 
         binding.delButton.setOnClickListener {
             newTimeRowViewModel.delButtonOnclick()

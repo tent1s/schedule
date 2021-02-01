@@ -1,29 +1,25 @@
 package com.tent1s.android.schedule.ui.timetable.timetablelist
 
-import android.app.AlertDialog
 import android.content.Context
 import android.content.SharedPreferences
-import android.net.ConnectivityManager
-import android.net.NetworkInfo
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupMenu
 import android.widget.ProgressBar
-import androidx.core.content.ContextCompat.getSystemService
+import androidx.annotation.MenuRes
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
-import com.google.firebase.database.*
+import com.tent1s.android.schedule.R
 import com.tent1s.android.schedule.ScheduleApplication
 import com.tent1s.android.schedule.databinding.FragmentTimetableBinding
 import com.tent1s.android.schedule.repository.ScheduleRepository
 import com.tent1s.android.schedule.ui.timetable.TimetableAdapter
 import com.tent1s.android.schedule.utils.shortToast
-import kotlinx.coroutines.delay
-import timber.log.Timber
-import java.io.IOException
 
 
 class TimetableFragment : Fragment() {
@@ -71,7 +67,7 @@ class TimetableFragment : Fragment() {
         myRepository.load.observe(viewLifecycleOwner){
             loadStatus = it
         }
-
+        setHasOptionsMenu(true)
         return binding.root
     }
 
@@ -149,21 +145,7 @@ class TimetableFragment : Fragment() {
         }
 
         binding.Week.setOnClickListener{
-            val builder: AlertDialog.Builder = AlertDialog.Builder(context)
-            builder.setTitle("Выберете неделю")
-
-            val dayOfWeek = arrayOf("Четная неделя", "Нечетная неделя")
-            builder.setItems(dayOfWeek) { _, which ->
-                when (which){
-                    0 -> binding.textWeek.text = "четная неделя"
-                    1 -> binding.textWeek.text = "нечетная неделя"
-                }
-                val editor = prefs.edit()
-                editor.putInt("week", which).apply()
-                timetableViewModel.setWeek(which)
-            }
-            val dialog: AlertDialog = builder.create()
-            dialog.show()
+            showMenu(it, R.menu.week)
         }
 
         timetableViewModel.checkEmptyList.observe(viewLifecycleOwner) {
@@ -176,10 +158,13 @@ class TimetableFragment : Fragment() {
 
     }
 
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
+
+
 
     override fun onResume() {
         super.onResume()
@@ -187,5 +172,41 @@ class TimetableFragment : Fragment() {
     }
 
 
+
+    private fun showMenu(v: View, @MenuRes menuRes: Int) {
+        val popup = PopupMenu(context!!, v)
+        popup.menuInflater.inflate(menuRes, popup.menu)
+
+        popup.setOnMenuItemClickListener { menuItem: MenuItem ->
+            when (menuItem.itemId){
+                R.id.option_1 -> {
+                    binding.textWeek.text = "четная неделя"
+
+                    val editor = prefs.edit()
+                    editor.putInt("week", 0).apply()
+                    timetableViewModel.setWeek(0)
+
+                    true
+                }
+                R.id.option_2 -> {
+                    binding.textWeek.text = "нечетная неделя"
+
+                    val editor = prefs.edit()
+                    editor.putInt("week", 1).apply()
+                    timetableViewModel.setWeek(1)
+
+                    true
+                }
+                else -> false
+            }
+
+        }
+        popup.show()
+    }
+
 }
+
+
+
+
 
