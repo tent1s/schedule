@@ -2,26 +2,21 @@ package com.tent1s.android.schedule.ui.timetable.newtimerow
 
 import android.app.AlertDialog
 import android.app.TimePickerDialog
-import android.os.Build
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.RequiresApi
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
-import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.tent1s.android.schedule.R
-import com.tent1s.android.schedule.database.ScheduleDatabase
 import com.tent1s.android.schedule.databinding.FragmentNewTimeRowBinding
 import com.tent1s.android.schedule.utils.hideKeyboard
 import com.tent1s.android.schedule.utils.shortToast
 import com.tent1s.android.schedule.utils.timetableStartTimeToString
-import timber.log.Timber
 
 
 class NewTimeRowFragment : Fragment() {
@@ -98,7 +93,7 @@ class NewTimeRowFragment : Fragment() {
             val builder: AlertDialog.Builder = AlertDialog.Builder(context)
             builder.setTitle("Выберете день недели")
 
-            val dayOfWeek = arrayOf("Понидельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота")
+            val dayOfWeek = arrayOf("Понидельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье")
             builder.setItems(dayOfWeek) { _, which ->
                 binding.buttonDayOfWeek.text = newTimeRowViewModel.dayOfWeekIntToString(which)
             }

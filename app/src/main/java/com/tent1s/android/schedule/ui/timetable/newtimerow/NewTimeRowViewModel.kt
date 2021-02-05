@@ -4,9 +4,14 @@ import android.app.Application
 import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
-import androidx.lifecycle.*
-import com.google.firebase.database.*
-import com.tent1s.android.schedule.database.TimetableDatabaseDao
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.ValueEventListener
 import com.tent1s.android.schedule.database.TimetableList
 import com.tent1s.android.schedule.utils.SingleLiveEvent
 import com.tent1s.android.schedule.utils.timetableStartTimeToString
@@ -264,6 +269,7 @@ class NewTimeRowViewModel( application: Application,
                 "Четверг" -> 3
                 "Пятница" -> 4
                 "Суббота" -> 5
+                "Воскресенье" -> 6
                 else -> -1
             }
         }catch (e: NumberFormatException) { -1 }
@@ -297,6 +303,7 @@ class NewTimeRowViewModel( application: Application,
             3 ->  "Четверг"
             4 ->  "Пятница"
             5 ->  "Суббота"
+            6 -> "Воскресенье"
             else -> "день недели"
         }
     }

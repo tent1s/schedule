@@ -8,15 +8,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tent1s.android.schedule.database.TimetableList
-import com.tent1s.android.schedule.repository.ScheduleRepository
 import com.tent1s.android.schedule.ui.timetable.TimetableItem
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.io.IOException
-import java.net.InetSocketAddress
-import java.net.Socket
-import java.net.SocketAddress
 import java.util.*
 
 
@@ -49,7 +42,7 @@ class TimetableViewModel() : ViewModel() {
         val arrayList = ArrayList<TimetableItem>()
          viewModelScope.launch {
 
-             for (j in 0..5) {
+             for (j in 0..6) {
                  val header = TimetableItem.Header()
 
                  when (j) {
@@ -59,6 +52,7 @@ class TimetableViewModel() : ViewModel() {
                      3 -> header.header = "Четрверг"
                      4 -> header.header = "Пятница"
                      5 -> header.header = "Суббота"
+                     6 -> header.header = "Воскресенье"
                  }
 
                  val count = getCount(j, date, week)
