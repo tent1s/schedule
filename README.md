@@ -3,6 +3,8 @@
 
 ## Idea
 
+Simple app that you can use to create todo list and your study timetable.
+The todo list has a local database and the schedule has a shared database in the cloud.
 
 ## How it looks
 
@@ -14,8 +16,7 @@
 
 
 ## What it uses
-Simple app that you can use to create todo list and your study timetable.
-The todo list has a local database and the schedule has a shared database in the cloud.
+
 ### Data
 
 * [Room](https://developer.android.com/topic/libraries/architecture/room)
