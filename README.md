@@ -7,6 +7,8 @@ Simple app that you can use to create todo list and your study timetable.
 The todo list has a local database and the schedule has a shared database in the cloud.
 Objects can be deleted / changed / edited.
 
+* [Trello](https://trello.com/b/yHv4yaxA/appschedule)
+
 ## How it looks
 
 <img src='screenshots/2.jpg' height='450'> <img src='screenshots/3.jpg' height='450'>
