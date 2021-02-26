@@ -5,6 +5,7 @@
 
 Simple app that you can use to create todo list and your study timetable.
 The todo list has a local database and the schedule has a shared database in the cloud.
+Objects can be deleted / changed / edited.
 
 ## How it looks
 
