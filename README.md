@@ -1,5 +1,5 @@
 # MySchedule
-![](.screenshots/schedule.jpg?raw=true "Title")
+<img src='screenshots/schedule.jpg' height='200'>
 ## Idea
 
 
