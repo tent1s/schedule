@@ -14,3 +14,20 @@
 
 
 ## What it uses
+
+### Data
+
+* [Room](https://developer.android.com/topic/libraries/architecture/room)
+* [SharedPreferences](https://developer.android.com/reference/kotlin/android/content/SharedPreferences)
+* [Firebase](https://firebase.google.com/docs/android/setup)
+
+### Android Architecture Components
+
+* [LiveData](https://developer.android.com/topic/libraries/architecture/livedata)
+* [ViewModel](https://developer.android.com/topic/libraries/architecture/viewmodel)
+* [Navigation](https://developer.android.com/topic/libraries/architecture/navigation/)
+
+### Others
+
+* [Timber](https://github.com/JakeWharton/timber) -  a logger with a small, extensible API which provides utility on top of Android's normal Log class.
+* [Material Components](https://github.com/material-components/material-components-android)
