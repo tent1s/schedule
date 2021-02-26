@@ -49,7 +49,7 @@ class TimetableViewModel() : ViewModel() {
                      0 -> header.header = "Понедельник"
                      1 -> header.header = "Вторник"
                      2 -> header.header = "Среда"
-                     3 -> header.header = "Четрверг"
+                     3 -> header.header = "Четверг"
                      4 -> header.header = "Пятница"
                      5 -> header.header = "Суббота"
                      6 -> header.header = "Воскресенье"
