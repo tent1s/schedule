@@ -18,7 +18,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/notification_view"
+                app:layout_constraintTop_toBottomOf="@+id/theme"
                 app:layout_constraintVertical_bias="0.0"
                 android:focusable="true"
                 android:foreground="?android:attr/selectableItemBackground" />
@@ -122,42 +122,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/about_view"
                 app:layout_constraintVertical_bias="1.0" />
 
-            <View
-                android:id="@+id/notification_view"
-                android:layout_width="0dp"
-                android:layout_height="59dp"
-                android:background="@color/primaryLightColor"
-                android:foreground="?android:attr/selectableItemBackground"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/theme"
-                app:layout_constraintVertical_bias="0.0" />
 
-            <View
-                android:id="@+id/view_line4"
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:background="@color/bottomLine"
-                app:layout_constraintBottom_toBottomOf="@+id/notification_view"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/notification_view"
-                app:layout_constraintVertical_bias="1.0" />
-
-            <TextView
-                android:id="@+id/notification_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:text="@string/notification_text"
-                android:textSize="16sp"
-                app:layout_constraintBottom_toBottomOf="@+id/notification_view"
-                app:layout_constraintEnd_toEndOf="@+id/notification_view"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="@+id/notification_view"
-                app:layout_constraintTop_toTopOf="@+id/notification_view" />
 
             <View
                 android:id="@+id/theme"

@@ -75,20 +75,6 @@
                 app:layout_constraintTop_toBottomOf="@+id/taskAbout"
                 app:layout_constraintVertical_bias="0.0" />
 
-            <TextView
-                android:id="@+id/notification"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:text="@string/notification"
-                android:textSize="24sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/checkTaskDone"
-                app:layout_constraintVertical_bias="0.0" />
 
             <Button
                 android:id="@+id/dateTask"
@@ -100,7 +86,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/notification"
+                app:layout_constraintTop_toBottomOf="@+id/checkTaskDone"
                 app:layout_constraintVertical_bias="0.0" />
 
             <Button
@@ -144,17 +130,6 @@
                 app:layout_constraintTop_toTopOf="@+id/checkTaskDone"
                 tools:ignore="UseSwitchCompatOrMaterialXml" />
 
-            <Switch
-                android:id="@+id/switch3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                app:layout_constraintBottom_toBottomOf="@+id/notification"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintStart_toEndOf="@+id/notification"
-                app:layout_constraintTop_toTopOf="@+id/notification"
-                tools:ignore="UseSwitchCompatOrMaterialXml" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 </layout>
